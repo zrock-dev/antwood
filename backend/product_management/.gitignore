@@ -28,3 +28,6 @@ go.work
 
 ## enviroment variables
 .env
+
+## air tool
+tmp
