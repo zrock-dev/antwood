@@ -1,4 +1,4 @@
-module gofiber/fiber/v2
+module antwood_team/product_management
 
 go 1.18
 
