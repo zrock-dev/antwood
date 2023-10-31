@@ -10,7 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Client mongo.Client
+var SoleStyleDatabase mongo.Database
+var SneakerCollection mongo.Collection
 
 func ConnectToTheDatabase() {
 	if err := godotenv.Load(); err != nil {
@@ -21,12 +22,19 @@ func ConnectToTheDatabase() {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	context := context.TODO()
 	options := options.Client().ApplyURI(URI).SetServerAPIOptions(serverAPI)
-	_, err := mongo.Connect(context, options)
+	client, err := mongo.Connect(context, options)
 	if err != nil {
 		panic(err)
 	}
-
 	fmt.Println("database connected")
+	initDatabase(*client)
+}
 
-	// soleStyleDatabase := Client.Database("sneakerStore")
+func initDatabase(client mongo.Client) {
+	SoleStyleDatabase = *client.Database("solestyle")
+	initSneakerCollection(SoleStyleDatabase)
+}
+
+func initSneakerCollection(database mongo.Database) {
+	SneakerCollection = *database.Collection("sneakers")
 }

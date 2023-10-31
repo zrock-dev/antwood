@@ -13,6 +13,6 @@ var serverPort = ":4000"
 func RunServer() {
 	database.ConnectToTheDatabase()
 	routes.RouteHome(Server)
-	routes.RouteProducts(Server)
+	routes.RouteSneakers(Server)
 	Server.Listen(serverPort)
 }
