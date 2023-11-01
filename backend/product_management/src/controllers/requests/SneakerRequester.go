@@ -1,4 +1,4 @@
-package controllers
+package requests
 
 import (
 	"context"
@@ -129,7 +129,12 @@ func RemoveSneakerColor(c *fiber.Ctx) error {
 	sneakerID := c.Params("id")
 	idColor := c.Params("idcolor")
 
-	wasRemoved, message := RemoveColorFromSneaker(sneakerID, idColor)
+	colorObjectID, err := primitive.ObjectIDFromHex(idColor)
+	if err != nil {
+		return c.Status(500).SendString("Invalid id color")
+	}
+
+	wasRemoved, message := removeColorFromSneaker(sneakerID, colorObjectID)
 	if !wasRemoved {
 		return c.Status(500).SendString(message)
 	}
@@ -137,14 +142,9 @@ func RemoveSneakerColor(c *fiber.Ctx) error {
 	return c.SendString(message)
 }
 
-func RemoveColorFromSneaker(sneakerID string, idColor string) (bool, string) {
-	colorObjectID, err := primitive.ObjectIDFromHex(idColor)
-	if err != nil {
-		return false, "Invalid Color ID"
-	}
-
+func removeColorFromSneaker(sneakerID string, idColor primitive.ObjectID) (bool, string) {
 	wasRemoved, _ := updateSneakerById(sneakerID, bson.M{
-		"$pull": bson.M{"colors": colorObjectID},
+		"$pull": bson.M{"colors": idColor},
 	})
 	if !wasRemoved {
 		return false, "Error removing color from Sneaker"

@@ -1,18 +1,18 @@
 package routes
 
 import (
-	"antwood_team/product_management/src/controllers"
+	"antwood_team/product_management/src/controllers/requests"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func RouteSneakerColors(server *fiber.App) {
-	server.Post("/sneakercolor", controllers.InsertSneakerColor)
-	server.Post("/sneakercolors", controllers.InsertManySneakerColors)
+	server.Post("/sneakercolor", requests.InsertSneakerColor)
+	server.Post("/sneakercolors", requests.InsertManySneakerColors)
 
-	server.Put("/sneakercolor/:id", controllers.UpdateSneakerColorById)
-	server.Put("/sneakercolor/image/:id", controllers.AddNewImageToSneakerColor)
+	server.Put("/sneakercolor/:id", requests.UpdateSneakerColorById)
+	server.Put("/sneakercolor/image/:id", requests.AddNewImageToSneakerColor)
 
-	server.Delete("/sneakercolor/:id", controllers.DeleteSneakerColorById)
-	server.Delete("/sneakercolor/image/:id/:imageid", controllers.DeleteSneakerColorImage)
+	server.Delete("/sneakercolor/:id", requests.DeleteSneakerColorById)
+	server.Delete("/sneakercolor/image/:id/:imageid", requests.DeleteSneakerColorImage)
 }

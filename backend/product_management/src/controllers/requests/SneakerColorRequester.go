@@ -1,4 +1,4 @@
-package controllers
+package requests
 
 import (
 	"context"
@@ -154,13 +154,38 @@ func updateSneakerColor(sneakerColorId string, toUpdate bson.M) (bool, string) {
 }
 
 func DeleteSneakerColorById(c *fiber.Ctx) error {
-	var id, _ = primitive.ObjectIDFromHex(c.Params("id"))
-	_, err := database.SneakerColorsCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	sneakerColorID := c.Params("id")
+	sneakerColorObjectID, err := primitive.ObjectIDFromHex(sneakerColorID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid sneaker color ID")
+	}
+
+	cur, err := database.SneakerCollection.Find(context.TODO(),
+		bson.M{"colors": sneakerColorObjectID})
+	if err != nil {
+		return c.Status(500).SendString("Error finding sneakers with this sneaker color")
+	}
+	defer cur.Close(context.TODO())
+
+	var sneakerIDs []primitive.ObjectID
+	for cur.Next(context.TODO()) {
+		var sneaker models.Sneaker
+		if err := cur.Decode(&sneaker); err != nil {
+			return c.Status(500).SendString("Error decoding sneaker")
+		}
+		sneakerIDs = append(sneakerIDs, sneaker.ID)
+	}
+
+	_, err = database.SneakerColorsCollection.DeleteOne(context.TODO(), bson.M{"_id": sneakerColorObjectID})
 	if err != nil {
 		return c.Status(500).SendString("Error during sneaker color deleting")
 	}
 
-	return c.SendString("Sneaker color successfully deleted")
+	for _, sneakerID := range sneakerIDs {
+		removeColorFromSneaker(sneakerID.Hex(), sneakerColorObjectID)
+	}
+
+	return c.SendString("Sneaker color and associated sneakers successfully deleted")
 }
 
 func DeleteSneakerColorImage(c *fiber.Ctx) error {
