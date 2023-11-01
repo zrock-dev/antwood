@@ -1,0 +1,43 @@
+name: Frontend Workflow
+run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - develop
+      - main
+    paths:
+      - "frontend/**"
+
+jobs:
+  build:
+    name: Build
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9.0'
+
+      - name: Build Frontend
+        run: cd frontend && npm ci && npm run build --if-present
+
+
+  test:
+    name: Test
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9.0'
+
+      - name: Test Frontend
+        run: cd frontend && npm ci && node --test
