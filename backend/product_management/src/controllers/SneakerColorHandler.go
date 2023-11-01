@@ -87,13 +87,13 @@ func UpdateSneakerColorById(c *fiber.Ctx) error {
 	}
 
 	update := validateUpdateData(updatedSneakerColor)
-	wasUpdated := updateSneakerColorById(sneakerColorID, update)
+	wasUpdated, message := updateSneakerColor(sneakerColorID, bson.M{"$set": update})
 
 	if !wasUpdated {
-		return c.Status(500).SendString("Error updating SneakerColor")
+		return c.Status(500).SendString(message)
 	}
 
-	return c.SendString("Sneaker color updated successfully")
+	return c.SendString(message)
 }
 
 func AddNewImageToSneakerColor(c *fiber.Ctx) error {
@@ -103,13 +103,13 @@ func AddNewImageToSneakerColor(c *fiber.Ctx) error {
 	if err := c.BodyParser(newImageData); err != nil {
 		return c.Status(400).SendString("Invalid image data")
 	}
-	wasUpdated := updateSneakerById(sneakerColorID, bson.M{
+	wasUpdated, message := updateSneakerColor(sneakerColorID, bson.M{
 		"$push": bson.M{"images": newImageData}})
 	if !wasUpdated {
-		return c.Status(500).SendString("Error adding new image")
+		return c.Status(500).SendString(message)
 	}
 
-	return c.SendString("Image added successfully")
+	return c.SendString(message)
 }
 
 func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
@@ -130,27 +130,27 @@ func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
 	return toUpdate
 }
 
-func updateSneakerColorById(sneakerColorId string, toUpdate bson.M) bool {
+func updateSneakerColor(sneakerColorId string, toUpdate bson.M) (bool, string) {
 	if sneakerColorId != "" {
 		id, err := primitive.ObjectIDFromHex(sneakerColorId)
 		if err != nil {
-			return false
+			return false, "Error getting the sneaker color id"
 		}
 
 		_, err = database.SneakerColorsCollection.UpdateOne(
 			context.TODO(),
 			bson.M{"_id": id},
-			bson.M{"$set": toUpdate},
+			toUpdate,
 		)
 
 		if err != nil {
-			return false
+			return false, "Error updating the sneaker color"
 		}
 
-		return true
+		return true, "Sneaker updated successfully"
 	}
 
-	return false
+	return false, "Invalid sneaker id"
 }
 
 func DeleteSneakerColorById(c *fiber.Ctx) error {
@@ -166,18 +166,18 @@ func DeleteSneakerColorById(c *fiber.Ctx) error {
 func DeleteSneakerColorImage(c *fiber.Ctx) error {
 	sneakerColorID := c.Params("id")
 
-	imageID := c.Params("imageID")
+	imageID := c.Params("imageid")
 	if imageID == "" {
 		return c.Status(400).SendString("Invalid image id")
 	}
 
-	wasDeleted := updateSneakerById(sneakerColorID, bson.M{
+	wasDeleted, message := updateSneakerColor(sneakerColorID, bson.M{
 		"$pull": bson.M{"images": bson.M{"id": imageID}},
 	})
 
 	if !wasDeleted {
-		return c.Status(500).SendString("Error deleting image")
+		return c.Status(500).SendString(message)
 	}
 
-	return c.SendString("Sneaker color image successfully deleted")
+	return c.SendString(message)
 }

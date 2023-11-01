@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -27,7 +27,7 @@ func ConnectToTheDatabase() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("database connected")
+	log.Println("database connected")
 	initDatabase(*client)
 }
 

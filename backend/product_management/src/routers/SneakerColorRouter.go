@@ -12,5 +12,5 @@ func RouteSneakerColors(server *fiber.App) {
 	server.Put("/sneakercolor/:id", controllers.UpdateSneakerColorById)
 	server.Put("/sneakercolor/image/:id", controllers.AddNewImageToSneakerColor)
 	server.Delete("/sneakercolor/:id", controllers.DeleteSneakerColorById)
-	server.Delete("/sneakercolor/image/:id", controllers.DeleteSneakerColorImage)
+	server.Delete("/sneakercolor/image/:id/:imageid", controllers.DeleteSneakerColorImage)
 }
