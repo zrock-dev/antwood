@@ -81,7 +81,48 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 }
 
 func EditSneakerColorById(c *fiber.Ctx) error {
-	return c.SendString("edit sneaker color " + c.Params("id"))
+	sneakerColorID := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(sneakerColorID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid SneakerColor ID")
+	}
+
+	update := bson.M{}
+	var updatedSneakerColor models.SneakerColor
+	if err := c.BodyParser(&updatedSneakerColor); err != nil {
+		return c.Status(400).SendString("Invalid update data")
+	}
+
+	update = validateSneakerColorDate(updatedSneakerColor, update)
+	result, err := database.SneakerColorsCollection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objectID},
+		bson.M{"$set": update},
+	)
+
+	if err != nil {
+		return c.Status(500).SendString("Error updating SneakerColor")
+	}
+
+	if result.ModifiedCount == 0 {
+		return c.Status(404).SendString("SneakerColor not found")
+	}
+
+	return c.SendString("SneakerColor updated successfully")
+}
+
+func validateSneakerColorDate(updatedSneakerColor models.SneakerColor, update bson.M) bson.M {
+	if len(updatedSneakerColor.Images) > 0 {
+		update["images"] = updatedSneakerColor.Images
+	}
+	if len(updatedSneakerColor.Sizes) > 0 {
+		update["sizes"] = updatedSneakerColor.Sizes
+	}
+	if updatedSneakerColor.Quantity >= 0 {
+		update["quantity"] = updatedSneakerColor.Quantity
+	}
+
+	return update
 }
 
 func DeleteSneakerColorById(c *fiber.Ctx) error {
