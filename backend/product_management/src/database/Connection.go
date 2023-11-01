@@ -12,6 +12,7 @@ import (
 
 var SoleStyleDatabase mongo.Database
 var SneakerCollection mongo.Collection
+var SneakerColorsCollection mongo.Collection
 
 func ConnectToTheDatabase() {
 	if err := godotenv.Load(); err != nil {
@@ -33,8 +34,13 @@ func ConnectToTheDatabase() {
 func initDatabase(client mongo.Client) {
 	SoleStyleDatabase = *client.Database("solestyle")
 	initSneakerCollection(SoleStyleDatabase)
+	initSneakerColorCollection(SoleStyleDatabase)
 }
 
 func initSneakerCollection(database mongo.Database) {
 	SneakerCollection = *database.Collection("sneakers")
+}
+
+func initSneakerColorCollection(database mongo.Database) {
+	SneakerColorsCollection = *database.Collection("sneakerColors")
 }

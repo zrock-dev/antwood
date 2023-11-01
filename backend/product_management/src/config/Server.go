@@ -14,5 +14,6 @@ func RunServer() {
 	database.ConnectToTheDatabase()
 	routes.RouteHome(Server)
 	routes.RouteSneakers(Server)
+	routes.RouteSneakerColors(Server)
 	Server.Listen(serverPort)
 }
