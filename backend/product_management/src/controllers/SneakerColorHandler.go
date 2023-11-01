@@ -29,6 +29,24 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error getting the sneaker id")
 	}
 
+	sneakerID := c.Query("sneakerid")
+	if sneakerID != "" {
+		objectID, err := primitive.ObjectIDFromHex(sneakerID)
+		if err != nil {
+			return c.Status(400).SendString("Invalid sneaker ID")
+		}
+
+		_, err = database.SneakerCollection.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": objectID},
+			bson.M{"$push": bson.M{"colors": insertResult.InsertedID}},
+		)
+
+		if err != nil {
+			return c.Status(500).SendString("Error updating sneaker colors")
+		}
+	}
+
 	return c.JSON(struct {
 		Message string             `json:"message"`
 		ID      primitive.ObjectID `json:"id"`
