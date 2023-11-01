@@ -67,6 +67,11 @@ func AddColorToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) bool 
 }
 
 func DeleteSneakerById(c *fiber.Ctx) error {
-	id := c.Params("id")
-	return c.SendString("delete sneaker " + id)
+	var id, _ = primitive.ObjectIDFromHex(c.Params("id"))
+	_, err := database.SneakerCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	if err != nil {
+		return c.Status(500).SendString("Error during sneaker deleting")
+	}
+
+	return c.SendString("Sneaker successfully deleted")
 }

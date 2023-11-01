@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"antwood_team/product_management/src/database"
@@ -84,5 +85,11 @@ func EditSneakerColorById(c *fiber.Ctx) error {
 }
 
 func DeleteSneakerColorById(c *fiber.Ctx) error {
-	return c.SendString("delete sneaker color " + c.Params("id"))
+	var id, _ = primitive.ObjectIDFromHex(c.Params("id"))
+	_, err := database.SneakerColorsCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	if err != nil {
+		return c.Status(500).SendString("Error during sneaker color deleting")
+	}
+
+	return c.SendString("Sneaker color successfully deleted")
 }
