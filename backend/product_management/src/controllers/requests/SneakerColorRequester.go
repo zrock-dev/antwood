@@ -160,13 +160,24 @@ func DeleteSneakerColorById(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Invalid sneaker color ID")
 	}
 
-	cur, err := database.SneakerCollection.Find(context.TODO(),
-		bson.M{"colors": sneakerColorObjectID})
+	var sneakerColor models.SneakerColor
+	err = database.SneakerColorsCollection.FindOne(context.TODO(), bson.M{"_id": sneakerColorObjectID}).Decode(&sneakerColor)
+	if err != nil {
+		return c.Status(500).SendString("Error finding sneaker color")
+	}
+
+	for _, imageData := range sneakerColor.Images {
+		if success := DeleteImageById(imageData.ID); !success {
+			return c.Status(500).SendString("Error deleting images from Cloudinary")
+		}
+	}
+
+	filter := bson.M{"colors": sneakerColorObjectID}
+	cur, err := database.SneakerCollection.Find(context.TODO(), filter)
 	if err != nil {
 		return c.Status(500).SendString("Error finding sneakers with this sneaker color")
 	}
 	defer cur.Close(context.TODO())
-
 	var sneakerIDs []primitive.ObjectID
 	for cur.Next(context.TODO()) {
 		var sneaker models.Sneaker
