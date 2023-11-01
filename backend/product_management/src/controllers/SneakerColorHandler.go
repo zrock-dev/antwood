@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"antwood_team/product_management/src/database"
@@ -58,6 +59,25 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 	for _, id := range insertResult.InsertedIDs {
 		if objID, ok := id.(primitive.ObjectID); ok {
 			insertedIDs = append(insertedIDs, objID)
+		}
+	}
+
+	sneakerID := c.Query("sneakerid")
+
+	if sneakerID != "" {
+		objectID, err := primitive.ObjectIDFromHex(sneakerID)
+		if err != nil {
+			return c.Status(400).SendString("Invalid sneaker ID")
+		}
+
+		_, err = database.SneakerCollection.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": objectID},
+			bson.M{"$push": bson.M{"colors": bson.M{"$each": insertResult.InsertedIDs}}},
+		)
+
+		if err != nil {
+			return c.Status(500).SendString("Error updating sneaker colors")
 		}
 	}
 
