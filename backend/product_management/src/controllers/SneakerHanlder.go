@@ -46,26 +46,25 @@ func UpdateSneakerById(c *fiber.Ctx) error {
 	}
 
 	update := validateSneakerUpdateData(updatedSneaker)
-	wasUpdated := updateSneakerById(sneakerID, update)
+	wasUpdated, message := updateSneakerById(sneakerID, bson.M{"$set": update})
 	if !wasUpdated {
-		return c.Status(500).SendString("Error updating sneaker")
+		return c.Status(500).SendString(message)
 	}
 
-	return c.SendString("Sneaker updated successfully")
+	return c.SendString(message)
 }
 
-func AddColorsToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) bool {
+func AddColorsToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) (bool, string) {
 	return updateSneakerById(
 		sneakerID,
-		bson.M{
-			"colors":   bson.M{"$each": InsertedIDs},
-			"lastDate": primitive.NewDateTimeFromTime(time.Now())})
+		bson.M{"$push": bson.M{"colors": bson.M{"$each": InsertedIDs}},
+			"$set": bson.M{"lastDate": primitive.NewDateTimeFromTime(time.Now())}})
 }
 
-func UpdateLastDate(sneakerID string) bool {
+func UpdateLastDate(sneakerID string) (bool, string) {
 	return updateSneakerById(
 		sneakerID,
-		bson.M{"lastDate": primitive.NewDateTimeFromTime(time.Now())})
+		bson.M{"$set": bson.M{"lastDate": primitive.NewDateTimeFromTime(time.Now())}})
 }
 
 func validateSneakerUpdateData(updatedSneaker models.Sneaker) bson.M {
@@ -93,26 +92,26 @@ func validateSneakerUpdateData(updatedSneaker models.Sneaker) bson.M {
 	return toUpdate
 }
 
-func updateSneakerById(sneakerID string, toUpdate bson.M) bool {
+func updateSneakerById(sneakerID string, toUpdate bson.M) (bool, string) {
 	if sneakerID != "" {
 		id, err := primitive.ObjectIDFromHex(sneakerID)
 		if err != nil {
-			return false
+			return false, "Error getting the sneaker id"
 		}
 		_, err = database.SneakerCollection.UpdateOne(
 			context.TODO(),
 			bson.M{"_id": id},
-			bson.M{"$set": toUpdate},
+			toUpdate,
 		)
 
 		if err != nil {
-			return false
+			return false, "Error updating the sneaker data"
 		}
 
-		return true
+		return true, "Sneaker updated successfully"
 	}
 
-	return false
+	return false, "Invalid sneaker id"
 
 }
 
@@ -124,4 +123,32 @@ func DeleteSneakerById(c *fiber.Ctx) error {
 	}
 
 	return c.SendString("Sneaker successfully deleted")
+}
+
+func RemoveSneakerColor(c *fiber.Ctx) error {
+	sneakerID := c.Params("id")
+	idColor := c.Params("idcolor")
+
+	wasRemoved, message := RemoveColorFromSneaker(sneakerID, idColor)
+	if !wasRemoved {
+		return c.Status(500).SendString(message)
+	}
+
+	return c.SendString(message)
+}
+
+func RemoveColorFromSneaker(sneakerID string, idColor string) (bool, string) {
+	colorObjectID, err := primitive.ObjectIDFromHex(idColor)
+	if err != nil {
+		return false, "Invalid Color ID"
+	}
+
+	wasRemoved, _ := updateSneakerById(sneakerID, bson.M{
+		"$pull": bson.M{"colors": colorObjectID},
+	})
+	if !wasRemoved {
+		return false, "Error removing color from Sneaker"
+	}
+	return true, "Color removed from Sneaker successfully"
+
 }

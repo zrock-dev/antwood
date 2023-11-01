@@ -30,7 +30,7 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 	}
 
 	sneakerID := c.Query("sneakerid")
-	isRelated := AddColorsToSneaker(sneakerID, []primitive.ObjectID{insertedID})
+	isRelated, _ := AddColorsToSneaker(sneakerID, []primitive.ObjectID{insertedID})
 	if !isRelated {
 		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
@@ -67,7 +67,7 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 	}
 
 	sneakerID := c.Query("sneakerid")
-	wasInserted := AddColorsToSneaker(sneakerID, insertedIDs)
+	wasInserted, _ := AddColorsToSneaker(sneakerID, insertedIDs)
 	if !wasInserted {
 		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
