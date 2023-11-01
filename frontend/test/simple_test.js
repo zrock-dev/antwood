@@ -1,5 +1,6 @@
 const assert = require('node:assert');
 
+//dummy comment
 // Generate an AssertionError to compare the error message later:
 const { message } = new assert.AssertionError({
     actual: 1,
