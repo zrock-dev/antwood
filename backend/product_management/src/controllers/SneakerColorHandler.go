@@ -35,7 +35,36 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 }
 
 func InsertManySneakerColors(c *fiber.Ctx) error {
-	return c.SendString("inserting sneaker colors")
+	var sneakerColors []models.SneakerColor
+
+	if err := c.BodyParser(&sneakerColors); err != nil {
+		return c.Status(400).SendString("Invalid sneaker colors data")
+	}
+
+	var documents []interface{}
+
+	for _, color := range sneakerColors {
+		color.ID = primitive.NewObjectID()
+
+		documents = append(documents, color)
+	}
+
+	insertResult, err := database.SneakerColorsCollection.InsertMany(context.TODO(), documents)
+	if err != nil {
+		return c.Status(500).SendString("Error inserting sneaker colors")
+	}
+
+	var insertedIDs []primitive.ObjectID
+	for _, id := range insertResult.InsertedIDs {
+		if objID, ok := id.(primitive.ObjectID); ok {
+			insertedIDs = append(insertedIDs, objID)
+		}
+	}
+
+	return c.JSON(struct {
+		Message string               `json:"message"`
+		IDs     []primitive.ObjectID `json:"ids"`
+	}{Message: "Successfully created sneaker colors", IDs: insertedIDs})
 }
 
 func EditSneakerColorById(c *fiber.Ctx) error {
