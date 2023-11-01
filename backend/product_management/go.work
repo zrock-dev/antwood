@@ -1,0 +1,10 @@
+go 1.21.3
+
+use(
+./app
+./context
+./router
+./app/test
+./context/test
+./router/test
+)
