@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"antwood_team/product_management/src/database"
@@ -30,21 +29,9 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 	}
 
 	sneakerID := c.Query("sneakerid")
-	if sneakerID != "" {
-		objectID, err := primitive.ObjectIDFromHex(sneakerID)
-		if err != nil {
-			return c.Status(400).SendString("Invalid sneaker ID")
-		}
-
-		_, err = database.SneakerCollection.UpdateOne(
-			context.TODO(),
-			bson.M{"_id": objectID},
-			bson.M{"$push": bson.M{"colors": insertResult.InsertedID}},
-		)
-
-		if err != nil {
-			return c.Status(500).SendString("Error updating sneaker colors")
-		}
+	wasInserted := AddColorToSneaker(sneakerID, []primitive.ObjectID{insertedID})
+	if !wasInserted {
+		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
 
 	return c.JSON(struct {
@@ -81,22 +68,9 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 	}
 
 	sneakerID := c.Query("sneakerid")
-
-	if sneakerID != "" {
-		objectID, err := primitive.ObjectIDFromHex(sneakerID)
-		if err != nil {
-			return c.Status(400).SendString("Invalid sneaker ID")
-		}
-
-		_, err = database.SneakerCollection.UpdateOne(
-			context.TODO(),
-			bson.M{"_id": objectID},
-			bson.M{"$push": bson.M{"colors": bson.M{"$each": insertResult.InsertedIDs}}},
-		)
-
-		if err != nil {
-			return c.Status(500).SendString("Error updating sneaker colors")
-		}
+	wasInserted := AddColorToSneaker(sneakerID, insertedIDs)
+	if !wasInserted {
+		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
 
 	return c.JSON(struct {
