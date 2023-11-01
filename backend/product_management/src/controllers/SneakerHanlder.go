@@ -38,72 +38,71 @@ func InsertSneaker(c *fiber.Ctx) error {
 	}{Message: "Successfully created sneaker", ID: insertedID})
 }
 
-func EditSneakerById(c *fiber.Ctx) error {
+func UpdateSneakerById(c *fiber.Ctx) error {
 	sneakerID := c.Params("id")
-	objectID, err := primitive.ObjectIDFromHex(sneakerID)
-	if err != nil {
-		return c.Status(400).SendString("Invalid sneaker ID")
-	}
-
-	update := bson.M{}
 	var updatedSneaker models.Sneaker
 	if err := c.BodyParser(&updatedSneaker); err != nil {
 		return c.Status(400).SendString("Invalid update data")
 	}
 
-	update = velidateSneakerData(updatedSneaker, update)
-	result, err := database.SneakerCollection.UpdateOne(
-		context.TODO(),
-		bson.M{"_id": objectID},
-		bson.M{"$set": update},
-	)
-
-	if err != nil {
+	update := validateSneakerUpdateData(updatedSneaker)
+	wasUpdated := updateSneakerById(sneakerID, update)
+	if !wasUpdated {
 		return c.Status(500).SendString("Error updating sneaker")
-	}
-
-	if result.ModifiedCount == 0 {
-		return c.Status(404).SendString("Sneaker not found")
 	}
 
 	return c.SendString("Sneaker updated successfully")
 }
 
-func velidateSneakerData(updatedSneaker models.Sneaker, update bson.M) bson.M {
-	if updatedSneaker.Name != "" {
-		update["name"] = updatedSneaker.Name
-	}
-	if updatedSneaker.Description != "" {
-		update["description"] = updatedSneaker.Description
-	}
-	if updatedSneaker.Price > 0 {
-		update["price"] = updatedSneaker.Price
-	}
-	if len(updatedSneaker.Tags) > 0 {
-		update["tags"] = updatedSneaker.Tags
-	}
-	if updatedSneaker.SalesQuantity > 0 {
-		update["salesQuantity"] = updatedSneaker.SalesQuantity
-	}
-	if updatedSneaker.PromotionCode != (primitive.ObjectID{}) {
-		update["promotionCode"] = updatedSneaker.PromotionCode
-	}
-	update["lastDate"] = primitive.NewDateTimeFromTime(time.Now())
-
-	return update
+func AddColorsToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) bool {
+	return updateSneakerById(
+		sneakerID,
+		bson.M{
+			"colors":   bson.M{"$each": InsertedIDs},
+			"lastDate": primitive.NewDateTimeFromTime(time.Now())})
 }
 
-func AddColorToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) bool {
+func UpdateLastDate(sneakerID string) bool {
+	return updateSneakerById(
+		sneakerID,
+		bson.M{"lastDate": primitive.NewDateTimeFromTime(time.Now())})
+}
+
+func validateSneakerUpdateData(updatedSneaker models.Sneaker) bson.M {
+	toUpdate := bson.M{}
+	if updatedSneaker.Name != "" {
+		toUpdate["name"] = updatedSneaker.Name
+	}
+	if updatedSneaker.Description != "" {
+		toUpdate["description"] = updatedSneaker.Description
+	}
+	if updatedSneaker.Price > 0 {
+		toUpdate["price"] = updatedSneaker.Price
+	}
+	if len(updatedSneaker.Tags) > 0 {
+		toUpdate["tags"] = updatedSneaker.Tags
+	}
+	if updatedSneaker.SalesQuantity > 0 {
+		toUpdate["salesQuantity"] = updatedSneaker.SalesQuantity
+	}
+	if updatedSneaker.PromotionCode != (primitive.ObjectID{}) {
+		toUpdate["promotionCode"] = updatedSneaker.PromotionCode
+	}
+	toUpdate["lastDate"] = primitive.NewDateTimeFromTime(time.Now())
+
+	return toUpdate
+}
+
+func updateSneakerById(sneakerID string, toUpdate bson.M) bool {
 	if sneakerID != "" {
 		id, err := primitive.ObjectIDFromHex(sneakerID)
 		if err != nil {
 			return false
 		}
-
 		_, err = database.SneakerCollection.UpdateOne(
 			context.TODO(),
 			bson.M{"_id": id},
-			bson.M{"$push": bson.M{"colors": bson.M{"$each": InsertedIDs}}},
+			bson.M{"$set": toUpdate},
 		)
 
 		if err != nil {
@@ -114,6 +113,7 @@ func AddColorToSneaker(sneakerID string, InsertedIDs []primitive.ObjectID) bool 
 	}
 
 	return false
+
 }
 
 func DeleteSneakerById(c *fiber.Ctx) error {

@@ -9,6 +9,8 @@ import (
 func RouteSneakerColors(server *fiber.App) {
 	server.Post("/sneakercolor", controllers.InsertSneakerColor)
 	server.Post("/sneakercolors", controllers.InsertManySneakerColors)
-	server.Put("/sneakercolor/:id", controllers.EditSneakerColorById)
+	server.Put("/sneakercolor/:id", controllers.UpdateSneakerColorById)
+	server.Put("/sneakercolor/image/:id", controllers.AddNewImageToSneakerColor)
 	server.Delete("/sneakercolor/:id", controllers.DeleteSneakerColorById)
+	server.Delete("/sneakercolor/image/:id", controllers.DeleteSneakerColorImage)
 }

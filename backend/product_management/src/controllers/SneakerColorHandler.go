@@ -30,8 +30,8 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 	}
 
 	sneakerID := c.Query("sneakerid")
-	wasInserted := AddColorToSneaker(sneakerID, []primitive.ObjectID{insertedID})
-	if !wasInserted {
+	isRelated := AddColorsToSneaker(sneakerID, []primitive.ObjectID{insertedID})
+	if !isRelated {
 		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
 
@@ -49,10 +49,8 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 	}
 
 	var documents []interface{}
-
 	for _, color := range sneakerColors {
 		color.ID = primitive.NewObjectID()
-
 		documents = append(documents, color)
 	}
 
@@ -63,13 +61,13 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 
 	var insertedIDs []primitive.ObjectID
 	for _, id := range insertResult.InsertedIDs {
-		if objID, ok := id.(primitive.ObjectID); ok {
-			insertedIDs = append(insertedIDs, objID)
+		if objectID, ok := id.(primitive.ObjectID); ok {
+			insertedIDs = append(insertedIDs, objectID)
 		}
 	}
 
 	sneakerID := c.Query("sneakerid")
-	wasInserted := AddColorToSneaker(sneakerID, insertedIDs)
+	wasInserted := AddColorsToSneaker(sneakerID, insertedIDs)
 	if !wasInserted {
 		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
 	}
@@ -80,49 +78,79 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 	}{Message: "Successfully created sneaker colors", IDs: insertedIDs})
 }
 
-func EditSneakerColorById(c *fiber.Ctx) error {
+func UpdateSneakerColorById(c *fiber.Ctx) error {
 	sneakerColorID := c.Params("id")
-	objectID, err := primitive.ObjectIDFromHex(sneakerColorID)
-	if err != nil {
-		return c.Status(400).SendString("Invalid SneakerColor ID")
-	}
 
-	update := bson.M{}
 	var updatedSneakerColor models.SneakerColor
 	if err := c.BodyParser(&updatedSneakerColor); err != nil {
 		return c.Status(400).SendString("Invalid update data")
 	}
 
-	update = validateSneakerColorDate(updatedSneakerColor, update)
-	result, err := database.SneakerColorsCollection.UpdateOne(
-		context.TODO(),
-		bson.M{"_id": objectID},
-		bson.M{"$set": update},
-	)
+	update := validateUpdateData(updatedSneakerColor)
+	wasUpdated := updateSneakerColorById(sneakerColorID, update)
 
-	if err != nil {
+	if !wasUpdated {
 		return c.Status(500).SendString("Error updating SneakerColor")
 	}
 
-	if result.ModifiedCount == 0 {
-		return c.Status(404).SendString("SneakerColor not found")
-	}
-
-	return c.SendString("SneakerColor updated successfully")
+	return c.SendString("Sneaker color updated successfully")
 }
 
-func validateSneakerColorDate(updatedSneakerColor models.SneakerColor, update bson.M) bson.M {
-	if len(updatedSneakerColor.Images) > 0 {
-		update["images"] = updatedSneakerColor.Images
+func AddNewImageToSneakerColor(c *fiber.Ctx) error {
+	sneakerColorID := c.Params("id")
+	newImageData := new(models.ImageData)
+
+	if err := c.BodyParser(newImageData); err != nil {
+		return c.Status(400).SendString("Invalid image data")
 	}
-	if len(updatedSneakerColor.Sizes) > 0 {
-		update["sizes"] = updatedSneakerColor.Sizes
-	}
-	if updatedSneakerColor.Quantity >= 0 {
-		update["quantity"] = updatedSneakerColor.Quantity
+	wasUpdated := updateSneakerById(sneakerColorID, bson.M{
+		"$push": bson.M{"images": newImageData}})
+	if !wasUpdated {
+		return c.Status(500).SendString("Error adding new image")
 	}
 
-	return update
+	return c.SendString("Image added successfully")
+}
+
+func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
+	toUpdate := bson.M{}
+	if updatedSneakerColor.Color != "" {
+		toUpdate["color"] = updatedSneakerColor.Color
+	}
+	if len(updatedSneakerColor.Images) > 0 {
+		toUpdate["images"] = updatedSneakerColor.Images
+	}
+	if len(updatedSneakerColor.Sizes) > 0 {
+		toUpdate["sizes"] = updatedSneakerColor.Sizes
+	}
+	if updatedSneakerColor.Quantity >= 0 {
+		toUpdate["quantity"] = updatedSneakerColor.Quantity
+	}
+
+	return toUpdate
+}
+
+func updateSneakerColorById(sneakerColorId string, toUpdate bson.M) bool {
+	if sneakerColorId != "" {
+		id, err := primitive.ObjectIDFromHex(sneakerColorId)
+		if err != nil {
+			return false
+		}
+
+		_, err = database.SneakerColorsCollection.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": id},
+			bson.M{"$set": toUpdate},
+		)
+
+		if err != nil {
+			return false
+		}
+
+		return true
+	}
+
+	return false
 }
 
 func DeleteSneakerColorById(c *fiber.Ctx) error {
@@ -133,4 +161,23 @@ func DeleteSneakerColorById(c *fiber.Ctx) error {
 	}
 
 	return c.SendString("Sneaker color successfully deleted")
+}
+
+func DeleteSneakerColorImage(c *fiber.Ctx) error {
+	sneakerColorID := c.Params("id")
+
+	imageID := c.Params("imageID")
+	if imageID == "" {
+		return c.Status(400).SendString("Invalid image id")
+	}
+
+	wasDeleted := updateSneakerById(sneakerColorID, bson.M{
+		"$pull": bson.M{"images": bson.M{"id": imageID}},
+	})
+
+	if !wasDeleted {
+		return c.Status(500).SendString("Error deleting image")
+	}
+
+	return c.SendString("Sneaker color image successfully deleted")
 }

@@ -8,6 +8,6 @@ import (
 
 func RouteSneakers(server *fiber.App) {
 	server.Post("/sneaker", controllers.InsertSneaker)
-	server.Put("/sneaker/:id", controllers.EditSneakerById)
+	server.Put("/sneaker/:id", controllers.UpdateSneakerById)
 	server.Delete("/sneaker/:id", controllers.DeleteSneakerById)
 }
