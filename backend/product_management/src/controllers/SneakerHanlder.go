@@ -20,7 +20,8 @@ func InsertSneaker(c *fiber.Ctx) error {
 
 	newSneaker.LastDate = primitive.NewDateTimeFromTime(time.Now())
 
-	insertResult, err := database.SneakerCollection.InsertOne(context.TODO(), newSneaker)
+	insertResult, err := database.SneakerCollection.
+		InsertOne(context.TODO(), newSneaker)
 	if err != nil {
 		return c.Status(500).SendString("Error inserting the sneaker")
 	}

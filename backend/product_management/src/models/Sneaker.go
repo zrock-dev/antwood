@@ -22,7 +22,7 @@ type Sneaker struct {
 
 func DefaultSneaker() *Sneaker {
 	return &Sneaker{
-		ID:            primitive.NilObjectID,
+		ID:            primitive.NewObjectID(),
 		Name:          "",
 		Description:   "",
 		Price:         0,
@@ -32,6 +32,6 @@ func DefaultSneaker() *Sneaker {
 		Qualification: 0,
 		LastDate:      primitive.NewDateTimeFromTime(time.Now()),
 		SalesQuantity: 0,
-		PromotionCode: primitive.NilObjectID,
+		PromotionCode: primitive.ObjectID{},
 	}
 }
