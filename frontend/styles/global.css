@@ -26,9 +26,10 @@ body {
 
   --first-title-font: "Lato", sans-serif;
   --second-title-font: "Nunito Sans", sans-serif;
-  --third-title-font: "Poppins", sans-serif;
+  --third-title-font: "Nunito Sans", sans-serif;
 
-  --box-shadow: -13px -17px 25px -10px rgba(0, 0, 0, 0.1);
+  --box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  --box-2-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 ul {
@@ -44,6 +45,7 @@ a {
 
 * {
   box-sizing: border-box;
+  font-family: var(--second-title-font);
 }
 
 body {

@@ -1,7 +1,8 @@
 import formStyle from "./shoes_form.module.css";
 import Button from "../Button";
 import ImageForm from "./ImageForm";
-import SizeCell from "./SizeCell";
+import ColorPicker from "./ColorPicker";
+import Tag from "./Tag";
 function AddShoeForm() {
   return (
     <div className={formStyle.section}>
@@ -17,43 +18,20 @@ function AddShoeForm() {
           </div>
           <div className={formStyle.shoe_form_inputs}>
             <label htmlFor="product_description">Description</label>
-            <input
-              type="longtext"
+            <textarea
+              name="description"
               id="product_description"
-              placeholder="Insert A description about the shoe"
-            />
+              cols="50"
+              rows="10"
+            ></textarea>
           </div>
-          <div
-            className={`${formStyle.shoe_form_inputs} ${formStyle.price_input_ctn}`}
-          >
+          <div className={`${formStyle.shoe_form_inputs}`}>
             <label htmlFor="">Price</label>
             <input type="number" />
           </div>
-          <div
-            className={`${formStyle.shoe_form_inputs} ${formStyle.color_input_ctn}`}
-          >
-            <div>
-              <label htmlFor="">Color</label>
-              <Button btnStyle="second_btn">
-                <i className="fa-solid fa-plus"></i>
-              </Button>
-            </div>
-            <div>
-              <div></div>
-            </div>
-          </div>
-          <div className={formStyle.shoe_form_inputs}>
-            <div>
-              <label htmlFor="">Tags</label>
-              <Button btnStyle="second_btn">
-                <i className="fa-solid fa-plus"></i>
-              </Button>
-            </div>
-            <div>
-              <div></div>
-            </div>
-          </div>
 
+          <ColorPicker className={`${formStyle.shoe_form_inputs}`} />
+          <Tag className={`${formStyle.shoe_form_inputs}`} />
           <div
             className={`${formStyle.shoe_form_inputs} ${formStyle.btns_ctn}`}
           >
@@ -69,7 +47,9 @@ function AddShoeForm() {
               <label>Color</label>
               <div className={formStyle.shoe_configure_color}></div>
             </div>
-            <div className={formStyle.shoe_configure_item}>
+            <div
+              className={`${formStyle.shoe_configure_item} ${formStyle.shoe_form_inputs} ${formStyle.number_ctn}`}
+            >
               <label>Quantity</label>
               <input type="number" />
             </div>
@@ -79,10 +59,8 @@ function AddShoeForm() {
               </Button>
             </div>
           </div>
-          <div className={formStyle.shoe_configure_item}>
-            <label>Sizes</label>
-            <SizeCell />
-          </div>
+
+          <Tag className={`${formStyle.shoe_form_inputs}`} prompt="Size" />
         </div>
       </form>
     </div>

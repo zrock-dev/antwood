@@ -1,12 +1,13 @@
 .section {
   flex-grow: 1;
-  overflow: ;
+  overflow: hidden;
 }
 .shoe_form_ctn {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 1rem;
   padding: 20px;
+
 }
 
 .shoe_form {
@@ -21,7 +22,8 @@
   margin: 2rem 0;
 }
 
-.shoe_form_inputs input {
+.shoe_form_inputs input,
+.shoe_form_inputs textarea {
   outline: none;
   border: none;
   border-radius: 5px;
@@ -30,13 +32,18 @@
   box-shadow: var(--box-shadow);
 }
 
+.shoe_form_inputs textarea {
+  resize: none;
+}
+
 .shoe_form_inputs label,
+.shoe_form_inputs textarea,
 .shoe_form_inputs input {
-  font-family: var(--third-title-font);
   font-size: 16px;
 }
 
-.shoe_form_inputs input {
+.shoe_form_inputs input,
+.shoe_configure textarea {
   color: var(--black-color);
 }
 
@@ -44,18 +51,6 @@
   font-size: 17px;
   font-weight: bold;
   color: var(--secondary-color);
-}
-
-#product_name {
-}
-
-#product_description {
-}
-
-.price_input_ctn {
-}
-
-.color_input_ctn {
 }
 
 .btns_ctn {
@@ -85,13 +80,12 @@
 .shoe_configure_item {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 2rem;
 }
 
 .shoe_configure_item label {
-  font-family: var(--third-title-font);
   font-size: 17px;
   font-weight: bold;
 }
@@ -102,17 +96,31 @@
   height: 100px;
   background-color: red;
 }
+
+.shoe_configure_item input[type="number"] {
+  width: 100px;
+}
+.number_ctn {
+  margin: 0;
+}
+
 @media screen and (max-width: 1200px) {
   .shoe_form_ctn {
     flex-direction: column;
+      align-items: center;
   }
   .shoe_form {
-    width: 95%;
+    width: 90%;
+    padding: 0;
   }
+
   .shoe_form_images {
-    width: 100%;
+    width: 90%;
+    padding: 0;
   }
   .shoe_configure {
-    width: 100%;
+    width: 90%;
+
+    padding: 0;
   }
 }

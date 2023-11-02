@@ -9,11 +9,9 @@
 .main_btn {
   background-color: var(--secondary-color);
   color: var(--main-color);
-  font-family: var(--second-title-font);
 }
 
 .second_btn {
   background-color: var(--transparent-gray-color);
   color: var(--gray-2-color);
-  font-family: var(--second-title-font);
 }

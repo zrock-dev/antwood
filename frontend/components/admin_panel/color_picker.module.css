@@ -1,0 +1,83 @@
+.color_picker {
+  position: relative;
+}
+
+.color_picker label {
+  margin-right: 5px;
+}
+.color {
+  width: 51px;
+  height: 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: solid 1px var(--gray-color);
+  position: relative;
+}
+
+.color:hover .color_prompt {
+  visibility: visible;
+}
+
+.color_prompt {
+  color: var(--main-color);
+  position: absolute;
+  top: 25px;
+  visibility: hidden;
+  background-color: var(--gray-2-color);
+  border-radius: 4px;
+  padding: 0 4px;
+  z-index: 10;
+}
+.color_picker_popup {
+  width: 250px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: var(--box-2-shadow);
+  position: absolute;
+  top: 0;
+  left: 95px;
+  z-index: 40;
+  background-color: var(--main-color);
+  transition: transform 0.5s ease;
+}
+
+.color_picker_ctn {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.open {
+  transform: translateY(0px);
+  visibility: visible;
+}
+
+.close {
+  transform: translateY(-100px);
+  visibility: hidden;
+}
+
+.color_custome_ctn {
+  margin-top: 10px;
+}
+
+.color_custome_ctn input {
+  margin-right: 5px;
+  width: 145px;
+  line-height: 18px;
+  font-size: 15px;
+}
+
+.tag {
+  cursor: pointer;
+  background-color: var(--gray-2-color);
+  padding: 5px;
+  border-radius: 4px;
+  color: var(--main-color);
+  margin-right: 5px;
+}
+
+.tag:hover {
+  background-color: var(--warning-color);
+}
