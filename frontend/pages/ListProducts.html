@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../styles/Sections.css">
+        <link rel="stylesheet" type="text/css" href="../styles/global.css">
+    </head>
+    <body>
+        <header class="headerS">
+            <nav>
+                <h1>
+                    Header
+                </h1>
+            </nav>
+        </header>
+
+        <main class="Content">
+            <aside class="Side_Bar">
+                <h2>
+                    Filters
+                </h2>
+                <form>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 1" name="preferences" value="option 1">
+                        <label for="option 1" class="checkbox-label">Option 1</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 2" name="preferences" value="option 2">
+                        <label for="option 2" class="checkbox-label">Option 2</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 3" name="preferences" value="option 3">
+                        <label for="option 3" class="checkbox-label">Option 3</label>
+                    </div>
+
+                </form>
+
+                <h2>
+                    Filters
+                </h2>
+                <form>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 4" name="preferences" value="option 4">
+                        <label for="option 1" class="checkbox-label">Option 1</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 5" name="preferences" value="option 5">
+                        <label for="option 2" class="checkbox-label">Option 2</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="option 6" name="preferences" value="option 6">
+                        <label for="option 3" class="checkbox-label">Option 3</label>
+                    </div>
+
+                </form>
+            </aside>
+
+            <section class="Gallery" id="Gallery_container">
+
+            </section>
+        </main>
+
+        <footer>
+            <h1>
+                Footer
+            </h1>
+        </footer>
+
+        <script>
+        function createItems(count) {
+            const itemContainer = document.getElementById('Gallery_container');
+
+            for (let i = 0; i < count; i++) {
+                fetch('item.html')
+                    .then(response => response.text())
+                    .then(data => {
+                        const item = document.createElement('div');
+                        item.innerHTML = data;
+                        itemContainer.appendChild(item);
+                    });
+            }
+        }
+        createItems(5);
+        </script>
+    </body>
+</html>

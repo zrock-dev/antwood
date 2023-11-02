@@ -1,0 +1,55 @@
+.headerS {
+    background-color: #000;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #fff;
+    margin: 0;
+}
+
+h2{
+    color: black;
+}
+
+.Content {
+    display: flex;
+}
+
+.Side_Bar {
+    width: 20%;
+    padding: 20px;
+    color: #fff;
+}
+
+.Gallery {
+    flex:1;
+    padding: 20px;
+    width: auto;
+    min-height: 500px;
+    max-height: 1000px;
+
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
+footer{
+    background-color: #111111;
+    padding: 20px;
+    text-align: center;
+}
+
+.checkbox-container {
+            display: flex;
+            align-items: center;
+}
+
+label{
+    color: #000
+}
