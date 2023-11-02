@@ -3,8 +3,8 @@ package config
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"antwood_team/product_management/src/database"
-	routes "antwood_team/product_management/src/routers"
+	"product_management/app/database"
+	routes "product_management/router"
 )
 
 var Server = fiber.New()

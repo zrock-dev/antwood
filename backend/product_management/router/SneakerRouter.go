@@ -1,7 +1,7 @@
-package routes
+package router
 
 import (
-	"antwood_team/product_management/src/controllers"
+	"product_management/context/controllers"
 
 	"github.com/gofiber/fiber/v2"
 )

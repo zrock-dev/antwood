@@ -1,6 +1,6 @@
 package main
 
-import "antwood_team/product_management/src/config"
+import "product_management/app/config"
 
 func main() {
 	config.RunServer()
