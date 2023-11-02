@@ -1,0 +1,54 @@
+name: Backend Product Management Workflow
+run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - develop
+      - main
+    paths:
+      - "backend/product_management/**"
+
+jobs:
+  build:
+    name: Build
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.3'
+
+      - name: Build App
+        run: cd backend/product_management/app && go build -v .
+
+      - name: Build Context
+        run: cd backend/product_management/context && go build -v .
+
+      - name: Build Router
+        run: cd backend/product_management/router && go build -v .
+
+  test:
+    name: Test
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.3'
+
+      - name: Test App
+        run: cd backend/product_management/app && go test -v .
+      
+      - name: Test Context
+        run: cd backend/product_management/context && go test -v .
+
+      - name: Test Router
+        run: cd backend/product_management/router && go test -v .
