@@ -1,7 +1,7 @@
 package router
 
 import (
-	"product_management/context/requests"
+	"product_management/context/controllers/requests"
 
 	"github.com/gofiber/fiber/v2"
 )
