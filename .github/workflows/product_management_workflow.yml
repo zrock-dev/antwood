@@ -25,7 +25,9 @@ jobs:
           go-version: '1.21.3'
 
       - name: Build Product Management Microservice
-        run: cd backend/product_management go build -v .
+
+        run: cd backend/product_management && go build -v .
+
 
   test:
     name: Test
@@ -39,4 +41,5 @@ jobs:
           go-version: '1.21.3'
 
       - name: Test Product Management Microservice
+
         run: cd backend/product_management/test && go test -v .
