@@ -1,13 +1,16 @@
 package router
 
 import (
-	"product_management/context/controllers"
+	"product_management/context/requests"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func RouteSneakers(server *fiber.App) {
-	server.Post("/sneaker", controllers.InsertSneaker)
-	server.Put("/sneaker/:id", controllers.EditSneakerById)
-	server.Delete("/sneaker/:id", controllers.DeleteSneakerById)
+	server.Post("/sneaker", requests.InsertSneaker)
+
+	server.Put("/sneaker/:id", requests.UpdateSneakerById)
+
+	server.Delete("/sneaker/:id", requests.DeleteSneakerById)
+	server.Delete("/sneaker/color/:id/:idcolor", requests.RemoveSneakerColor)
 }

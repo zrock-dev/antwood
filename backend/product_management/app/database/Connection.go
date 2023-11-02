@@ -2,10 +2,9 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,10 +14,6 @@ var SneakerCollection mongo.Collection
 var SneakerColorsCollection mongo.Collection
 
 func ConnectToTheDatabase() {
-	if err := godotenv.Load(); err != nil {
-		panic(err)
-	}
-
 	URI := os.Getenv("MONGO_URI")
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	context := context.TODO()
@@ -27,7 +22,7 @@ func ConnectToTheDatabase() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("database connected")
+	log.Println("database connected")
 	initDatabase(*client)
 }
 
