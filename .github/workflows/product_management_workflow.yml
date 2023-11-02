@@ -24,14 +24,8 @@ jobs:
         with:
           go-version: '1.21.3'
 
-      - name: Build App
-        run: cd backend/product_management/app && go build -v .
-
-      - name: Build Context
-        run: cd backend/product_management/context && go build -v .
-
-      - name: Build Router
-        run: cd backend/product_management/router && go build -v .
+      - name: Build Product Management Microservice
+        run: cd backend/product_management && go build -v .
 
   test:
     name: Test
@@ -44,11 +38,5 @@ jobs:
         with:
           go-version: '1.21.3'
 
-      - name: Test App
-        run: cd backend/product_management/app && go test -v .
-      
-      - name: Test Context
-        run: cd backend/product_management/context && go test -v .
-
-      - name: Test Router
-        run: cd backend/product_management/router && go test -v .
+      - name: Test Product Management Microservice
+        run: cd backend/product_management/test && go test -v .
