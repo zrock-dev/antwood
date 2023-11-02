@@ -1,0 +1,20 @@
+.inventory_card {
+  /*  box-shadow: var(--box-shadow);*/
+  border-radius: 8px;
+  background-color: rgb(235, 235, 235);
+  padding: 10px;
+}
+
+.inventory_card_btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  gap: 1rem;
+}
+
+.shoe_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  -webkit-user-drag: none;
+}

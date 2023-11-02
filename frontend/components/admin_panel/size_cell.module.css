@@ -1,0 +1,14 @@
+
+
+.shoe_configure_size_ctn {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.shoe_configure_size {
+  width: 100px;
+  height: 20px;
+  background-color: red;
+}

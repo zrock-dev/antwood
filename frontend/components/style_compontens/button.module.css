@@ -1,0 +1,19 @@
+.btn {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.main_btn {
+  background-color: var(--secondary-color);
+  color: var(--main-color);
+  font-family: var(--second-title-font);
+}
+
+.second_btn {
+  background-color: var(--transparent-gray-color);
+  color: var(--gray-2-color);
+  font-family: var(--second-title-font);
+}

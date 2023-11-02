@@ -1,0 +1,39 @@
+.img_form_ctn {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 20px;
+}
+.shoe_form_images {
+  min-width: 300px;
+  width: 100%;
+  height: 400px;
+}
+
+.shoe_image_variant {
+  max-width: 200px;
+  min-width: 150px;
+  height: 150px;
+}
+
+.shoe_image_add_btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 200px;
+  min-width: 150px;
+  height: 150px;
+  gap: 1rem;
+  font-size: 18px;
+}
+
+.shoe_image_variant_ctn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-around;
+  justify-items: center;
+}

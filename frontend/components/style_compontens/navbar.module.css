@@ -1,0 +1,17 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: var(--secondary-color);
+  color: var(--main-color);
+  padding: 0 2rem;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--gray-color);
+  font-family: var(--second-title-font);
+  font-weight: bold;
+}
