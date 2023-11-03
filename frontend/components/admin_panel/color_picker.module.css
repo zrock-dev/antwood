@@ -46,6 +46,7 @@
   gap: 0.5rem;
   flex-direction: row;
   flex-wrap: wrap;
+  min-height: 35px;
 }
 
 .open {
@@ -55,6 +56,16 @@
 
 .close {
   transform: translateY(-100px);
+  visibility: hidden;
+}
+
+.active {
+  transform: translateY(-100px);
+  visibility: visible;
+}
+
+.inactive {
+  transform: translateY(-300px);
   visibility: hidden;
 }
 
@@ -80,4 +91,8 @@
 
 .tag:hover {
   background-color: var(--warning-color);
+}
+
+.popup_btn {
+  display: flex;
 }

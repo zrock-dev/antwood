@@ -22,16 +22,18 @@ const availableColors = [
   "lightgreen",
 ];
 
-function ColorPicker({ className, colorList = [] }) {
+function ColorPicker({ className, colorList = [] , onSelectColor}) {
   const [colors, setColors] = useState(colorList);
   const [openPopup, setOpenPopup] = useState(false);
   const popupRef = useRef();
+  const popupBtnRef = useRef();
 
     useEffect(() => {
       let handler = (e) => {
         if (
           popupRef.current &&
-          !popupRef.current.contains(e.target)
+          !popupRef.current.contains(e.target) &&
+          !popupBtnRef.current.contains(e.target)
         ) {
           setOpenPopup(false);
         }
@@ -51,6 +53,7 @@ function ColorPicker({ className, colorList = [] }) {
     if (!isValidColor(color)) return;
 
     if (!colors.includes(color)) {
+      onSelectColor(color)
       setColors([...colors, color]);
     }
     togglePopup();
@@ -64,20 +67,28 @@ function ColorPicker({ className, colorList = [] }) {
 
   return (
     <div className={`${colorPickerStyle.color_picker}  ${className}`}>
-      <div>
-        <label htmlFor="">Color</label>
-        <Button btnStyle="second_btn" onClick={togglePopup}>
-          <i className="fa-solid fa-plus"></i>
-        </Button>
+      <div className={colorPickerStyle.popup_btn}>
+        <div ref={popupBtnRef}>
+          <label htmlFor="">Color</label>
+          <Button btnStyle="second_btn" onClick={togglePopup}>
+            <i className="fa-solid fa-plus"></i>
+          </Button>
+        </div>
       </div>
       <ColorPickerPopup
-        className={openPopup ? colorPickerStyle.open : colorPickerStyle.close}
+        className={
+          openPopup ? colorPickerStyle.active : colorPickerStyle.inactive
+        }
         addColor={addNewColor}
         popupRef={popupRef}
       />
       <div className={colorPickerStyle.color_picker_ctn}>
         {colors.map((color) => (
-          <Color name={color} key={color} />
+          <Color
+            name={color}
+            key={color}
+            onClick={() => onSelectColor(color)}
+          />
         ))}
       </div>
     </div>

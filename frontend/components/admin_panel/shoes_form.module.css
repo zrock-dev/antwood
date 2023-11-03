@@ -1,20 +1,25 @@
 .section {
   flex-grow: 1;
-  overflow: hidden;
 }
 .shoe_form_ctn {
   display: flex;
   flex-direction: row;
   gap: 1rem;
   padding: 20px;
-
 }
 
 .shoe_form {
-  box-sizing: border-box;
-  width: 30%;
+  flex-grow: 1;
 }
 
+.image_form {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 70%;
+  border-radius: 8px;
+  border: solid 1px var(--gray-color);
+}
 .shoe_form_inputs {
   display: flex;
   flex-direction: column;
@@ -60,54 +65,23 @@
 }
 
 .shoe_form_images {
-  width: 40%;
+  flex-grow: 1;
 }
 
-.shoe_configure {
-  width: 30%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
 
-.shoe_shoe_configure_ctn {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-
-.shoe_configure_item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 2rem;
-}
-
-.shoe_configure_item label {
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.shoe_configure_color {
-  border-radius: 100%;
-  width: 100px;
-  height: 100px;
-  background-color: red;
-}
-
-.shoe_configure_item input[type="number"] {
-  width: 100px;
-}
-.number_ctn {
-  margin: 0;
+.disable{
+  visibility: hidden;
 }
 
 @media screen and (max-width: 1200px) {
   .shoe_form_ctn {
     flex-direction: column;
-      align-items: center;
+    align-items: center;
+  }
+  .image_form {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
   }
   .shoe_form {
     width: 90%;
@@ -120,7 +94,15 @@
   }
   .shoe_configure {
     width: 90%;
-
     padding: 0;
   }
+}
+
+
+.pair{
+  display: flex;
+  flex-direction: row !important;
+}
+.pair input{
+  width: 100px;
 }

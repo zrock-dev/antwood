@@ -6,6 +6,7 @@ import (
 	routes "product_management/router"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var Server = fiber.New()
@@ -14,6 +15,8 @@ var serverPort = ":4000"
 func RunServer() {
 	utils.LoadGodotenv()
 	database.ConnectToTheDatabase()
+	
+	Server.Use(cors.New())
 
 	routes.RouteHome(Server)
 	routes.RouteSneakers(Server)

@@ -8,6 +8,7 @@
   min-width: 300px;
   width: 100%;
   height: 400px;
+  border-radius: 8px;
 }
 
 .shoe_image_variant {
@@ -29,6 +30,9 @@
   font-size: 18px;
 }
 
+.shoe_image_add_btn input {
+  display: none;
+}
 .shoe_image_variant_ctn {
   display: flex;
   flex-direction: row;
@@ -37,3 +41,80 @@
   justify-content: space-around;
   justify-items: center;
 }
+
+.shoe_configure {
+  width: 30%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.shoe_shoe_configure_ctn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.shoe_configure_item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+}
+
+.shoe_configure_item label {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.shoe_configure_color {
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  border: solid 1px var(--gray-color);
+}
+
+.shoe_configure_item input[type="number"] {
+  width: 100px;
+}
+.number_ctn {
+  margin: 0;
+}
+
+.image_item {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.image_item button {
+  position: absolute;
+  top: -0px;
+  right: -7px;
+  visibility: hidden;
+  transition: transform 0.5s ease;
+}
+
+.image_item:hover button {
+  visibility: visible;
+  transform: translateY(-7px);
+}
+
+.image_item {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+}
+
+.available_images {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+

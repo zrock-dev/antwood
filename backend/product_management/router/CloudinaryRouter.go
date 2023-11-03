@@ -8,6 +8,6 @@ import (
 
 func RouteCloudinary(server *fiber.App) {
 	requests.LoadCloudinary()
-
-	server.Delete("/cloudinary/:id", requests.DeleteImage)
+	server.Post("/cloudinary/:id/:brand", requests.UploadImage)
+	server.Delete("/cloudinary", requests.DeleteImage)
 }

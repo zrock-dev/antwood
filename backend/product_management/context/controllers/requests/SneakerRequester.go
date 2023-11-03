@@ -15,6 +15,7 @@ import (
 func InsertSneaker(c *fiber.Ctx) error {
 	var newSneaker = models.DefaultSneaker()
 
+
 	if err := c.BodyParser(newSneaker); err != nil {
 		return c.Status(400).SendString("Invalid sneaker data")
 	}

@@ -9,7 +9,7 @@ function Button({
   children,
 }) {
   return (
-    <button
+    <button 
       type={type}
       className={` ${className}  ${styles.btn} ${styles[btnStyle]}`}
       onClick={onClick}
