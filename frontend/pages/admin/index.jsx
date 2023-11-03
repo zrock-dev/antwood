@@ -33,15 +33,6 @@ function admin() {
     setShowInventory(false);
   };
 
-  const returnData = () => {
-    let sh = shoe;
-    let b = brand;
-    setShoe(null);
-    setBrand(null);
-
-    return <AddShoeForm shoeParams={sh} selectedbrand={b} />;
-  };
-
   return (
     <div className={styles.admin_panel}>
       <ul className={styles.admin_panel_menu}>
@@ -71,7 +62,7 @@ function admin() {
       ) : !shoe ? (
         <AddShoeForm />
       ) : (
-        returnData()
+        <AddShoeForm shoeParams={shoe} selectedbrand={brand} />
       )}
     </div>
   );

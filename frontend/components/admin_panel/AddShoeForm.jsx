@@ -187,7 +187,7 @@ function AddShoeForm({ shoeParams = shoe, selectedbrand }) {
               />
             </>
           ) : (
-            <div className={formStyle.select_image}>Select a Color</div>
+            <div className={formStyle.select_image}></div>
           )}
         </div>
       </form>
