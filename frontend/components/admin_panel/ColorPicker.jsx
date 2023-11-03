@@ -1,5 +1,5 @@
 import Button from "../Button";
-import { useRef, useState , useEffect} from "react";
+import { useRef, useState, useEffect } from "react";
 
 import colorPickerStyle from "./color_picker.module.css";
 
@@ -22,28 +22,27 @@ const availableColors = [
   "lightgreen",
 ];
 
-function ColorPicker({ className, colorList = [] , onSelectColor}) {
-  const [colors, setColors] = useState(colorList);
+function ColorPicker({ className, colors = [], onSelectColor, addColor }) {
   const [openPopup, setOpenPopup] = useState(false);
   const popupRef = useRef();
   const popupBtnRef = useRef();
 
-    useEffect(() => {
-      let handler = (e) => {
-        if (
-          popupRef.current &&
-          !popupRef.current.contains(e.target) &&
-          !popupBtnRef.current.contains(e.target)
-        ) {
-          setOpenPopup(false);
-        }
-      };
+  useEffect(() => {
+    let handler = (e) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(e.target) &&
+        !popupBtnRef.current.contains(e.target)
+      ) {
+        setOpenPopup(false);
+      }
+    };
 
-      document.addEventListener("mousedown", handler);
-      return () => {
-        document.removeEventListener("mousedown", handler);
-      };
-    }, []);
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
 
   const togglePopup = () => {
     setOpenPopup(!openPopup);
@@ -53,8 +52,8 @@ function ColorPicker({ className, colorList = [] , onSelectColor}) {
     if (!isValidColor(color)) return;
 
     if (!colors.includes(color)) {
-      onSelectColor(color)
-      setColors([...colors, color]);
+      onSelectColor(color);
+      addColor(color);
     }
     togglePopup();
   };
@@ -83,11 +82,11 @@ function ColorPicker({ className, colorList = [] , onSelectColor}) {
         popupRef={popupRef}
       />
       <div className={colorPickerStyle.color_picker_ctn}>
-        {colors.map((color) => (
+        {colors.map((c) => (
           <Color
-            name={color}
-            key={color}
-            onClick={() => onSelectColor(color)}
+            name={c}
+            key={c}
+            onClick={() => onSelectColor(c)}
           />
         ))}
       </div>

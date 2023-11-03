@@ -11,6 +11,7 @@ import {
   updateShoeColor,
 } from "../../request/shoes";
 import { Toaster, toast } from "sonner";
+import { parse } from "next/dist/build/swc";
 const focusedImageStyle = (url) => {
   return {
     backgroundImage: `url(${url})`,
@@ -31,6 +32,7 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
   imageShoe.color = colorSelected;
 
   const [imageForm, setImageForm] = useState(imageShoe);
+  const [isSaved, setIsSaved] = useState(imageForm.id ? true : false);
 
   const handleChange = (e) => {
     setImageForm({
@@ -51,13 +53,61 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
       console.log("Invalid size");
     }
   };
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    uploadShoeToStorageService(formData, idShoe, brand)
+      .then((result) => {
+        toast.success("Image uploaded successfully");
+        console.log(result.data);
+        setImageForm({
+          ...imageForm,
+          images: [...imageForm.images, result.data],
+        });
+      })
+      .catch((err) => {
+        toast.error("Error when uploading image.");
+      });
+  };
+
+  const onRemoveProductImage = (e, id) => {
+    deleteImage(id).then((result) => {
+      let index = imageForm.images.findIndex((image) => image.id === id);
+      imageForm.images.splice(index, 1);
+      setImageForm({
+        ...imageForm,
+        images: [...imageForm.images],
+      });
+      toast.success("Image deleted successfully");
+    });
+  };
+
+  const onRemoveSize = (size) => {
+      imageForm.quantity = parseInt(imageForm.quantity);
+    const index = imageForm.sizes.indexOf(size);
+    if (index > -1) {
+      imageForm.sizes.splice(index, 1);
+      setImageForm({
+        ...imageForm,
+        sizes: [...imageForm.sizes],
+      });
+    }
+  };
 
   const handleUploadColor = () => {
-    imageForm.quantity = parseInt(imageForm.quantity);
+      imageForm.quantity = parseInt(imageForm.quantity);
     addColorShoe(imageForm, idShoe)
       .then((result) => {
         toast.success("Color added successfully");
         imageForm.id = result.data.id;
+        setIsSaved(true);
       })
       .catch((err) => {
         toast.error("Error when adding color.");
@@ -65,7 +115,6 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
   };
 
   const onUpdateShoueColor = () => {
-    console.log(imageForm);
     updateShoeColor(imageForm)
       .then((result) => {
         toast.success("Color updated successfully");
@@ -82,7 +131,11 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
           className={imgStyle.shoe_form_images}
           style={focusedImageStyle("default-image.png")}
         ></div>
-        <ImagesProducts images={imageForm.images} idShoe={idShoe} />
+        <ImagesProducts
+          imageProducts={imageForm.images}
+          onRemoveProductImage={onRemoveProductImage}
+          uploadImage={uploadImage}
+        />
       </div>
       <div className={imgStyle.shoe_configure}>
         <div className={imgStyle.shoe_shoe_configure_ctn}>
@@ -110,14 +163,15 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
             </Button>
             <Button
               onClick={() => {
-                if (imageForm.id) {
+              
+                if (isSaved) {
                   onUpdateShoueColor();
                 } else {
                   handleUploadColor();
                 }
               }}
             >
-              {imageForm.id ? "Update" : "Save"}
+              {isSaved ? "Update" : "Save"}
             </Button>
           </div>
         </div>
@@ -127,66 +181,38 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
           prompt="Size"
           tagParams={imageForm.sizes}
           onAddTag={onAddSizes}
+          onRemove={onRemoveSize}
         />
       </div>
     </>
   );
 }
 
-const ImagesProducts = ({ images, idShoe }) => {
-  const [imageProducts, setImageProducts] = useState(images);
-
-  const onRemoveProductImage = (e, id) => {
-
-    deleteImage(id).then((result) => {
-    let index = imageProducts.findIndex((image) => image.id === id);
-    imageProducts.splice(index, 1);
-    setImageProducts(imageProducts);
-      toast.success("Image deleted successfully");
-    });
-  };
-
-  const uploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    uploadShoeToStorageService(formData, idShoe, brand)
-      .then((result) => {
-        toast.success("Image uploaded successfully");
-        console.log(result.data);
-        setImageProducts([...imageProducts, result.data]);
-      })
-      .catch((err) => {
-        toast.error("Error when uploading image.");
-      });
-  };
-
+const ImagesProducts = ({
+  imageProducts,
+  onRemoveProductImage,
+  uploadImage,
+}) => {
   return (
     <div className={imgStyle.available_images}>
       <div className={imgStyle.shoe_image_add_btn}>
         <label htmlFor="file-upload" className={imgStyle.first_btn}>
           <i className="fa fa-cloud-upload"></i> Upload Image
         </label>
-        <input type="file" id="file-upload" onChange={uploadImage} />
+        <input type="file" id="file-upload" onChange={(e) => uploadImage(e)} />
       </div>
-      {imageProducts &&
-        imageProducts.map((image) => (
-          <div
-            key={uuidv4()}
-            className={imgStyle.image_item}
-            style={focusedImageStyle(image.url)}
-          >
-            <Button onClick={(e) => onRemoveProductImage(e, image.id)}>
-              <i className="fa fa-x"></i>
-            </Button>
-          </div>
-        ))}
+      {console.log(imageProducts)}
+      {imageProducts.map((q) => (
+        <div
+          key={uuidv4()}
+          className={imgStyle.image_item}
+          style={focusedImageStyle(q.url)}
+        >
+          <Button onClick={(e) => onRemoveProductImage(e, q.id)}>
+            <i className="fa fa-x"></i>
+          </Button>
+        </div>
+      ))}
     </div>
   );
 };

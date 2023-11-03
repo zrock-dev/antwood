@@ -3,17 +3,17 @@ import { useRef, useState, useEffect } from "react";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 import tagStyle from "./color_picker.module.css";
 
-function Tag({ className, tagParams = [], prompt = "Tag", onAddTag }) {
-  const [tags, setTags] = useState(tagParams);
+function Tag({
+  className,
+  tagParams = [],
+  prompt = "Tag",
+  onAddTag,
+  onRemove,
+}) {
   const [openPopup, setOpenPopup] = useState(false);
   const [newTag, setNewTag] = useState("");
   const popupRef = useRef();
   const tagBtnRef = useRef();
-  useEffect(() => {
-    setTags((tag) => {
-      return tagParams;
-    });
-  }, [tagParams]);
 
   useEffect(() => {
     let handler = (e) => {
@@ -37,20 +37,22 @@ function Tag({ className, tagParams = [], prompt = "Tag", onAddTag }) {
     setOpenPopup(!openPopup);
   };
 
-  const addNewTag = (tag) => {
-    if (tag === "") return;
-    if (!tags.includes(tag)) {
-      onAddTag(tag);
+  const addNewTag = () => {
+    if (newTag === "") return;
+    if (!tagParams.includes(newTag)) {
+      onAddTag(newTag);
     }
     togglePopup();
   };
 
   const hadleOnChange = (e) => {
-    setNewTag(e.target.value);
+    const tag = e.target.value;
+
+    setNewTag(tag);
   };
 
   const removeTag = (tag) => {
-    setTags(tags.filter((t) => t !== tag));
+    onRemove(tag);
   };
 
   return (
@@ -77,19 +79,13 @@ function Tag({ className, tagParams = [], prompt = "Tag", onAddTag }) {
           <label>Write a new {prompt}</label>
           <div>
             <input type="text" value={newTag} onChange={hadleOnChange} />
-            <Button
-              onClick={() => {
-                addNewTag(newTag);
-              }}
-            >
-              Save
-            </Button>
+            <Button onClick={addNewTag}>Save</Button>
           </div>
         </div>
       </div>
 
       <div className={tagStyle.color_picker_ctn}>
-        {tags.map((tag) => (
+        {tagParams.map((tag) => (
           <div
             key={uuidv4()}
             className={tagStyle.tag}

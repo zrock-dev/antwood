@@ -4,7 +4,7 @@ import ImageForm from "./ImageForm";
 import ColorPicker from "./ColorPicker";
 import Tag from "./Tag";
 import { useState } from "react";
-import { saveShoe } from "../../request/shoes";
+import { saveShoe, updateShoe } from "../../request/shoes";
 import { Toaster, toast } from "sonner";
 
 const shoe = {
@@ -34,9 +34,27 @@ function AddShoeForm({ shoeParams = shoe }) {
   };
 
   const addTag = (tag) => {
+    console.log(shoeForm.tags);
     setShoeForm({
       ...shoeForm,
       tags: [...shoeForm.tags, tag],
+    });
+  };
+  const removeTag = (tag) => {
+    const index = shoeForm.tags.indexOf(tag);
+    if (index > -1) {
+      shoeForm.tags.splice(index, 1);
+      setShoeForm({
+        ...shoeForm,
+        tags: [...shoeForm.tags],
+      });
+    }
+  };
+
+  const addColor = (color) => {
+    setShoeForm({
+      ...shoeForm,
+      colors: [...shoeForm.colors, color],
     });
   };
 
@@ -48,16 +66,32 @@ function AddShoeForm({ shoeParams = shoe }) {
     setBrand(e.target.value);
   };
   const saveShoes = () => {
-    shoeForm.price = parseFloat(shoeForm.price);
-    saveShoe(shoeForm)
+    if (isSaved) {
+      updateShoesInformation();
+    } else {
+      shoeForm.price = parseFloat(shoeForm.price);
+      saveShoe(shoeForm)
+        .then((result) => {
+          toast.success("Shoe saved successfully");
+          shoeForm.id = result.data.id;
+          setIsSaved(true);
+        })
+        .catch((err) => {
+          toast.error("Shoe not saved");
+          console.log(console.log(err));
+        });
+    }
+  };
+
+  const updateShoesInformation = () => {
+    console.log(shoeForm)
+    updateShoe(shoeForm)
       .then((result) => {
-        toast.success("Shoe saved successfully");
-        shoeForm.id = result.data.id;
-        setIsSaved(true);
+        toast.success("Shoe updated successfully");
       })
       .catch((err) => {
-        toast.error("Shoe not saved");
-        console.log(console.log(err));
+        console.log(err)
+        toast.error("Shoe not updated");
       });
   };
 
@@ -115,6 +149,7 @@ function AddShoeForm({ shoeParams = shoe }) {
             className={`${formStyle.shoe_form_inputs}`}
             tagParams={shoeForm.tags}
             onAddTag={addTag}
+            onRemove={removeTag}
           />
           <div
             className={`${formStyle.shoe_form_inputs} ${formStyle.btns_ctn}`}
@@ -126,7 +161,9 @@ function AddShoeForm({ shoeParams = shoe }) {
             className={`${formStyle.shoe_form_inputs} ${
               !isSaved && formStyle.disable
             }`}
+            colors={shoeForm.colors}
             onSelectColor={handleSelctedColor}
+            addColor={addColor}
           />
         </div>
         <div className={formStyle.image_form}>

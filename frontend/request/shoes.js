@@ -10,7 +10,7 @@ export const saveShoe = (shoe) =>
   axios.post(`${API}/sneaker`, JSON.stringify(shoe), axiosConfig);
 
 export const updateShoe = (shoe) =>
-  axios.put(`${API}/sneaker/${shoe.id}`, JSON.stringify(shoe), axiosConfig);
+  axios.put(`${API}/sneaker/${shoe.id}`, axiosConfig);
 
 export const deleteShoe = (id) =>
   axios.delete(`${API}/sneaker/${id}`, axiosConfig);
