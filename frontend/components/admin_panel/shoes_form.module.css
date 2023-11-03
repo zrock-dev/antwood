@@ -10,6 +10,7 @@
 
 .shoe_form {
   flex-grow: 1;
+  max-width: 500px;
 }
 
 .image_form {

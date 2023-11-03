@@ -1,18 +1,20 @@
 import inventoryStyle from "./style_compontens/inventory_card.module.css";
 import Button from "./Button";
-function InventoryCard() {
+
+
+function InventoryCard({ shoe, onEdit }) {
   return (
     <div className={inventoryStyle.inventory_card}>
       <div>
         <img
-        className={inventoryStyle.shoe_img}
-          src="https://images.pexels.com/photos/1055271/pexels-photo-1055271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          className={inventoryStyle.shoe_img}
+          src={shoe.Sneakercolor.images[0].url}
           alt="shoe"
         />
-        <h4>Shoe Name</h4>
+        <h4>{shoe.Shoe.name}</h4>
       </div>
       <div className={inventoryStyle.inventory_card_btns}>
-        <Button>Edit</Button>
+        <Button onClick={()=>onEdit(shoe)}>Edit</Button>
         <Button>Remove</Button>
       </div>
     </div>

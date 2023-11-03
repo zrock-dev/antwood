@@ -11,7 +11,7 @@ import {
   updateShoeColor,
 } from "../../request/shoes";
 import { Toaster, toast } from "sonner";
-import { parse } from "next/dist/build/swc";
+
 const focusedImageStyle = (url) => {
   return {
     backgroundImage: `url(${url})`,
@@ -115,6 +115,7 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
   };
 
   const onUpdateShoueColor = () => {
+      imageForm.quantity = parseInt(imageForm.quantity);
     updateShoeColor(imageForm)
       .then((result) => {
         toast.success("Color updated successfully");

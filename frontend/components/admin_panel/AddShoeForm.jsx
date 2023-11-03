@@ -16,11 +16,15 @@ const shoe = {
   tags: [],
 };
 
-function AddShoeForm({ shoeParams = shoe }) {
+function AddShoeForm({ shoeParams = shoe, selectedbrand }) {
   const [isSaved, setIsSaved] = useState(shoeParams.id ? true : false);
+
   const [colorSelected, setUserSelected] = useState("");
   const [shoeForm, setShoeForm] = useState(shoeParams);
-  const [brand, setBrand] = useState("");
+  const [brand, setBrand] = useState(selectedbrand ? selectedbrand : "");
+  const [availableBrand, setAvailableBrand] = useState(
+    selectedbrand ? true : false
+  );
 
   const handleSelctedColor = (color) => {
     setUserSelected(color);
@@ -84,13 +88,13 @@ function AddShoeForm({ shoeParams = shoe }) {
   };
 
   const updateShoesInformation = () => {
-    console.log(shoeForm)
+    console.log(shoeForm);
     updateShoe(shoeForm)
       .then((result) => {
         toast.success("Shoe updated successfully");
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         toast.error("Shoe not updated");
       });
   };
@@ -131,19 +135,25 @@ function AddShoeForm({ shoeParams = shoe }) {
               onChange={handleChange}
               name="price"
             />
-            <label for="brand">Select the Shoe Brand</label>
-            <select
-              id="brand"
-              name="brand"
-              onChange={onAssignBrand}
-              value={brand}
-            >
-              <option value="nike">Nike</option>
-              <option value="adidas">Adidas</option>
-              <option value="converse">Converse</option>
-              <option value="jordan">Jordan</option>
-              <option value="vans">Vans</option>
-            </select>
+            <label for="brand">
+              {isSaved ? "Brand" : "Select the Shoe Brand"}
+            </label>
+            {isSaved ? (
+              brand
+            ) : (
+              <select
+                id="brand"
+                name="brand"
+                onChange={onAssignBrand}
+                value={brand}
+              >
+                <option value="nike">Nike</option>
+                <option value="adidas">Adidas</option>
+                <option value="converse">Converse</option>
+                <option value="jordan">Jordan</option>
+                <option value="vans">Vans</option>
+              </select>
+            )}
           </div>
           <Tag
             className={`${formStyle.shoe_form_inputs}`}

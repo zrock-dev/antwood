@@ -15,6 +15,9 @@ export const updateShoe = (shoe) =>
 export const deleteShoe = (id) =>
   axios.delete(`${API}/sneaker/${id}`, axiosConfig);
 
+export const getAllShoes = () =>
+  axios.get(`${API}/sneaker`, axiosConfig);
+
 // Cloudinary Management
 
 export const deleteImage = (id) =>

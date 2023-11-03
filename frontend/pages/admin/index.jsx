@@ -8,13 +8,38 @@ import { useState } from "react";
 
 function admin() {
   const [showInventory, setShowInventory] = useState(true);
-
+  const [shoe, setShoe] = useState(null);
+  const [brand, setBrand] = useState(null);
   const displayInventory = () => {
     setShowInventory(true);
   };
 
   const hideInventory = () => {
     setShowInventory(false);
+  };
+
+  const onEdit = (s) => {
+    setShoe(s.Shoe);
+    const inputString = s.Sneakercolor.images[0].id;
+    const parts = inputString.split("solestyle/product_images/");
+
+    if (parts.length === 2) {
+      const secondPart = parts[1];
+      const result = secondPart.split("/")[0];
+      setBrand(result);
+    } else {
+      console.log("The input string was not in the expected format.");
+    }
+    setShowInventory(false);
+  };
+
+  const returnData = () => {
+    let sh = shoe;
+    let b = brand;
+    setShoe(null);
+    setBrand(null);
+
+    return <AddShoeForm shoeParams={sh} selectedbrand={b} />;
   };
 
   return (
@@ -41,7 +66,13 @@ function admin() {
           </Button>
         </li>
       </ul>
-      {showInventory ? <Inventory /> : <AddShoeForm />}
+      {showInventory ? (
+        <Inventory onEdit={onEdit} />
+      ) : !shoe ? (
+        <AddShoeForm />
+      ) : (
+        returnData()
+      )}
     </div>
   );
 }
