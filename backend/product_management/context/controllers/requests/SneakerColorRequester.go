@@ -2,6 +2,8 @@ package requests
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,12 +14,50 @@ import (
 )
 
 func InsertSneakerColor(c *fiber.Ctx) error {
-	var newSneakerColor = models.DefaultSneakerColor()
-
-	if err := c.BodyParser(newSneakerColor); err != nil {
-		return c.Status(400).SendString("Invalid sneaker color data")
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Error when parsing the form")
 	}
 
+	var uploadedImages []models.ImageData
+	brand := form.Value["brand"][0]
+
+	newSneakerColor := models.SneakerColor{
+		ID:       primitive.NewObjectID(),
+		Color:    form.Value["color"][0],
+		Images:   []models.ImageData{},
+		Sizes:    []float32{},
+		Quantity: 0,
+	}
+	number, _ := strconv.Atoi(form.Value["quantity"][0])
+	newSneakerColor.Quantity = number
+	sizeStrings, exists := form.Value["sizes[]"]
+
+	fmt.Println(sizeStrings)
+	fmt.Println(exists)
+	if !exists {
+
+	}
+	var sizes []float32
+	for _, sizeStr := range sizeStrings {
+		size, err := strconv.ParseFloat(sizeStr, 32)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Error de conversión")
+		}
+		sizes = append(sizes, float32(size))
+	}
+	newSneakerColor.Sizes = sizes
+	images := form.File["images[]"]
+	fmt.Println(images)
+	for _, image := range images {
+		result, _ := UploadDirectImage(image, brand, c.Query("sneakerid"))
+		uploadedImages = append(uploadedImages, models.ImageData{
+			URL: result.SecureURL,
+			ID:  result.PublicID,
+		})
+	}
+
+	newSneakerColor.Images = uploadedImages
 	insertResult, err := database.SneakerColorsCollection.
 		InsertOne(context.TODO(), newSneakerColor)
 	if err != nil {
@@ -79,21 +119,89 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 }
 
 func UpdateSneakerColorById(c *fiber.Ctx) error {
-	sneakerColorID := c.Params("id")
 
-	var updatedSneakerColor models.SneakerColor
-	if err := c.BodyParser(&updatedSneakerColor); err != nil {
-		return c.Status(400).SendString("Invalid update data")
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Error when parsing the form")
 	}
 
+	var colorId  string 
+	colorId = c.Params("id")
+    sneakerColorID , err := primitive.ObjectIDFromHex(colorId)
+    if err != nil {
+        fmt.Println("Error al crear el ObjectID:", err)
+    }
+	var uploadedImages []models.ImageData
+	var updatedSneakerColor models.SneakerColor
+
+	filter := bson.M{
+		"_id": sneakerColorID,
+	}
+
+	fmt.Println(filter)
+	err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&updatedSneakerColor)
+	if err != nil {
+		return c.Status(500).SendString("Error finding sneaker color")
+	}
+
+	brand := form.Value["brand"][0]
+	number, _ := strconv.Atoi(form.Value["quantity"][0])
+	updatedSneakerColor.Quantity = number
+	sizeStrings, exists := form.Value["sizes[]"]
+	fmt.Println(sizeStrings)
+	fmt.Println(exists)
+	if !exists {
+
+	}
+	var sizes []float32
+	for _, sizeStr := range sizeStrings {
+		size, err := strconv.ParseFloat(sizeStr, 32)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Error de conversión")
+		}
+		sizes = append(sizes, float32(size))
+	}
+	updatedSneakerColor.Sizes = sizes
+	images := form.File["images[]"]
+	for _, image := range images {
+		result, _ := UploadDirectImage(image, brand, c.Query("sneakerid"))
+		uploadedImages = append(uploadedImages, models.ImageData{
+			URL: result.SecureURL,
+			ID:  result.PublicID,
+		})
+	}
+
+	deleted_images := form.File["deleted_images[]"]
+	for _, deletedId := range deleted_images {
+		wasDeleted := DeleteImageById(deletedId.Filename)
+		if !wasDeleted {
+			return c.Status(500).SendString("Error deleting image")
+		}
+	}
+
+	updatedSneakerColor.Images = uploadedImages
+
 	update := validateUpdateData(updatedSneakerColor)
-	wasUpdated, message := updateSneakerColor(sneakerColorID, bson.M{"$set": update})
+	wasUpdated, message := updateSneakerColor(colorId, bson.M{"$set": update})
 
 	if !wasUpdated {
 		return c.Status(500).SendString(message)
 	}
 
 	return c.SendString(message)
+}
+
+func DeleteImageFromCloudinary(imageId string, images []models.ImageData) bool {
+	for i, image := range images {
+		if imageId == image.ID {
+			wasDeleted := DeleteImageById(imageId)
+			if wasDeleted {
+				images = append(images[:i], images[i+1:]...)
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func AddNewImageToSneakerColor(c *fiber.Ctx) error {

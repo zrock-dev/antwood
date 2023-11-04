@@ -13,4 +13,7 @@ func RouteSneakers(server *fiber.App) {
 
 	server.Delete("/sneaker/:id", requests.DeleteSneakerById)
 	server.Delete("/sneaker/color/:id/:idcolor", requests.RemoveSneakerColor)
+
+
+	server.Get("/sneaker", requests.GetAllSneakers)
 }

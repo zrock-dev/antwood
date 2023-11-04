@@ -62,6 +62,12 @@ func UploadImage(c *fiber.Ctx) error {
 	})
 }
 
+func UploadDirectImage(file *multipart.FileHeader, brand string, sneakerId string) (*uploader.UploadResult, error) {
+	var id, _ = primitive.ObjectIDFromHex(sneakerId)
+	return UploadToCloudinary(file, "solestyle/product_images/"+brand+"/"+id.Hex())
+}
+
+
 func UploadToCloudinary(file *multipart.FileHeader, path string) (*uploader.UploadResult, error) {
 	uploadParams := uploader.UploadParams{
 		PublicID: path,

@@ -7,7 +7,7 @@ import (
 )
 
 type Sneaker struct {
-	ID            primitive.ObjectID   `bson:"_id,omitempty"`
+	ID            primitive.ObjectID   `bson:"_id,omitempty" json:"id" form:"id"`
 	Name          string               `json:"name" form:"name" bson:"name"`
 	Description   string               `json:"description" form:"description" bson:"description"`
 	Price         int                  `json:"price" form:"price" bson:"price"`

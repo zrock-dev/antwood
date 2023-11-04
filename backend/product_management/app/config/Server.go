@@ -9,7 +9,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-var Server = fiber.New()
+
+var Server =fiber.New(fiber.Config{BodyLimit: 2 * 1024 * 1024, DisableStartupMessage: false})
 var serverPort = ":4000"
 
 func RunServer() {
