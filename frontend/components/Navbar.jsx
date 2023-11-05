@@ -1,4 +1,4 @@
-import navStyle from "./style_compontens/navbar.module.css";
+import navStyle from "styles/stylecomponents/navbar.module.css";
 import Link from "next/link";
 function Navbar() {
   return (

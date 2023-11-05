@@ -1,7 +1,7 @@
 import Button from "../Button";
 import { useRef, useState, useEffect } from "react";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-import tagStyle from "./color_picker.module.css";
+import tagStyle from "styles/stylecomponents/adminPanel/color_picker.module.css";
 
 function Tag({
   className,
@@ -17,7 +17,6 @@ function Tag({
 
   useEffect(() => {
     let handler = (e) => {
-      console.log(e);
       if (
         popupRef.current &&
         !popupRef.current.contains(e.target) &&

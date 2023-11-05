@@ -1,7 +1,7 @@
 import Button from "../Button";
 import { useRef, useState, useEffect } from "react";
 
-import colorPickerStyle from "./color_picker.module.css";
+import colorPickerStyle from "styles/stylecomponents/adminPanel/color_picker.module.css";
 
 const availableColors = [
   "white",
@@ -22,7 +22,7 @@ const availableColors = [
   "lightgreen",
 ];
 
-function ColorPicker({ className, colors = [], onSelectColor, addColor }) {
+function ColorPicker({ className, colors = [], onSelectColor }) {
   const [openPopup, setOpenPopup] = useState(false);
   const popupRef = useRef();
   const popupBtnRef = useRef();
@@ -53,7 +53,6 @@ function ColorPicker({ className, colors = [], onSelectColor, addColor }) {
 
     if (!colors.includes(color)) {
       onSelectColor(color);
-      addColor(color);
     }
     togglePopup();
   };

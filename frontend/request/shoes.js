@@ -10,13 +10,12 @@ export const saveShoe = (shoe) =>
   axios.post(`${API}/sneaker`, JSON.stringify(shoe), axiosConfig);
 
 export const updateShoe = (shoe) =>
-  axios.put(`${API}/sneaker/${shoe.id}`, axiosConfig);
+  axios.put(`${API}/sneaker/${shoe.id}`, JSON.stringify(shoe), axiosConfig);
 
 export const deleteShoe = (id) =>
   axios.delete(`${API}/sneaker/${id}`, axiosConfig);
 
-export const getAllShoes = () =>
-  axios.get(`${API}/sneaker`, axiosConfig);
+export const getAllShoes = () => axios.get(`${API}/sneaker`, axiosConfig);
 
 // Cloudinary Management
 
@@ -32,19 +31,19 @@ export const uploadShoeToStorageService = (image, id, brand) =>
 
 // Manage Colors
 
-export const updateShoeColor = (shoeColor) =>
-  axios.put(
-    `${API}/sneakercolor/${shoeColor.id}`,
-    JSON.stringify(shoeColor),
-    axiosConfig
-  );
+export const updateShoeColor = (form, id) =>
+  axios.put(`${API}/sneakercolor/${id}`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
 export const deleteShoeColor = (id, idColor) =>
   axios.delete(`${API}/sneaker/color/${id}/${idColor}`, axiosConfig);
 
-export const addColorShoe = (shoeColor, id) =>
-  axios.post(
-    `${API}/sneakercolor?sneakerid=${id}`,
-    JSON.stringify(shoeColor),
-    axiosConfig
-  );
+export const addColorShoe = (form, id) =>
+  axios.post(`${API}/sneakercolor?sneakerid=${id}`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });

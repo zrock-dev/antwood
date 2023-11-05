@@ -1,103 +1,30 @@
-import formStyle from "./shoes_form.module.css";
+import formStyle from "styles/stylecomponents/adminPanel/shoes_form.module.css";
 import Button from "../Button";
 import ImageForm from "./ImageForm";
 import ColorPicker from "./ColorPicker";
 import Tag from "./Tag";
 import { useState } from "react";
-import { saveShoe, updateShoe } from "../../request/shoes";
 import { Toaster, toast } from "sonner";
+import FormManager from "../../service/ManageForm";
 
-const shoe = {
-  id: "",
-  name: "",
-  description: "",
-  price: 0,
-  colors: [],
-  tags: [],
-};
-
-function AddShoeForm({ shoeParams = shoe, selectedbrand }) {
-  const [isSaved, setIsSaved] = useState(shoeParams.id ? true : false);
-
-  const [colorSelected, setUserSelected] = useState("");
-  const [shoeForm, setShoeForm] = useState(shoeParams);
-  const [brand, setBrand] = useState(selectedbrand ? selectedbrand : "");
-  const [availableBrand, setAvailableBrand] = useState(
-    selectedbrand ? true : false
-  );
-
-  const handleSelctedColor = (color) => {
-    setUserSelected(color);
-  };
-
-  const handleChange = (e) => {
-    setShoeForm({
-      ...shoeForm,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const addTag = (tag) => {
-    console.log(shoeForm.tags);
-    setShoeForm({
-      ...shoeForm,
-      tags: [...shoeForm.tags, tag],
-    });
-  };
-  const removeTag = (tag) => {
-    const index = shoeForm.tags.indexOf(tag);
-    if (index > -1) {
-      shoeForm.tags.splice(index, 1);
-      setShoeForm({
-        ...shoeForm,
-        tags: [...shoeForm.tags],
-      });
-    }
-  };
-
-  const addColor = (color) => {
-    setShoeForm({
-      ...shoeForm,
-      colors: [...shoeForm.colors, color],
-    });
-  };
-
-  const resetShoeForm = () => {
-    setShoeForm(shoe);
-  };
-
-  const onAssignBrand = (e) => {
-    setBrand(e.target.value);
-  };
-  const saveShoes = () => {
-    if (isSaved) {
-      updateShoesInformation();
-    } else {
-      shoeForm.price = parseFloat(shoeForm.price);
-      saveShoe(shoeForm)
-        .then((result) => {
-          toast.success("Shoe saved successfully");
-          shoeForm.id = result.data.id;
-          setIsSaved(true);
-        })
-        .catch((err) => {
-          toast.error("Shoe not saved");
-          console.log(console.log(err));
-        });
-    }
-  };
-
-  const updateShoesInformation = () => {
-    console.log(shoeForm);
-    updateShoe(shoeForm)
-      .then((result) => {
-        toast.success("Shoe updated successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Shoe not updated");
-      });
-  };
+function AddShoeForm({ shoeParams, selectedbrand }) {
+  const {
+    isSaved,
+    colorSelected,
+    shoeForm,
+    brand,
+    handleSelctedColor,
+    handleChange,
+    addTag,
+    removeTag,
+    addColor,
+    resetShoeForm,
+    onAssignBrand,
+    saveShoes,
+  } = FormManager({
+    shoeParams,
+    selectedbrand,
+  });
 
   return (
     <div className={formStyle.section}>
@@ -161,19 +88,19 @@ function AddShoeForm({ shoeParams = shoe, selectedbrand }) {
             onAddTag={addTag}
             onRemove={removeTag}
           />
+
           <div
             className={`${formStyle.shoe_form_inputs} ${formStyle.btns_ctn}`}
           >
             <Button onClick={saveShoes}>{isSaved ? "Update" : "Save"}</Button>
             <Button onClick={resetShoeForm}>Clean Fields</Button>
           </div>
+
+
           <ColorPicker
-            className={`${formStyle.shoe_form_inputs} ${
-              !isSaved && formStyle.disable
-            }`}
+            className={`${formStyle.shoe_form_inputs} ${!isSaved && formStyle.disable}`}
             colors={shoeForm.colors}
             onSelectColor={handleSelctedColor}
-            addColor={addColor}
           />
         </div>
         <div className={formStyle.image_form}>

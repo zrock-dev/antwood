@@ -1,4 +1,4 @@
-import styles from "./inventory.module.css";
+import styles from "styles/stylecomponents/adminPanel/inventory.module.css";
 import InventoryCard from "../InventoryCard";
 import Button from "../Button";
 import { getAllShoes } from "../../request/shoes";

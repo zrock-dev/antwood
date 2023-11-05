@@ -1,9 +1,8 @@
-import imgStyle from "./shoes_image_form.module.css";
+import imgStyle from "styles/stylecomponents/adminPanel/shoes_image_form.module.css";
 import Button from "../Button";
 import Tag from "./Tag";
 import { useState } from "react";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-
 import {
   addColorShoe,
   uploadShoeToStorageService,
@@ -33,6 +32,8 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
 
   const [imageForm, setImageForm] = useState(imageShoe);
   const [isSaved, setIsSaved] = useState(imageForm.id ? true : false);
+  const [newImages, setNewImages] = useState([]);
+  const deletedImages = [];
 
   const handleChange = (e) => {
     setImageForm({
@@ -50,47 +51,37 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
         sizes: [...imageForm.sizes, parsedSize],
       });
     } else {
-      console.log("Invalid size");
+      toast.error("Size must be a number");
     }
   };
-  const uploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      console.error("No file selected");
-      return;
+  const addImage = (e) => {
+    const files = e.target.files;
+
+    for (const file of files) {
+      const reader = new FileReader();
+      const image = {
+        file: file,
+        url: "",
+      };
+      reader.onload = function (e) {
+        image.url = e.target.result;
+        setNewImages((prevImages) => [...prevImages, image]);
+      };
+      reader.readAsDataURL(file);
     }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    uploadShoeToStorageService(formData, idShoe, brand)
-      .then((result) => {
-        toast.success("Image uploaded successfully");
-        console.log(result.data);
-        setImageForm({
-          ...imageForm,
-          images: [...imageForm.images, result.data],
-        });
-      })
-      .catch((err) => {
-        toast.error("Error when uploading image.");
-      });
   };
 
-  const onRemoveProductImage = (e, id) => {
-    deleteImage(id).then((result) => {
-      let index = imageForm.images.findIndex((image) => image.id === id);
-      imageForm.images.splice(index, 1);
-      setImageForm({
-        ...imageForm,
-        images: [...imageForm.images],
-      });
-      toast.success("Image deleted successfully");
+  const onRemoveProductImage = (e, index) => {
+    deletedImages.push(imageForm.images[index].id);
+    imageForm.images.splice(index, 1);
+    setImageForm({
+      ...imageForm,
+      images: [...imageForm.images],
     });
   };
 
   const onRemoveSize = (size) => {
-      imageForm.quantity = parseInt(imageForm.quantity);
+    imageForm.quantity = parseInt(imageForm.quantity);
     const index = imageForm.sizes.indexOf(size);
     if (index > -1) {
       imageForm.sizes.splice(index, 1);
@@ -101,28 +92,57 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
     }
   };
 
-  const handleUploadColor = () => {
-      imageForm.quantity = parseInt(imageForm.quantity);
-    addColorShoe(imageForm, idShoe)
-      .then((result) => {
-        toast.success("Color added successfully");
+  const handleUploadColor = (form) => {
+    toast.promise(addColorShoe(form, idShoe), {
+      loading: "Adding Color",
+      success: (result) => {
         imageForm.id = result.data.id;
         setIsSaved(true);
-      })
-      .catch((err) => {
-        toast.error("Error when adding color.");
-      });
+        return "Color added successfully";
+      },
+      error: "Error when adding color.",
+    });
   };
 
-  const onUpdateShoueColor = () => {
-      imageForm.quantity = parseInt(imageForm.quantity);
-    updateShoeColor(imageForm)
-      .then((result) => {
-        toast.success("Color updated successfully");
-      })
-      .catch((err) => {
-        toast.error("Error when updating color.");
-      });
+  const onUpdateShoueColor = (form) => {
+    toast.promise(updateShoeColor(form, imageForm.id), {
+      loading: "Updating...",
+      success: "Color updated successfully",
+      error: (error)=>{
+        console.log(error);
+        return "Error when updating color.";
+      },
+    });
+  };
+
+  const onSubmitShoeColor = () => {
+    const form = new FormData();
+    imageForm.quantity = parseInt(imageForm.quantity);
+
+    form.append("color", imageForm.color);
+    form.append("quantity", imageForm.quantity);
+    imageForm.sizes.forEach((s) => {
+      form.append("sizes[]", s);
+    });
+    deletedImages.forEach((d) => {
+      form.append("deleted_images[]", d.id);
+    });
+    newImages.forEach((newImage) => {
+      form.append("images[]", newImage.file);
+    });
+    form.append("brand", brand);
+    console.log(imageForm.sizes);
+    console.log(newImages);
+
+    if (isSaved) {
+      onUpdateShoueColor(form);
+    } else {
+      handleUploadColor(form);
+    }
+  };
+
+  const onRemoveNewImage = (e, i) => {
+    setNewImages(newImages.filter((q, index) => index !== i));
   };
 
   return (
@@ -134,8 +154,10 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
         ></div>
         <ImagesProducts
           imageProducts={imageForm.images}
+          newImages={newImages}
+          onRemoveNewImage={onRemoveNewImage}
           onRemoveProductImage={onRemoveProductImage}
-          uploadImage={uploadImage}
+          addImage={addImage}
         />
       </div>
       <div className={imgStyle.shoe_configure}>
@@ -162,16 +184,7 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
             <Button>
               <i className="fa-solid fa-trash"></i>
             </Button>
-            <Button
-              onClick={() => {
-              
-                if (isSaved) {
-                  onUpdateShoueColor();
-                } else {
-                  handleUploadColor();
-                }
-              }}
-            >
+            <Button onClick={onSubmitShoeColor}>
               {isSaved ? "Update" : "Save"}
             </Button>
           </div>
@@ -191,8 +204,10 @@ function ImageForm({ className, colorSelected, idShoe, brand }) {
 
 const ImagesProducts = ({
   imageProducts,
+  newImages,
+  onRemoveNewImage,
   onRemoveProductImage,
-  uploadImage,
+  addImage,
 }) => {
   return (
     <div className={imgStyle.available_images}>
@@ -200,16 +215,33 @@ const ImagesProducts = ({
         <label htmlFor="file-upload" className={imgStyle.first_btn}>
           <i className="fa fa-cloud-upload"></i> Upload Image
         </label>
-        <input type="file" id="file-upload" onChange={(e) => uploadImage(e)} />
+        <input
+          type="file"
+          accept="image/*"
+          id="file-upload"
+          onChange={(e) => addImage(e)}
+          multiple
+        />
       </div>
-      {console.log(imageProducts)}
-      {imageProducts.map((q) => (
+      {imageProducts.map((q, index) => (
         <div
           key={uuidv4()}
           className={imgStyle.image_item}
           style={focusedImageStyle(q.url)}
         >
-          <Button onClick={(e) => onRemoveProductImage(e, q.id)}>
+          <Button onClick={(e) => onRemoveProductImage(e, index)}>
+            <i className="fa fa-x"></i>
+          </Button>
+        </div>
+      ))}
+
+      {newImages.map((q, i) => (
+        <div
+          key={uuidv4()}
+          className={imgStyle.image_item}
+          style={focusedImageStyle(q.url)}
+        >
+          <Button onClick={(e) => onRemoveNewImage(e, i)}>
             <i className="fa fa-x"></i>
           </Button>
         </div>

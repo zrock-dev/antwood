@@ -1,6 +1,6 @@
 import Layout from "../../components/Layout";
 import Link from "next/link";
-import styles from "./adminpanel.module.css";
+import styles from "styles/adminpanel.module.css";
 import Button from "../../components/Button";
 import Inventory from "../../components/admin_panel/Inventory";
 import AddShoeForm from "../../components/admin_panel/AddShoeForm";
@@ -15,6 +15,8 @@ function admin() {
   };
 
   const hideInventory = () => {
+    setShoe(null);
+    setBrand(null);
     setShowInventory(false);
   };
 

@@ -1,4 +1,4 @@
-import inventoryStyle from "./style_compontens/inventory_card.module.css";
+import inventoryStyle from "styles/stylecomponents/inventory_card.module.css";
 import Button from "./Button";
 
 
