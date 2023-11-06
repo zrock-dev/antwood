@@ -1,0 +1,60 @@
+/* Colors */
+:root {
+  --primary-color: #ffffff;
+  --secondary-color: #000000;
+  --gradient-tone: #f8f8f8;
+
+  --light-gray: #dddddd;
+  --medium-gray: #999999;
+  --transparent-gray: rgba(196, 196, 196, 0.295);
+  --dark-black: #333333;
+  --medium-black: #222222;
+  --light-black: #111111;
+
+  --warning-color: #f7002d;
+  --alert-color: #fff500;
+  --success-color: #90ff67;
+  --info-color: #00b3ff;
+}
+
+/* Fonts */
+:root {
+  --primary-title-font: "Lato", sans-serif;
+  --secondary-title-font: "Nunito Sans", sans-serif;
+  --other-title-font: "Nunito Sans", sans-serif;
+}
+
+/* Shadows */
+:root {
+  --main-box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  --secondary-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+
+/* General Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: var(--secondary-title-font); /* Default font for all elements */
+}
+
+/* List Reset */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Link Styles */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
