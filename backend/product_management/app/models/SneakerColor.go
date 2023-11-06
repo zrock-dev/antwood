@@ -11,16 +11,14 @@ type ImageData struct {
 
 type SneakerColor struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Color    string             `json:"color" form:"color" bson:"color"`
 	Images   []ImageData        `json:"images" form:"images" bson:"images"`
-	Sizes    []float32          `json:"sizes" form:"sizes" bson:"sizes"`
-	Quantity int                `json:"quantity" form:"quantity" bson:"quantity"`
+	Sizes    []float32          `json:"sizes,omitempty" form:"sizes,omitempty" bson:"sizes,omitempty"`
+	Quantity int                `json:"quantity,omitempty" form:"quantity,omitempty" bson:"quantity,omitempty"`
 }
 
 func DefaultSneakerColor() *SneakerColor {
 	return &SneakerColor{
 		ID:       primitive.NewObjectID(),
-		Color:    "",
 		Images:   []ImageData{},
 		Sizes:    []float32{},
 		Quantity: 0,

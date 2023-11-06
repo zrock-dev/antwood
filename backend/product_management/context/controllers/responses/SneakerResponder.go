@@ -25,7 +25,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		bson.D{
 			{Key: "$lookup", Value: bson.D{
 				{Key: "from", Value: "sneakerColors"},
-				{Key: "localField", Value: "colors.0"},
+				{Key: "localField", Value: "colors.0._id"},
 				{Key: "foreignField", Value: "_id"},
 				{Key: "as", Value: "types"},
 			}},
@@ -35,6 +35,17 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		},
 		bson.D{
 			{Key: "$limit", Value: limit},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "tags", Value: 0},
+				{Key: "qualification", Value: 0},
+				{Key: "description", Value: 0},
+				{Key: "reviews", Value: 0},
+				{Key: "brand", Value: 0},
+				{Key: "types.sizes", Value: 0},
+				{Key: "types.quantity", Value: 0},
+			}},
 		},
 	}
 
@@ -54,7 +65,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 	}
 
 	if len(sneakersWithColors) == 0 {
-		sneakersWithColors = ([]models.SneakerWithColors{})
+		sneakersWithColors = []models.SneakerWithColors{}
 	}
 
 	return c.JSON(struct {
