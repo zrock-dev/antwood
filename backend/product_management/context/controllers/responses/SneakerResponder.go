@@ -53,5 +53,15 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
 	}
 
-	return c.JSON(sneakersWithColors)
+	if len(sneakersWithColors) == 0 {
+		sneakersWithColors = ([]models.SneakerWithColors{})
+	}
+
+	return c.JSON(struct {
+		Sneakers []models.SneakerWithColors `json:"sneakers"`
+		Page     int                        `json:"page"`
+	}{
+		Sneakers: sneakersWithColors,
+		Page:     pageInt,
+	})
 }
