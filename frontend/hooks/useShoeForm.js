@@ -53,8 +53,8 @@ const useShoeForm = ({ shoeParams = shoe }) => {
   };
 
   const addTag = (tag) => {
-    if(shoeForm.tags.length >= 12){
-      toast.error("you can't add more than 10 tags");
+    if(shoeForm.tags.length >= 30){
+      toast.error("you can't add more than 30 tags");
       return;
     }
 

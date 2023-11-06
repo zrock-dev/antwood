@@ -60,14 +60,13 @@ function useShoeColorForm({
         return "Uploaded!";
       },
       error: (err) => {
-        console.log(err);
         return "Upload Failed!";
       },
     });
   };
 
   const onAddSizes = (size) => {
-    if (colorForm.sizes.length >= 20) {
+    if (colorForm.sizes.length >= 30) {
       toast.error("Cannot add more than 20 sizes");
       return;
     }

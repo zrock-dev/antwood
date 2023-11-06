@@ -47,6 +47,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   min-height: 35px;
+  padding: 15px;
 }
 
 .open {
@@ -96,3 +97,4 @@
 .popup_btn {
   display: flex;
 }
+
