@@ -27,7 +27,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 				{Key: "from", Value: "sneakerColors"},
 				{Key: "localField", Value: "colors.0"},
 				{Key: "foreignField", Value: "_id"},
-				{Key: "as", Value: "colors"},
+				{Key: "as", Value: "types"},
 			}},
 		},
 		bson.D{

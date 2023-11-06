@@ -7,7 +7,8 @@ type SneakerWithColors struct {
 	Name          string               `json:"name"`
 	Description   string               `json:"description"`
 	Price         int                  `json:"price"`
-	Colors        []SneakerColor       `json:"colors"`
+	Colors        []primitive.ObjectID `json:"colors"`
+	Types         []SneakerColor       `json:"types"`
 	Tags          []string             `json:"tags"`
 	Reviews       []primitive.ObjectID `json:"reviews"`
 	Qualification int                  `json:"qualification"`
