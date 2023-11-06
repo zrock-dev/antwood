@@ -18,7 +18,6 @@ func RunServer() {
 	database.ConnectToTheDatabase()
 	
 	Server.Use(cors.New())
-
 	routes.RouteHome(Server)
 	routes.RouteSneakers(Server)
 	routes.RouteSneakerColors(Server)
