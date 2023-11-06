@@ -10,17 +10,20 @@
 
 .shoe_form {
   flex-grow: 1;
-  max-width: 500px;
+  flex-basis: 300px;
 }
 
 .image_form {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  width: 70%;
+  flex-basis: 70%;
   border-radius: 8px;
   border: solid 1px var(--gray-color);
+  justify-content: space-around;
+
 }
+
 .shoe_form_inputs {
   display: flex;
   flex-direction: column;
@@ -74,16 +77,12 @@
   visibility: hidden;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
   .shoe_form_ctn {
     flex-direction: column;
     align-items: center;
   }
-  .image_form {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-  }
+
   .shoe_form {
     width: 90%;
     padding: 0;
@@ -96,6 +95,16 @@
   .shoe_configure {
     width: 90%;
     padding: 0;
+  }
+}
+
+
+
+@media screen and (max-width: 1900px) {
+  .image_form {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
   }
 }
 

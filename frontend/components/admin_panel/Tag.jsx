@@ -1,4 +1,6 @@
 import Button from "../Button";
+import styleButton from "styles/stylecomponents/button.module.css";
+import shoeFormStyle from "styles/stylecomponents/adminPanel/color_picker.module.css";
 import { useRef, useState, useEffect } from "react";
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 import tagStyle from "styles/stylecomponents/adminPanel/color_picker.module.css";
@@ -9,11 +11,13 @@ function Tag({
   prompt = "Tag",
   onAddTag,
   onRemove,
+  verifyInput,
 }) {
   const [openPopup, setOpenPopup] = useState(false);
   const [newTag, setNewTag] = useState("");
   const popupRef = useRef();
   const tagBtnRef = useRef();
+  const uuid = uuidv4();
 
   useEffect(() => {
     let handler = (e) => {
@@ -33,21 +37,29 @@ function Tag({
   }, []);
 
   const togglePopup = () => {
+    setNewTag("");
     setOpenPopup(!openPopup);
   };
 
   const addNewTag = () => {
-    if (newTag === "") return;
-    if (!tagParams.includes(newTag)) {
+    if (!(newTag === "") && !tagParams.includes(newTag)) {
       onAddTag(newTag);
     }
     togglePopup();
   };
 
-  const hadleOnChange = (e) => {
-    const tag = e.target.value;
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && openPopup) {
+      addNewTag();
+    }
+  };
 
-    setNewTag(tag);
+  const hadleOnChange = (e) => {
+    let value = e.target.value;
+    if (!verifyInput(value)) {
+      return;
+    }
+    setNewTag(value);
   };
 
   const removeTag = (tag) => {
@@ -55,17 +67,19 @@ function Tag({
   };
 
   return (
-    <div className={`${tagStyle.color_picker}  ${className}`}>
-      <div className={tagStyle.popup_btn}>
+    <div
+      className={`${tagStyle.color_picker}  ${shoeFormStyle.shoe_form_inputs}  ${className}`}
+    >
+      <div className={`${tagStyle.popup_btn}`}>
         <div ref={tagBtnRef}>
-          <label htmlFor="">{prompt}</label>
-          <Button
-            btnStyle="second_btn"
+          <label>{prompt}</label>
+          <label
             onClick={togglePopup}
-            className="btn_ref"
+            className={`${styleButton.btn} ${styleButton.second_btn}`}
+            htmlFor={uuid}
           >
             <i className="fa-solid fa-plus"></i>
-          </Button>
+          </label>
         </div>
       </div>
       <div
@@ -77,7 +91,13 @@ function Tag({
         <div className={tagStyle.color_custome_ctn}>
           <label>Write a new {prompt}</label>
           <div>
-            <input type="text" value={newTag} onChange={hadleOnChange} />
+            <input
+              type="text"
+              value={newTag}
+              onChange={hadleOnChange}
+              id={uuid}
+              onKeyDown={handleKeyPress}
+            />
             <Button onClick={addNewTag}>Save</Button>
           </div>
         </div>

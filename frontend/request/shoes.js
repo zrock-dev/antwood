@@ -31,6 +31,10 @@ export const uploadShoeToStorageService = (image, id, brand) =>
 
 // Manage Colors
 
+export const getColorById = (id)=>
+  axios.get(`${API}/sneakercolor/${id}`, axiosConfig); 
+
+
 export const updateShoeColor = (form, id) =>
   axios.put(`${API}/sneakercolor/${id}`, form, {
     headers: {
@@ -39,7 +43,7 @@ export const updateShoeColor = (form, id) =>
   });
 
 export const deleteShoeColor = (id, idColor) =>
-  axios.delete(`${API}/sneaker/color/${id}/${idColor}`, axiosConfig);
+  axios.delete(`${API}/sneakercolor/${id}/${idColor}`, axiosConfig);
 
 export const addColorShoe = (form, id) =>
   axios.post(`${API}/sneakercolor?sneakerid=${id}`, form, {

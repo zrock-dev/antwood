@@ -1,8 +1,10 @@
 .img_form_ctn {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   padding: 20px;
+  flex-basis: 700px;
+  width: 100%;
 }
 .shoe_form_images {
   min-width: 300px;
@@ -111,10 +113,13 @@
 }
 
 .available_images {
+  height: 350px;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
+  overflow-y: scroll;
+  padding: 10px 0 ;
 }
 
 

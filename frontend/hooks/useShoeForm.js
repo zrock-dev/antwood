@@ -6,6 +6,7 @@ const shoe = {
   id: "",
   name: "",
   description: "",
+  brand: "nike",
   price: 0,
   colors: [],
   tags: [],
@@ -21,28 +22,42 @@ function validateForm(form) {
   );
 }
 
-const FormManager = ({ shoeParams = shoe, selectedbrand }) => {
+const useShoeForm = ({ shoeParams = shoe }) => {
   const [isSaved, setIsSaved] = useState(shoeParams.id ? true : false);
-  const [colorSelected, setUserSelected] = useState("");
+  const [colorSelected, setColorSelected] = useState();
   const [shoeForm, setShoeForm] = useState(shoeParams);
-  const [brand, setBrand] = useState(selectedbrand ? selectedbrand : "");
-  const [availableBrand, setAvailableBrand] = useState(
-    selectedbrand ? true : false
-  );
 
   const handleSelctedColor = (color) => {
-    setUserSelected(color);
+    setColorSelected(color);
   };
 
   const handleChange = (e) => {
+    let value = e.target.value;
+    let name = e.target.name;
+    if (name == "price" && (value > 1500 || value < 0 || isNaN(value))) {
+      return;
+    }
+    if (name == "name" && value.length > 50) {
+      return;
+    }
+
+    if ((name == "description" && value.length > 2000)) {
+      console.log("a");
+      return;
+    }
+
     setShoeForm({
       ...shoeForm,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   const addTag = (tag) => {
-    console.log(shoeForm.tags);
+    if(shoeForm.tags.length >= 12){
+      toast.error("you can't add more than 10 tags");
+      return;
+    }
+
     setShoeForm({
       ...shoeForm,
       tags: [...shoeForm.tags, tag],
@@ -67,11 +82,23 @@ const FormManager = ({ shoeParams = shoe, selectedbrand }) => {
   };
 
   const resetShoeForm = () => {
+    setColorSelected(null);
+    setIsSaved(false);
     setShoeForm(shoe);
   };
 
-  const onAssignBrand = (e) => {
-    setBrand(e.target.value);
+  const resetColorSelection = () => {
+    let index = shoeForm.colors.findIndex(
+      (color) => color.color == colorSelected.color
+    );
+    console.log(colorSelected);
+    shoeForm.colors.splice(index, 1);
+    console.log(shoeForm.colors);
+    setShoeForm({
+      ...shoeForm,
+      colors: [...shoeForm.colors],
+    });
+    setColorSelected(null);
   };
   const saveShoes = () => {
     if (!validateForm(shoeForm)) {
@@ -116,18 +143,16 @@ const FormManager = ({ shoeParams = shoe, selectedbrand }) => {
     isSaved,
     colorSelected,
     shoeForm,
-    brand,
-    availableBrand,
     handleSelctedColor,
     handleChange,
     addTag,
     removeTag,
     addColor,
     resetShoeForm,
-    onAssignBrand,
     saveShoes,
     updateShoesInformation,
+    resetColorSelection,
   };
 };
 
-export default FormManager;
+export default useShoeForm;

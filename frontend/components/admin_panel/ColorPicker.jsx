@@ -3,24 +3,7 @@ import { useRef, useState, useEffect } from "react";
 
 import colorPickerStyle from "styles/stylecomponents/adminPanel/color_picker.module.css";
 
-const availableColors = [
-  "white",
-  "black",
-  "red",
-  "blue",
-  "green",
-  "yellow",
-  "gray",
-  "orange",
-  "pink",
-  "purple",
-  "brown",
-  "cyan",
-  "silver",
-  "gold",
-  "lightblue",
-  "lightgreen",
-];
+import { availableColors } from "utils/color-picker";
 
 function ColorPicker({ className, colors = [], onSelectColor }) {
   const [openPopup, setOpenPopup] = useState(false);
@@ -52,7 +35,10 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
     if (!isValidColor(color)) return;
 
     if (!colors.includes(color)) {
-      onSelectColor(color);
+      onSelectColor({
+        id: "",
+        color: color,
+      });
     }
     togglePopup();
   };
@@ -82,11 +68,7 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
       />
       <div className={colorPickerStyle.color_picker_ctn}>
         {colors.map((c) => (
-          <Color
-            name={c}
-            key={c}
-            onClick={() => onSelectColor(c)}
-          />
+          <Color name={c.color} key={c.id} onClick={() => onSelectColor(c)} />
         ))}
       </div>
     </div>

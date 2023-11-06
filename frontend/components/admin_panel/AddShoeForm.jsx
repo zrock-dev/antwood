@@ -1,34 +1,37 @@
 import formStyle from "styles/stylecomponents/adminPanel/shoes_form.module.css";
 import Button from "../Button";
-import ImageForm from "./ImageForm";
+import ShoeColorForm from "./ShoeColorForm";
 import ColorPicker from "./ColorPicker";
 import Tag from "./Tag";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
-import FormManager from "../../service/ManageForm";
+import useShoeForm from "../../hooks/useShoeForm";
 
-function AddShoeForm({ shoeParams, selectedbrand }) {
+function AddShoeForm(params) {
   const {
     isSaved,
     colorSelected,
     shoeForm,
-    brand,
     handleSelctedColor,
     handleChange,
     addTag,
     removeTag,
     addColor,
     resetShoeForm,
-    onAssignBrand,
     saveShoes,
-  } = FormManager({
-    shoeParams,
-    selectedbrand,
-  });
+    resetColorSelection,
+  } = useShoeForm(params);
+
+  const verifyTagInput = (value) => {
+    if (value.length > 15) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <div className={formStyle.section}>
-      <Toaster richColors />
       <form className={formStyle.shoe_form_ctn}>
         <div className={formStyle.shoe_form}>
           <div className={formStyle.shoe_form_inputs}>
@@ -60,19 +63,20 @@ function AddShoeForm({ shoeParams, selectedbrand }) {
               type="number"
               value={shoeForm.price}
               onChange={handleChange}
+              min={0}
               name="price"
             />
-            <label for="brand">
+            <label htmlFor="brand">
               {isSaved ? "Brand" : "Select the Shoe Brand"}
             </label>
             {isSaved ? (
-              brand
+              shoeForm.brand
             ) : (
               <select
                 id="brand"
                 name="brand"
-                onChange={onAssignBrand}
-                value={brand}
+                onChange={handleChange}
+                value={shoeForm.brand}
               >
                 <option value="nike">Nike</option>
                 <option value="adidas">Adidas</option>
@@ -87,18 +91,20 @@ function AddShoeForm({ shoeParams, selectedbrand }) {
             tagParams={shoeForm.tags}
             onAddTag={addTag}
             onRemove={removeTag}
+            verifyInput={verifyTagInput}
           />
 
           <div
             className={`${formStyle.shoe_form_inputs} ${formStyle.btns_ctn}`}
           >
             <Button onClick={saveShoes}>{isSaved ? "Update" : "Save"}</Button>
-            <Button onClick={resetShoeForm}>Clean Fields</Button>
+            <Button onClick={resetShoeForm}>New Shoe</Button>
           </div>
 
-
           <ColorPicker
-            className={`${formStyle.shoe_form_inputs} ${!isSaved && formStyle.disable}`}
+            className={`${formStyle.shoe_form_inputs} ${
+              !isSaved && formStyle.disable
+            }`}
             colors={shoeForm.colors}
             onSelectColor={handleSelctedColor}
           />
@@ -106,11 +112,13 @@ function AddShoeForm({ shoeParams, selectedbrand }) {
         <div className={formStyle.image_form}>
           {colorSelected ? (
             <>
-              <ImageForm
+              <ShoeColorForm
                 className={formStyle.shoe_form_images}
                 colorSelected={colorSelected}
                 idShoe={shoeForm.id}
-                brand={brand}
+                brand={shoeForm.brand}
+                addColor={addColor}
+                resetColorSelection={resetColorSelection}
               />
             </>
           ) : (

@@ -5,38 +5,36 @@ import Button from "../../components/Button";
 import Inventory from "../../components/admin_panel/Inventory";
 import AddShoeForm from "../../components/admin_panel/AddShoeForm";
 import { useState } from "react";
+import { Toaster, toast } from "sonner";
 
-function admin() {
+function Admin() {
   const [showInventory, setShowInventory] = useState(true);
   const [shoe, setShoe] = useState(null);
-  const [brand, setBrand] = useState(null);
   const displayInventory = () => {
     setShowInventory(true);
   };
 
   const hideInventory = () => {
     setShoe(null);
-    setBrand(null);
     setShowInventory(false);
   };
 
   const onEdit = (s) => {
-    setShoe(s.Shoe);
-    const inputString = s.Sneakercolor.images[0].id;
-    const parts = inputString.split("solestyle/product_images/");
-
-    if (parts.length === 2) {
-      const secondPart = parts[1];
-      const result = secondPart.split("/")[0];
-      setBrand(result);
-    } else {
-      console.log("The input string was not in the expected format.");
-    }
+    setShoe(s.sneaker);
     setShowInventory(false);
+  };
+
+  const selectSide = () => {
+    if (showInventory) {
+      return <Inventory onEdit={onEdit} />;
+    } else {
+      return !shoe ? <AddShoeForm /> : <AddShoeForm shoeParams={shoe} />;
+    }
   };
 
   return (
     <div className={styles.admin_panel}>
+      <Toaster richColors expanded={true} />
       <ul className={styles.admin_panel_menu}>
         <li>
           <Button
@@ -59,15 +57,9 @@ function admin() {
           </Button>
         </li>
       </ul>
-      {showInventory ? (
-        <Inventory onEdit={onEdit} />
-      ) : !shoe ? (
-        <AddShoeForm />
-      ) : (
-        <AddShoeForm shoeParams={shoe} selectedbrand={brand} />
-      )}
+      {selectSide()}
     </div>
   );
 }
 
-export default admin;
+export default Admin;

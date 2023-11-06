@@ -1,10 +1,10 @@
 import styles from "styles/stylecomponents/adminPanel/inventory.module.css";
 import InventoryCard from "../InventoryCard";
 import Button from "../Button";
-import { getAllShoes } from "../../request/shoes";
+import { getAllShoes, deleteShoe } from "../../request/shoes";
 import { useEffect, useState } from "react";
-
-function Inventory({onEdit}) {
+import { toast } from "sonner";
+function Inventory({ onEdit }) {
   const [shoes, setShoes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,16 +16,30 @@ function Inventory({onEdit}) {
     setLoading(true);
     getAllShoes()
       .then((res) => {
-        if ((res.data !== null)) {
-          setShoes(res.data);
-        }
-        console.log(res.data)
-        setLoading(false);
+        console.log(res.data);
+        if (res.data !== null) setShoes(res.data);
+        toast.success("Inventory loaded successfully");
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        toast.error(error.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
+  };
+
+  const onDeleteShoe = (id) => {
+    toast.promise(deleteShoe(id), {
+      loading: "Deleting...",
+      success: (result) => {
+        setShoes((prev) => prev.filter((shoe) => shoe.sneaker.id != id));
+        return "Deleted!";
+      },
+      error: (err) => {
+        console.log(err);
+        return "Delete Failed!";
+      },
+    });
   };
 
   return (
@@ -49,7 +63,12 @@ function Inventory({onEdit}) {
       <div className={styles.inventary_ctn}>
         <div className={styles.inventary_grid}>
           {shoes.map((shoe) => (
-            <InventoryCard shoe={shoe} key={shoe.id} onEdit={onEdit} />
+            <InventoryCard
+              shoe={shoe}
+              key={shoe.sneaker.id}
+              onEdit={onEdit}
+              onDelete={onDeleteShoe}
+            />
           ))}
         </div>
       </div>
