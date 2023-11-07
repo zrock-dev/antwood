@@ -9,8 +9,28 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func SendSneakerByID(c *fiber.Ctx) error {
+	var sneaker models.Sneaker
+	requiredSneakerID := c.Query("id")
+	objectID, err := primitive.ObjectIDFromHex(requiredSneakerID)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.D{{Key: "_id", Value: objectID}}
+
+	err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&sneaker)
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(sneaker)
+}
 
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	page := c.Query("page", "1")
