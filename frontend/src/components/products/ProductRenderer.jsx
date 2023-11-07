@@ -44,7 +44,7 @@ const ProductRenderer = ({ fetchMethod }) => {
 		<>
 			<div className="products-main-container">
 				{products.map((product) => (
-					<ProductCard product={product} />
+					<ProductCard key={product._id} product={product} />
 				))}
 			</div>
 			{hasMore && (
