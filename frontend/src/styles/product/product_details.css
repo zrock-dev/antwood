@@ -14,6 +14,10 @@
 	background-color: var(--gradient-tone);
 }
 
+.product-details-header {
+	z-index: 50;
+}
+
 .product-details-color-name {
 	text-transform: uppercase;
 
@@ -34,7 +38,9 @@
 .product-details-color-image-container {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 
+	width: 90%;
 	margin-inline: auto;
 }
 
@@ -59,6 +65,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	z-index: 0;
 
 	height: 430px;
 
@@ -71,6 +78,7 @@
 .product-details-images-container {
 	display: flex;
 	gap: 10px;
+	z-index: 50;
 
 	margin-inline: auto;
 }
@@ -132,6 +140,6 @@
 }
 
 .product-details-secction-description {
-	font-size: 12px;
+	font-size: 15px;
 	font-weight: 100;
 }

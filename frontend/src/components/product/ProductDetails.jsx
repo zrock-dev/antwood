@@ -34,7 +34,7 @@ const ProductDetails = ({ product }) => {
 	return (
 		<div className="product-details-main-container">
 			<div className="product-details-color-container">
-				<div>
+				<div className="product-details-header">
 					<h1 className="product-details-color-name">{product.name}</h1>
 					<span className="product-details-color-price">{product.price} $</span>
 				</div>
@@ -72,8 +72,7 @@ const ProductDetails = ({ product }) => {
 			<div className="product-details-information-container">
 				<DetailSection
 					title="Shoe Sizes"
-					description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
-					quasi."
+					description="We have these sizes available for this sneaker in this color"
 					body={
 						<div className="secction-item-row">
 							{colorData.sizes.map((size, index) => (
@@ -86,8 +85,7 @@ const ProductDetails = ({ product }) => {
 				/>
 				<DetailSection
 					title="Colors"
-					description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
-					quasi."
+					description="We have these colors available so you can choose for your collection"
 					body={
 						<div className="secction-item-row">
 							{product.types.map((type, index) => (

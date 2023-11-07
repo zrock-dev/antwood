@@ -15,7 +15,7 @@ import (
 
 func SendSneakerByID(c *fiber.Ctx) error {
 	var sneaker models.Sneaker
-	requiredSneakerID := c.Query("id")
+	requiredSneakerID := c.Params("id")
 	objectID, err := primitive.ObjectIDFromHex(requiredSneakerID)
 	if err != nil {
 		return err
