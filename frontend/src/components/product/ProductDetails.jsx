@@ -1,3 +1,5 @@
+import ArrowLeft from '@/icons/ArrowLeft';
+import ArrowRight from '@/icons/ArrowRight';
 import { useState } from 'react';
 
 const ProductDetails = ({ product }) => {
@@ -8,17 +10,49 @@ const ProductDetails = ({ product }) => {
 
 	const [colorData, setColorData] = useState(product.types[color.colorIndex]);
 
+	const nextImage = () => {
+		setColor({
+			...color,
+			imageIndex:
+				color.imageIndex === colorData.images.length - 1
+					? 0
+					: color.imageIndex + 1
+		});
+	};
+
+	const backImage = () => {
+		setColor({
+			...color,
+			imageIndex:
+				color.imageIndex === 0
+					? colorData.images.length - 1
+					: color.imageIndex - 1
+		});
+	};
+
 	return (
 		<div className="product-details-main-container">
 			<div className="product-details-color-container">
 				<div>
-					<h1>{product.name}</h1>
+					<h1 className="product-details-color-name">{product.name}</h1>
 					<span>{product.price} $</span>
 				</div>
-				<div>
-					<button>left</button>
-					<img src={colorData.images[color.imageIndex].url} alt="" />
-					<button>right</button>
+				<div className="product-details-color-image-container">
+					<button
+						className="product-details-color-directions"
+						onClick={backImage}
+					>
+						<ArrowLeft />
+					</button>
+					<div className="product-details-color-image">
+						<img src={colorData.images[color.imageIndex].url} alt="" />
+					</div>
+					<button
+						className="product-details-color-directions"
+						onClick={nextImage}
+					>
+						<ArrowRight />
+					</button>
 				</div>
 				<div className="product-details-images-container">
 					{colorData.images.map((image, index) => (
@@ -52,11 +86,14 @@ const ProductDetails = ({ product }) => {
 						quasi.
 					</p>
 					{product.types.map((type, index) => (
-						<img
-							src={type.images[0].url}
-							alt=""
-							className={`${index === color.colorIndex && 'selected'}`}
-						/>
+						<div
+							key={index}
+							className={`product-details-images-image ${
+								index === color.colorIndex && 'selected'
+							}`}
+						>
+							<img src={type.images[0].url} alt="" />
+						</div>
 					))}
 				</div>
 				<div>
