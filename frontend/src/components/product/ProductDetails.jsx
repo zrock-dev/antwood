@@ -1,6 +1,6 @@
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ProductDetails = ({ product }) => {
 	const [color, setColor] = useState({
@@ -8,7 +8,7 @@ const ProductDetails = ({ product }) => {
 		imageIndex: 0
 	});
 
-	const [colorData, setColorData] = useState(product.types[color.colorIndex]);
+	const colorData = product.types[color.colorIndex];
 
 	const nextImage = () => {
 		setColor({
@@ -88,6 +88,7 @@ const ProductDetails = ({ product }) => {
 					{product.types.map((type, index) => (
 						<div
 							key={index}
+							onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
 							className={`product-details-images-image ${
 								index === color.colorIndex && 'selected'
 							}`}
