@@ -1,7 +1,7 @@
 'use client';
 
-import '../../styles/products/product_card.css'
-import '../../styles/products/products.css'
+import '../../styles/products/product_card.css';
+import '../../styles/products/products.css';
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
 
@@ -41,16 +41,18 @@ const ProductRenderer = ({ fetchMethod }) => {
 		};
 	}, [products]);
 	return (
-		<div className='products-main-container'>
-			{products.map((product) => (
-				<ProductCard product={product} />
-			))}
+		<>
+			<div className="products-main-container">
+				{products.map((product) => (
+					<ProductCard product={product} />
+				))}
+			</div>
 			{hasMore && (
-				<div ref={lastProduct}>
-					loading items ...
+				<div ref={lastProduct} className="loader-container">
+					<span className="loader"></span>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -17,8 +17,8 @@ const ProductCard = ({ product }) => {
 				src={product.types[0].images[0].url}
 				alt=""
 			/>
-			<span className="text-extra-bold m-top-20">{product.name}</span>
-			<span>{product.price} $</span>
+			<span className="product-card-name margin-top-15">{product.name}</span>
+			<span className="product-card-price">{product.price} $</span>
 			{getTag()}
 		</Link>
 	);
