@@ -1,11 +1,37 @@
 .subtitle {
 	text-transform: uppercase;
 	font-weight: 900;
-    font-size: 50px;
+	font-size: 50px;
 }
 
 .vertical-separator {
-    margin-inline: auto;
-    padding: 25px 2px;
-    background-color: black;
+	margin-inline: auto;
+	padding: 25px 2px;
+	background-color: black;
+}
+
+.secction-item-row {
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
+.sneaker-size {
+	font-weight: 700;
+	border: 1px solid var(--medium-gray);
+	padding: 10px;
+
+	cursor: pointer;
+
+	&:hover {
+		border-color: black;
+		background-color: black;
+		color: white;
+	}
+}
+
+.sneaker-size.selected {
+	border-color: black;
+	background-color: black;
+	color: white;
 }

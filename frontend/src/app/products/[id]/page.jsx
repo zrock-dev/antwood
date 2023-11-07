@@ -1,7 +1,7 @@
+import Layout from '@/components/Layout';
 import SingleProductRenderer from '@/components/product/SingleProductRenderer';
-
 const SingleProductPage = ({ params }) => {
-	return <SingleProductRenderer id={params.id} />;
+	return <Layout children={<SingleProductRenderer id={params.id} />} />;
 };
 
 export default SingleProductPage;

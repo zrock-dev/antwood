@@ -1,6 +1,7 @@
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import DetailSection from './DetailSection';
 
 const ProductDetails = ({ product }) => {
 	const [color, setColor] = useState({
@@ -35,7 +36,7 @@ const ProductDetails = ({ product }) => {
 			<div className="product-details-color-container">
 				<div>
 					<h1 className="product-details-color-name">{product.name}</h1>
-					<span>{product.price} $</span>
+					<span className="product-details-color-price">{product.price} $</span>
 				</div>
 				<div className="product-details-color-image-container">
 					<button
@@ -69,38 +70,48 @@ const ProductDetails = ({ product }) => {
 				</div>
 			</div>
 			<div className="product-details-information-container">
-				<div>
-					<span>Shoe size</span>
-					<p>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
-						quasi.
-					</p>
-					{colorData.sizes.map((size, index) => (
-						<span key={index}>{size} - </span>
-					))}
-				</div>
-				<div>
-					<span>Colors</span>
-					<p>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
-						quasi.
-					</p>
-					{product.types.map((type, index) => (
-						<div
-							key={index}
-							onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
-							className={`product-details-images-image ${
-								index === color.colorIndex && 'selected'
-							}`}
-						>
-							<img src={type.images[0].url} alt="" />
+				<DetailSection
+					title="Shoe Sizes"
+					description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
+					quasi."
+					body={
+						<div className="secction-item-row">
+							{colorData.sizes.map((size, index) => (
+								<span className="sneaker-size" key={index}>
+									{size}
+								</span>
+							))}
 						</div>
-					))}
-				</div>
-				<div>
-					<span>description</span>
-					<p>{product.description}</p>
-				</div>
+					}
+				/>
+				<DetailSection
+					title="Colors"
+					description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni,
+					quasi."
+					body={
+						<div className="secction-item-row">
+							{product.types.map((type, index) => (
+								<div
+									key={index}
+									onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
+									className={`product-details-images-image gray ${
+										index === color.colorIndex && 'selected'
+									}`}
+								>
+									<img src={type.images[0].url} alt="" />
+								</div>
+							))}
+						</div>
+					}
+				/>
+				<DetailSection
+					title="Description"
+					body={
+						<p className="product-details-color-description">
+							{product.description}
+						</p>
+					}
+				/>
 			</div>
 		</div>
 	);
