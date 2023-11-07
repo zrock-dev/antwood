@@ -29,7 +29,32 @@ func SendSneakerByID(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(sneaker)
+	var sneakerWithColors models.SneakerWithColors
+	sneakerWithColors.ID = sneaker.ID
+	sneakerWithColors.Name = sneaker.Name
+	sneakerWithColors.Brand = sneaker.Brand
+	sneakerWithColors.Price = sneaker.Price
+	sneakerWithColors.Description = sneaker.Description
+	sneakerWithColors.LastDate = sneaker.LastDate
+	sneakerWithColors.Qualification = sneaker.Qualification
+	sneakerWithColors.SalesQuantity = sneaker.SalesQuantity
+	sneakerWithColors.PromotionCode = sneaker.PromotionCode
+	sneakerWithColors.Tags = sneaker.Tags
+	sneakerWithColors.Reviews = sneaker.Reviews
+
+	var colorTypes []models.SneakerColor
+	for _, color := range sneaker.Colors {
+		var colorS models.SneakerColor
+		filter := bson.D{{Key: "_id", Value: color.ID}}
+		err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&colorS)
+		if err != nil {
+			return err
+		}
+		colorTypes = append(colorTypes, colorS)
+	}
+
+	sneakerWithColors.Types = colorTypes
+	return c.JSON(sneakerWithColors)
 }
 
 func SendSneakersByPagination(c *fiber.Ctx) error {
