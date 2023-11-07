@@ -12,7 +12,7 @@ type ColorObject struct {
 }
 
 type Sneaker struct {
-	ID            primitive.ObjectID   `bson:"_id,omitempty"`
+	ID            primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
 	Name          string               `json:"name" form:"name" bson:"name"`
 	Description   string               `json:"description" form:"description" bson:"description"`
 	Price         int                  `json:"price" form:"price" bson:"price"`
