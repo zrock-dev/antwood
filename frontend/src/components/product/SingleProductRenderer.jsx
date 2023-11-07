@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import ProductDetails from './ProductDetails';
 import { getSneakerById } from '@/requests/SneakersRequest';
 
-import '../../styles/product/product_details.css'
+import '../../styles/product/product_details.css';
+import { useRouter } from 'next/navigation';
 
 const SingleProductRenderer = ({ id }) => {
+	const router = useRouter();
 	const [product, setProduct] = useState(null);
 
 	useEffect(() => {
@@ -15,7 +17,7 @@ const SingleProductRenderer = ({ id }) => {
 				setProduct(response);
 			})
 			.catch((e) => {
-				alert(e.message);
+				router.push('/');
 			});
 	}, []);
 	return product ? (
