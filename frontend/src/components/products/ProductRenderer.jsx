@@ -1,5 +1,7 @@
 'use client';
 
+import '../../styles/products/product_card.css'
+import '../../styles/products/products.css'
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
 
@@ -39,12 +41,12 @@ const ProductRenderer = ({ fetchMethod }) => {
 		};
 	}, [products]);
 	return (
-		<div>
+		<div className='products-main-container'>
 			{products.map((product) => (
 				<ProductCard product={product} />
 			))}
 			{hasMore && (
-				<div ref={lastProduct} style={{ fontSize: '20px', fontWeight: 'bold' }}>
+				<div ref={lastProduct}>
 					loading items ...
 				</div>
 			)}

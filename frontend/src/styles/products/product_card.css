@@ -1,0 +1,20 @@
+.product-card-container {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	&:hover {
+		.product-card-image {
+			background-color: var(--light-gray);
+		}
+	}
+}
+
+.product-card-image {
+	object-fit: cover;
+
+	width: 100%;
+	height: 40vh;
+
+	background-color: var(--gradient-tone);
+}
