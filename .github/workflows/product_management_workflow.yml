@@ -1,4 +1,4 @@
-name: Backend Product Management Workflow
+name: "Backend: Product Management Workflow"
 run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
 
 on:
@@ -22,15 +22,15 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21.3'
+          go-version: ${{ vars.GO_VERSION }} 
 
-      - name: Build Product Management Microservice
-
+      - name: Building 
         run: cd backend/product_management && go build -v .
 
 
   test:
     name: Test
+    needs: build
     runs-on:  ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,8 +38,8 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21.3'
+          go-version: ${{ vars.GO_VERSION }} 
 
-      - name: Test Product Management Microservice
-
+      - name: Running tests 
         run: cd backend/product_management/test && go test -v .
+
