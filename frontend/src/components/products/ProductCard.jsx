@@ -11,16 +11,21 @@ const ProductCard = ({ product }) => {
 	};
 
 	return (
-		<Link href={`/products/${product._id}`} className="product-card-container">
-			<img
-				className="product-card-image"
-				src={product.types[0].images[0].url}
-				alt=""
-			/>
-			<span className="product-card-name margin-top-15">{product.name}</span>
-			<span className="product-card-price">{product.price} $</span>
-			{getTag()}
-		</Link>
+		product.colors.length > 0 && (
+			<Link
+				href={`/products/${product._id}`}
+				className="product-card-container"
+			>
+				<img
+					className="product-card-image"
+					src={product.types[0].images[0].url}
+					alt=""
+				/>
+				<span className="product-card-name margin-top-15">{product.name}</span>
+				<span className="product-card-price">{product.price} $</span>
+				{getTag()}
+			</Link>
+		)
 	);
 };
 
