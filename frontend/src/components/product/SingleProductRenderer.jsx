@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ProductDetails from './ProductDetails';
 import { getSneakerById } from '@/requests/SneakersRequest';
 
 import '../../styles/product/product_details.css';
 import { useRouter } from 'next/navigation';
+import { AlertContext } from '@/context/AlertProvider';
 
 const SingleProductRenderer = ({ id }) => {
+	const { setDangerAlert } = useContext(AlertContext);
 	const router = useRouter();
 	const [product, setProduct] = useState(null);
 
@@ -17,10 +19,11 @@ const SingleProductRenderer = ({ id }) => {
 				setProduct(response);
 			})
 			.catch((e) => {
+				setDangerAlert('Invalid sneaker id');
 				router.push('/');
 			});
 	}, [id, router]);
-	
+
 	return product ? (
 		<ProductDetails product={product} />
 	) : (
