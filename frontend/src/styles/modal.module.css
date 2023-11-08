@@ -1,0 +1,13 @@
+.modal_ctn{
+    background-color: rgba(0, 0, 0, 0.719);
+    position:absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+}

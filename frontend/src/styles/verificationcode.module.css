@@ -1,0 +1,32 @@
+
+.tooltip{
+    position: absolute;
+    width: 350px;
+    height: 300px;
+    z-index: 200;
+    background-color: var(--primary-color);
+    box-shadow: var(--secondary-box-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    padding: 30px;
+    gap: 2rem;
+}
+
+.tooltip div{
+    display: flex;
+    
+}
+
+
+
+
+.tooltip input{
+    padding: 4px;
+    font-size: 35px;
+    margin-right: 5px;
+    height: 50px;
+    width: 150px;
+}
