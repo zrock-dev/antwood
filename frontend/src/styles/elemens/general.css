@@ -1,0 +1,11 @@
+.subtitle {
+	text-transform: uppercase;
+	font-weight: 900;
+    font-size: 50px;
+}
+
+.vertical-separator {
+    margin-inline: auto;
+    padding: 25px 2px;
+    background-color: black;
+}
