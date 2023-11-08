@@ -1,0 +1,8 @@
+FROM golang:1.21.3-alpine3.18
+
+RUN mkdir /service
+COPY . /service
+WORKDIR /service
+RUN go build -v .
+
+ENTRYPOINT ["go", "run", "."]
