@@ -19,7 +19,8 @@ const SingleProductRenderer = ({ id }) => {
 			.catch((e) => {
 				router.push('/');
 			});
-	}, []);
+	}, [id, router]);
+	
 	return product ? (
 		<ProductDetails product={product} />
 	) : (

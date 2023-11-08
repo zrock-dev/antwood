@@ -73,43 +73,38 @@ const ProductDetails = ({ product }) => {
 				<DetailSection
 					title="Shoe Sizes"
 					description="We have these sizes available for this sneaker in this color"
-					body={
-						<div className="secction-item-row">
-							{colorData.sizes.map((size, index) => (
-								<span className="sneaker-size" key={index}>
-									{size}
-								</span>
-							))}
-						</div>
-					}
-				/>
+				>
+					<div className="secction-item-row">
+						{colorData.sizes.map((size, index) => (
+							<span className="sneaker-size" key={index}>
+								{size}
+							</span>
+						))}
+					</div>
+				</DetailSection>
 				<DetailSection
 					title="Colors"
 					description="We have these colors available so you can choose for your collection"
-					body={
-						<div className="secction-item-row">
-							{product.types.map((type, index) => (
-								<div
-									key={index}
-									onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
-									className={`product-details-images-image gray ${
-										index === color.colorIndex && 'selected'
-									}`}
-								>
-									<img src={type.images[0].url} alt="" />
-								</div>
-							))}
-						</div>
-					}
-				/>
-				<DetailSection
-					title="Description"
-					body={
-						<p className="product-details-color-description">
-							{product.description}
-						</p>
-					}
-				/>
+				>
+					<div className="secction-item-row">
+						{product.types.map((type, index) => (
+							<div
+								key={index}
+								onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
+								className={`product-details-images-image gray ${
+									index === color.colorIndex && 'selected'
+								}`}
+							>
+								<img src={type.images[0].url} alt="" />
+							</div>
+						))}
+					</div>
+				</DetailSection>
+				<DetailSection title="Description">
+					<p className="product-details-color-description">
+						{product.description}
+					</p>
+				</DetailSection>
 			</div>
 		</div>
 	);
