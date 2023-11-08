@@ -23,6 +23,11 @@ func GetSneakerColors(documentID string) ([]primitive.ObjectID, error) {
 	if err != nil {
 		return nil, err
 	}
+	var sneakerIdsColors  []primitive.ObjectID
 
-	return sneaker.Colors, nil
+	for _, sneakerColor := range sneaker.Colors {
+		sneakerIdsColors = append(sneakerIdsColors, sneakerColor.ID)
+	}
+
+	return sneakerIdsColors, nil
 }

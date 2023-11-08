@@ -8,7 +8,7 @@ type Sneaker struct {
 	Brand         string               `bson:"brand"`
 	Description   string               `bson:"description"`
 	Price         int                  `bson:"price"`
-	Colors        []primitive.ObjectID `bson:"colors,omitempty"`
+	Colors        []ColorData          `bson:"colors,omitempty"`
 	Tags          []string             `bson:"tags,omitempty"`
 	Reviews       []primitive.ObjectID `bson:"reviews,omitempty"`
 	Qualification int                  `bson:"qualification,omitempty"`
@@ -28,3 +28,11 @@ type SneakerColorImage struct {
 	Url string `bson:"url"`
 	Id  string `bson:"id"`
 }
+
+
+
+type ColorData struct {
+	ID  primitive.ObjectID `bson:"_id,omitempty" json:"id" form:"id"`
+	Color  string `json:"color" form:"color" bson:"color"`
+}
+

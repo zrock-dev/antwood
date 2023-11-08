@@ -2,100 +2,62 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"mime/multipart"
 	"os"
 
 	"github.com/cloudinary/cloudinary-go"
-	"github.com/cloudinary/cloudinary-go/api/admin"
 	"github.com/cloudinary/cloudinary-go/api/uploader"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func credentials() (*cloudinary.Cloudinary, context.Context) {
-	// Add your Cloudinary credentials, set configuration parameter
-	// Secure=true to return "https" URLs, and create a context
-	//===================
+var Cld cloudinary.Cloudinary
+
+func LoadCloudinary() {
 	name := os.Getenv("CLOUDINARY_NAME")
 	apiKey := os.Getenv("CLOUDINARY_API_KEY")
-	apiSecret := os.Getenv("CLOUDINARY_API_SECRET")
-	cld, _ := cloudinary.NewFromParams(name, apiKey, apiSecret)
-	cld.Config.URL.Secure = true
+	apiSecrect := os.Getenv("CLOUDINARY_API_SECRECT")
 
-	ctx := context.Background()
-	return cld, ctx
+	cld, _ := cloudinary.NewFromParams(name, apiKey, apiSecrect)
+	Cld = *cld
 }
 
-func uploadImage(cld *cloudinary.Cloudinary, ctx context.Context) {
-
-	// Upload the image.
-	// Set the asset's public ID and allow overwriting the asset with new versions
-	resp, err := cld.Upload.Upload(ctx, "https://cloudinary-devs.github.io/cld-docs-assets/assets/images/butterfly.jpeg", uploader.UploadParams{
-		PublicID:       "quickstart_butterfly",
-		UniqueFilename: false,
-		Overwrite:      true})
+func DeleteImageByPublicId(imageId string) bool {
+	LoadCloudinary() 
+	_, err := Cld.Upload.Destroy(context.TODO(), uploader.DestroyParams{
+		PublicID: imageId,
+	})
 	if err != nil {
-		fmt.Println("error")
+		log.Fatal(err)
+		return false
 	}
-
-	// Log the delivery URL
-	fmt.Println("****2. Upload an image****\nDelivery URL:", resp.SecureURL, "\n")
+	return true
 }
 
-func getAssetInfo(cld *cloudinary.Cloudinary, ctx context.Context) {
-	// Get and use details of the image
-	// ==============================
-	resp, err := cld.Admin.Asset(ctx, admin.AssetParams{PublicID: "quickstart_butterfly"})
-	if err != nil {
-		fmt.Println("error")
-	}
-	fmt.Println("****3. Get and use details of the image****\nDetailed response:\n", resp, "\n")
-
-	// Assign tags to the uploaded image based on its width. Save the response to the update in the variable 'update_resp'.
-	if resp.Width > 900 {
-		update_resp, err := cld.Admin.UpdateAsset(ctx, admin.UpdateAssetParams{
-			PublicID: "quickstart_butterfly",
-			Tags:     []string{"large"}})
-		if err != nil {
-			fmt.Println("error")
-		} else {
-			// Log the new tag to the console.
-			fmt.Println("New tag: ", update_resp.Tags, "\n")
-		}
-	} else {
-		update_resp, err := cld.Admin.UpdateAsset(ctx, admin.UpdateAssetParams{
-			PublicID: "quickstart_butterfly",
-			Tags:     []string{"small"}})
-		if err != nil {
-			fmt.Println("error")
-		} else {
-			// Log the new tag to the console.
-			fmt.Println("New tag: ", update_resp.Tags, "\n")
-		}
-	}
-
+func UploadImage(file *multipart.FileHeader, brand string) (*uploader.UploadResult, error) {
+	LoadCloudinary() 
+	var id = primitive.NewObjectID()
+	return UploadToCloudinary(file, "solestyle/product_images/"+brand+"/"+id.Hex())
 }
 
-func transformImage(cld *cloudinary.Cloudinary, ctx context.Context) {
-	// Instantiate an object for the asset with public ID "my_image"
-	qs_img, err := cld.Image("quickstart_butterfly")
+
+func UploadToCloudinary(file *multipart.FileHeader, path string) (*uploader.UploadResult, error) {
+	uploadParams := uploader.UploadParams{
+		PublicID: path,
+	}
+	fileContent, err := file.Open()
 	if err != nil {
-		fmt.Println("error")
+		log.Fatal(err)
+		return nil, err
+	}
+	defer fileContent.Close()
+
+	uploadResult, err := Cld.Upload.Upload(context.TODO(), fileContent, uploadParams)
+	if err != nil {
+		log.Println("Error when uploading image to cloudinary")
+		log.Fatal(err)
+		return nil, err
 	}
 
-	// Add the transformation
-	qs_img.Transformation = "r_max/e_sepia"
-
-	// Generate and log the delivery URL
-	new_url, err := qs_img.String()
-	if err != nil {
-		fmt.Println("error")
-	} else {
-		print("****4. Transform the image****\nTransfrmation URL: ", new_url, "\n")
-	}
-}
-
-func Run() {
-	cld, ctx := credentials()
-	uploadImage(cld, ctx)
-	getAssetInfo(cld, ctx)
-	transformImage(cld, ctx)
+	return uploadResult, nil
 }

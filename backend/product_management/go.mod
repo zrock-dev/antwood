@@ -4,10 +4,13 @@ go 1.21.3
 
 require github.com/cloudinary/cloudinary-go v1.7.0
 
+require github.com/gofiber/utils v0.0.10 // indirect
+
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/cloudinary/cloudinary-go/v2 v2.6.0 // indirect
 	github.com/creasty/defaults v1.5.1 // indirect
+	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/fiber/v2 v2.50.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.3.1 // indirect

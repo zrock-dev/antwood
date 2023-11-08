@@ -38,8 +38,20 @@ func getSneakersPage(c *fiber.Ctx) error {
 		c.SendStatus(404)
 		return c.SendString(err.Error())
 	}
+
 	intI, err := strconv.ParseInt(pageIndex, 10, 32)
+	if err != nil {
+		c.SendStatus(404)
+		return c.SendString(err.Error())
+	}
+	
 	results, err := handlers.GetRestaurantsPage(intS, intI)
+	if err != nil {
+		c.SendStatus(404)
+		return c.SendString(err.Error())
+	}
+
+	
 
 	var d = new(models.PaginationResult)
 	d.PageIndex = intS
