@@ -72,8 +72,14 @@ function AuthFormWrapper() {
     if (!hasAccount) {
       if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
     } else if (validateSignupForm(form, setError)) {
+      try{
       let exist = await verifyUserExists(form.email);
+
       if (!exist) setShowVerificationCode(true);
+    }catch(err){
+
+      }
+
     }
   };
 

@@ -33,9 +33,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const onAuthSignin = async (user, provider) => {
-    return loginUser(user, provider)
+    return await loginUser(user, provider)
       .then((res) => {
         const data = res.data;
+        if(data.error){
+               toast.error("bad credentials");
+               return { success: false, message: "bad credentials" };
+        }
         updateUser(data);
         setIsAuthenticated(true)
         closeAuthModal();
@@ -44,25 +48,27 @@ export const AuthProvider = ({ children }) => {
       })
       .catch((err) => {
         toast.error("bad credentials");
-        console.log(err)
         return { success: false, message: err };
       });
   };
 
   const verifyUserExists = async (email) => {
-    return await getUserByEmail(email)
+    return  await getUserByEmail(email)
       .then((res) => {
-        toast.error("there is already an account using that email");
-        return true;
+          if(res.data.email!==""){
+             toast.error("there is already an account using that email");
+            return true;
+            }
+        return false;
       })
       .catch((error) => {
-
+        console.log(error)
         return false;
       });
   };
 
   const onAuthSignup = async (user, provider) => {
-    return registerUser(user, provider)
+    return await registerUser(user, provider)
       .then((res) => {
         const data = res.data;
         updateUser(data);

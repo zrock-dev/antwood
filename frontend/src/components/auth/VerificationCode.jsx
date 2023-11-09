@@ -10,7 +10,7 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
   const [code, setCode] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [secondsLeft, setSecondsLeft] = useState(360);
 
   useEffect(() => {
     let onClickHandler = (e) => {
@@ -37,10 +37,10 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
      blockSendCode();
      getCodeToVerifyAccount(email).then((res) => {
       let code = res.data.code;
-      console.log(code)
        if(code!==""){
         let encryptedData = encryptData(code);
         setVerificationCode(encryptedData);
+        toast.info("The code has been sent, if you don't receive it, check if your email is valid");
        }else{
          toast.error("The email could not be sent, verify that it exists");
        }
@@ -52,13 +52,14 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
 
   const blockSendCode = () => {
     setIsCodeSent(true);
-    let seconds = 60;
+    let seconds = 360;
     const interval = setInterval(() => {
       setSecondsLeft(seconds);
       seconds -= 1;
       if (seconds < 0) {
         setIsCodeSent(false);
         clearInterval(interval);
+        setCode("")
       }
     }, 1000);
   };
