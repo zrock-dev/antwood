@@ -1,7 +1,7 @@
 import styles from "@/styles/verificationcode.module.css";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
-import { getCodeToVerifyAccount } from "@/request/AuthRequest";
+import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
 import { toast } from "sonner";
 import { encryptData, decryptData } from "@/utils/Encrypter";
 

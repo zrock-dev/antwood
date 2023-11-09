@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 import Modal from "@/components/Modal";
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import useModal from "@/hooks/useModal";
-import { loginUser, registerUser, getUserByEmail } from "@/request/AuthRequest";
+import { loginUser, registerUser, getUserByEmail } from "@/requests/AuthRequest";
 import { toast } from "sonner";
 export const AuthContext = createContext();
 
