@@ -21,7 +21,9 @@
 }
 
 
-
+.disableBuutton{
+    background-color: rgb(197, 46, 46)!important;
+}
 
 .tooltip input{
     padding: 4px;

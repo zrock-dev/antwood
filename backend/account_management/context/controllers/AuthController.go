@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"account_management/app/models"
+	"account_management/app/repository"
 	"account_management/context/records"
 	"account_management/context/service"
 
@@ -92,7 +94,7 @@ func Login(c *fiber.Ctx) error {
 
 
 
-func User(c *fiber.Ctx) error {
+func GetUserByToken(c *fiber.Ctx) error {
 	authProvider := service.UseProvider(c.Query("provider"))
 
 	authTocken := c.Cookies("jwt")
@@ -108,7 +110,7 @@ func User(c *fiber.Ctx) error {
 
 	accessToken := (*claims)["accessToken"].( string)
 
-	user,userError := authProvider.User(accessToken)
+	user,userError := authProvider.GetUserByToken(accessToken)
 
 	if userError!= nil {
 		c.Status(fiber.StatusForbidden)
@@ -159,4 +161,16 @@ func Logout(c *fiber.Ctx) error {
 		"message": "success logout",
 	})
 
+}
+
+func GetUserByEmail(c *fiber.Ctx) error {
+	email := c.Params("email")
+	var user models.User
+	user , err := repository.FindUserByEmail(email)
+
+	if err!=nil{
+		return c.Status(fiber.StatusForbidden).JSON(user)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(user)
 }

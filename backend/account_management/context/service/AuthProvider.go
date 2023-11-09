@@ -15,7 +15,7 @@ type Provider interface {
 	Register(ctx *fiber.Ctx) (string,models.User,error)
 	Login(ctx *fiber.Ctx) (string,models.User,error)
 	Logout(accessToken string) (string , error)
-	User(accessToken string)  (models.User,error) 
+	GetUserByToken(accessToken string)  (models.User,error) 
 }
 
 
@@ -96,7 +96,7 @@ func (s SoleStyleProvider) Login(ctx *fiber.Ctx)(string,models.User,error) {
 
 
 
-func (s SoleStyleProvider) User(accessToken string) (models.User,error) {
+func (s SoleStyleProvider) GetUserByToken(accessToken string) (models.User,error) {
 
 	claims,err := GetStandardClaims(accessToken)
 	if(err!= nil){

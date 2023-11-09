@@ -19,6 +19,11 @@ export const registerUser = (user,provider) =>
 
 export const getUser = () =>
   axios.get(`${API}/auth/user?provider=${provider}`, axiosConfig);
+  export const getUserByEmail = (email) =>
+    axios.get(`${API}/auth/user/${email}`, axiosConfig);
 
 export const logoutUser = (user,provider) =>
   axios.post(`${API}/auth/logout?provider=${provider}`, user, axiosConfig);
+
+export const getCodeToVerifyAccount = (email) =>
+  axios.get(`${API}/auth/verify-account/${email}`, axiosConfig);

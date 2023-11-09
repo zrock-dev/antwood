@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import { AuthProvider } from "@/context/AuthContext";
 const inter = Inter({ subsets: ['latin'] })
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: 'Solestyle',
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="logo.svg" />
       </head>
       <body className={inter.className}>
+        <Toaster richColors />
         <AuthProvider>{children}</AuthProvider>
         <script
           src="https://kit.fontawesome.com/76fc76e1bc.js"

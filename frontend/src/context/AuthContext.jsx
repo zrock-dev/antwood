@@ -1,9 +1,10 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import Modal from "@/components/Modal";
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import useModal from "@/hooks/useModal";
-import { loginUser, registerUser } from "@/request/AuthRequest";
+import { loginUser, registerUser, getUserByEmail } from "@/request/AuthRequest";
+import { toast } from "sonner";
 export const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -32,25 +33,48 @@ export const AuthProvider = ({ children }) => {
   };
 
   const onAuthSignin = async (user, provider) => {
-    try {
-      const res = await loginUser(user, provider);
-      const data = await res.data;
-      updateUser(data);
-      closeAuthModal();
-    } catch (err) {
-      console.log(err);
-    }
+    return loginUser(user, provider)
+      .then((res) => {
+        const data = res.data;
+        updateUser(data);
+        setIsAuthenticated(true)
+        closeAuthModal();
+        toast.success("success signin ");
+        return { success: true, message: "success signin" };
+      })
+      .catch((err) => {
+        toast.error("bad credentials");
+        console.log(err)
+        return { success: false, message: err };
+      });
+  };
+
+  const verifyUserExists = async (email) => {
+    return await getUserByEmail(email)
+      .then((res) => {
+        toast.error("there is already an account using that email");
+        return true;
+      })
+      .catch((error) => {
+
+        return false;
+      });
   };
 
   const onAuthSignup = async (user, provider) => {
-    try {
-      const res = await registerUser(user, provider);
-      const data = await res.data;
-      updateUser(data);
-      closeAuthModal();
-    } catch (err) {
-      console.log(err);
-    }
+    return registerUser(user, provider)
+      .then((res) => {
+        const data = res.data;
+        updateUser(data);
+        setIsAuthenticated(true);
+        closeAuthModal();
+        toast.success("success signup ");
+        return { sucess: true, message: "success signup" };
+      })
+      .catch((err) => {
+        toast.error("Signup Error");
+        return { sucess: false, message: "Signup Error" };
+      });
   };
 
   return (
@@ -62,7 +86,8 @@ export const AuthProvider = ({ children }) => {
         openAuthModal,
         closeAuthModal,
         onAuthSignin,
-        onAuthSignup
+        onAuthSignup,
+        verifyUserExists,
       }}
     >
       {children}

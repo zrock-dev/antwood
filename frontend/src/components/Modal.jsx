@@ -3,8 +3,6 @@
 import modalStyle from '@/styles/modal.module.css'
 import { useEffect, useRef } from "react";
 
-
-
 function Modal({
   children,
   isModalOpen,

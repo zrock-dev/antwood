@@ -5,6 +5,11 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import VerificationCode from "./VerificationCode";
 import Button from "../Button";
+import {
+  validateSignupForm,
+  validateSigninForm,
+} from "@/utils/AuthFormValidations";
+
 const defaultForm = {
   username: "",
   email: "",
@@ -21,66 +26,41 @@ function AuthFormWrapper() {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
   const [error, setError] = useState(fieldError);
-  const { onAuthSignin, onAuthSignup } = useAuth();
-  const [showVerificationCode, setVerificationCode] = useState(false)
+  const { onAuthSignin, onAuthSignup, verifyUserExists } = useAuth();
+  const [showVerificationCode, setShowVerificationCode] = useState(false);
 
-
-  const regex = /^[a-zA-Z0-9\s]+$/;
   const handleAuth = () => {
-    resetForm()
+    resetForm();
     setHasAccount(!hasAccount);
   };
 
   const resetForm = () => {
     setForm(defaultForm);
+    setError(fieldError);
   };
 
   const onSignin = async (user, provider) => {
-    try {
-      await onAuthSignin(user, provider);
+    const result = await onAuthSignin(user, provider);
+    const success = await result.success;
+    if (success) {
       resetForm();
-    } catch (err) {
-      console.log(err);
     }
   };
 
   const onSignup = async (user, provider) => {
-    try {
-      await onAuthSignup(user, provider);
+    const res = await onAuthSignup(user, provider);
+    if (res.success) {
       resetForm();
-    } catch (err) {
-      console.log(err);
     }
   };
 
   const handleOnChange = (e) => {
     let { name, value } = e.target;
     value = value.trim();
-
-    if (value =="") {
-      setError({
-        ...error,
-        [name]: "as",
-      });
+    const maxLength = name === "email" ? 50 : 20;
+    if (value.length > maxLength) {
+      return;
     }
-  
-   
-    if(value.length > 30){
-      return ;
-    }
-
-    if (!regex.test(value)) {
-        setError({
-          ...error,
-          [name]: "* Only alphanumeric values are allowed",
-        });
-    }else{
-      setError({
-        ...error,
-        [name]: "",
-      });
-    }
-
     setForm({
       ...form,
       [name]: value,
@@ -90,11 +70,24 @@ function AuthFormWrapper() {
   const handleSignIn = async (e) => {
     e.preventDefault();
     if (!hasAccount) {
-      onSignin(form, "solesstyle");
-    } else {
-      setVerificationCode(true)
-      onSignup(form, "solestyle");
+      if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
+    } else if (validateSignupForm(form, setError)) {
+      let exist = await verifyUserExists(form.email);
+      if (!exist) setShowVerificationCode(true);
     }
+  };
+
+  const hideVerificationCodePopup = () => {
+    setShowVerificationCode(false);
+  };
+
+  const renderErrorMessage = (fieldName) => {
+    if (error[fieldName]) {
+      return (
+        <span className={authStyle.error_message}>{error[fieldName]}</span>
+      );
+    }
+    return null;
   };
 
   return (
@@ -114,11 +107,6 @@ function AuthFormWrapper() {
         <div>
           {hasAccount && (
             <>
-              {error.username && (
-                <span className={authStyle.error_message}>
-                  {error.username}
-                </span>
-              )}
               <input
                 type="text"
                 placeholder="Username"
@@ -126,10 +114,8 @@ function AuthFormWrapper() {
                 name="username"
                 onChange={handleOnChange}
               />
+              {renderErrorMessage("username")}
             </>
-          )}
-          {error.email && (
-            <span className={authStyle.error_message}>{error.email}</span>
           )}
           <input
             type="email"
@@ -138,16 +124,15 @@ function AuthFormWrapper() {
             name="email"
             onChange={handleOnChange}
           />
-          {error.password && (
-            <span className={authStyle.error_message}>{error.password}</span>
-          )}
+          {renderErrorMessage("email")}
           <input
             type="password"
             placeholder="Password"
             value={form.password}
             name="password"
             onChange={handleOnChange}
-          />{" "}
+          />
+          {renderErrorMessage("password")}{" "}
         </div>
         <Button className={authStyle.btn} onClick={handleSignIn}>
           {hasAccount ? "Sign Up" : "Sign In"}
@@ -158,7 +143,11 @@ function AuthFormWrapper() {
         <span onClick={handleAuth}>{hasAccount ? "Sign In" : "Sign Up"}</span>
       </p>
       {showVerificationCode && (
-        <VerificationCode onCloseToolTip={() => setVerificationCode(false)} />
+        <VerificationCode
+          onCloseToolTip={hideVerificationCodePopup}
+          onVerified={() => onSignup(form, "solestyle")}
+          email={form.email}
+        />
       )}
     </div>
   );
