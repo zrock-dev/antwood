@@ -1,0 +1,24 @@
+name: "QA Testing environment deploy workflow"
+run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
+
+on:
+  workflow_run:
+    workflows: [Backend Account Management Workflow, Backend Product Management Workflow, Frontend Workflow]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send update signal to server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ vars.QA_HOST }}
+        username: ${{ secrets.QA_USERNAME }}
+        key: ${{ secrets.QA_KEY }}
+        script: ./tools/run_images_upgrade
+
