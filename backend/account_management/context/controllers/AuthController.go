@@ -61,7 +61,7 @@ func Login(c *fiber.Ctx) error {
 	authentication_token, user ,authError:= authProvider.Login(c)
 
 	if authError != nil {
-		c.Status(fiber.StatusInternalServerError)
+		c.Status(fiber.StatusOK)
 		return c.JSON(fiber.Map{
 			"error": authError.Error(),
 		})
@@ -169,7 +169,7 @@ func GetUserByEmail(c *fiber.Ctx) error {
 	user , err := repository.FindUserByEmail(email)
 
 	if err!=nil{
-		return c.Status(fiber.StatusForbidden).JSON(user)
+		return c.Status(fiber.StatusOK).JSON(user)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(user)
