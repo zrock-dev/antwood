@@ -3,6 +3,7 @@ package responses
 import (
 	"context"
 	"strconv"
+	"fmt"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -120,4 +121,48 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		Sneakers: sneakersWithColors,
 		Page:     pageInt,
 	})
+}
+
+func sendSneakerByBrand(c *fiber.Ctx) error {
+    var sneaker models.Sneaker
+    requiredSneakerBrand := c.Params("brand")
+    objectBrand, err := String(requiredSneakerBrand)
+    if err != nil {
+   		return err
+   	}
+
+    filter := bson.D{{Key: "brand", Value: objectBrand}}
+
+    err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&sneaker)
+
+    if err != nil {
+   		return err
+   	}
+
+    	var sneakerWithColors models.SneakerWithColors
+    	sneakerWithColors.ID = sneaker.ID
+    	sneakerWithColors.Name = sneaker.Name
+    	sneakerWithColors.Brand = sneaker.Brand
+    	sneakerWithColors.Price = sneaker.Price
+    	sneakerWithColors.Description = sneaker.Description
+    	sneakerWithColors.LastDate = sneaker.LastDate
+    	sneakerWithColors.Qualification = sneaker.Qualification
+    	sneakerWithColors.SalesQuantity = sneaker.SalesQuantity
+    	sneakerWithColors.PromotionCode = sneaker.PromotionCode
+    	sneakerWithColors.Tags = sneaker.Tags
+    	sneakerWithColors.Reviews = sneaker.Reviews
+
+    	var colorTypes []models.SneakerColor
+    	for _, color := range sneaker.Colors {
+    		var colorS models.SneakerColor
+    		filter := bson.D{{Key: "_id", Value: color.ID}}
+    		err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&colorS)
+    		if err != nil {
+    			return err
+    		}
+    		colorTypes = append(colorTypes, colorS)
+    	}
+
+    	sneakerWithColors.Types = colorTypes
+    	return c.JSON(sneakerWithColors)
 }

@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import SingleProductRenderer from '@/components/product/SingleProductRenderer';
-import RelatedProductRenderer from '@/components/product/RelatedProductRenderer';
+import RelatedProductRenderer from '@/components/product/RelatedProducts/RelatedProductRenderer';
 
 const SingleProductPage = ({ params }) => {
 	return (

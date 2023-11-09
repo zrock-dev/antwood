@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ProductDetails from './ProductDetails';
 import { getSneakerById } from '@/requests/SneakersRequest';
 
 import '../../styles/product/product_details.css';
