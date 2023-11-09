@@ -1,17 +1,17 @@
 export const isUsernameValid = (username) => {
   const regex = /^[a-zA-Z0-9\s.\-]+$/;
-  return regex.test(username) && username.length >= 6;
+  return regex.test(username) && username.length >= 6 && !username.includes(" ");
 };
 
 export const isEmailValid = (email) => {
   const regex = /^[a-zA-Z0-9\s,@.\-]+$/;
   const emailRegex = /^[a-zA-Z0-9\s,@.\-]+@gmail\.com$/;
-  return regex.test(email) && emailRegex.test(email) && email.length <= 50;
+  return regex.test(email) && emailRegex.test(email) && email.length <= 50 && !email.includes(" ");
 };
 
 export const isPasswordValid = (password) => {
   const regex = /^[a-zA-Z0-9\s.\-]+$/;
-  return regex.test(password) && password.length >= 6;
+  return regex.test(password) && password.length >= 6 && !password.includes(" ");
 };
 
 
@@ -27,7 +27,7 @@ export const validateSignupForm = (form,setError) => {
 
   if (!isUsernameValid(form.username)) {
     errors.username =
-      "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -";
+      "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9,., -";
     isFormValid = false;
   }
 
@@ -38,7 +38,7 @@ export const validateSignupForm = (form,setError) => {
 
   if (!isPasswordValid(form.password)) {
     errors.password =
-      "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -, or _";
+      "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -";
     isFormValid = false;
   }  
   setError(errors);
@@ -60,7 +60,7 @@ export const validateSigninForm = (form, setError) => {
   }
 
   if (!isPasswordValid(form.password)) {
-    errors.password = "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -, or _";
+    errors.password = "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -";
     isFormValid = false;
   }
   setError(errors)

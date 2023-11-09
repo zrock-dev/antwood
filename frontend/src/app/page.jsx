@@ -1,14 +1,16 @@
 "use client"
-import styles from '@/styles/page.module.css'
-import { useAuth } from "@/context/AuthContext";
-export default function Home() {
+import Layout from '@/components/Layout';
+import ProductSuggestions from '@/components/products/product_renderers/ProductSuggestions';
+import '../styles/landing_page/page.css';
 
-  const { openAuthModal } = useAuth();
-
-  return (
-    <main className={styles.main}>
-      HOME
-      <button onClick={openAuthModal}>Login</button>
-    </main>
-  );
+export default function LandingPage() {
+	return (
+		<Layout>
+			<main className="landing-page-main-container">
+				<span className="vertical-separator"></span>
+				<span className="subtitle">Our suggestions for you</span>
+				<ProductSuggestions />
+			</main>
+		</Layout>
+	);
 }

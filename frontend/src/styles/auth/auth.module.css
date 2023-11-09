@@ -90,10 +90,31 @@
 
 .delimiter{
     display: flex;
+    position: relative;
+
     width: fit-content;
     font-size:30px;
     font-weight: bold;
     user-select: none;
+}
+
+.delimiter::before, .delimiter::after {
+    content: '';
+    position: absolute;
+    top: 55%;
+
+    width: 240%;
+    height: 5px;
+    border-radius: 2px;
+    background-color: black;
+}
+
+.delimiter::before {
+    right: 120%;
+}
+
+.delimiter::after {
+    left: 120%;
 }
 
 .delimiter hr{

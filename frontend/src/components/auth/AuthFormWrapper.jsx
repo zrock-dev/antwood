@@ -26,7 +26,8 @@ function AuthFormWrapper() {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
   const [error, setError] = useState(fieldError);
-  const { onAuthSignin, onAuthSignup, verifyUserExists } = useAuth();
+  const { onAuthSignin, onAuthSignup, verifyUserExists, isAuthModalOpen } =
+    useAuth();
   const [showVerificationCode, setShowVerificationCode] = useState(false);
 
   const handleAuth = () => {
@@ -67,8 +68,7 @@ function AuthFormWrapper() {
     });
   };
 
-  const handleSignIn = async (e) => {
-    e.preventDefault();
+  const handleSignIn = async () => {
     if (!hasAccount) {
       if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
     } else if (validateSignupForm(form, setError)) {
@@ -96,6 +96,13 @@ function AuthFormWrapper() {
     return null;
   };
 
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter" && isAuthModalOpen) {
+        handleSignIn();
+      }
+    };
+
+
   return (
     <div className={authStyle.auth_ctn}>
       <div>
@@ -108,7 +115,7 @@ function AuthFormWrapper() {
           {hasAccount ? "Sign Up with Google" : "Sign In with Google"}
         </div>
       </div>
-      <div className={authStyle.delimiter}> -- o --</div>
+      <div className={authStyle.delimiter}>o</div>
       <form className={authStyle.form_inputs}>
         <div>
           {hasAccount && (
@@ -137,6 +144,7 @@ function AuthFormWrapper() {
             value={form.password}
             name="password"
             onChange={handleOnChange}
+            onKeyDown={handleKeyPress}
           />
           {renderErrorMessage("password")}{" "}
         </div>

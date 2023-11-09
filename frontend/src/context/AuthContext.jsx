@@ -31,6 +31,9 @@ export const AuthProvider = ({ children }) => {
   const closeAuthModal = () => {
     closeModal();
   };
+  const isAuthModalOpen = ()=>{
+    return isModalOpen
+  }
 
   const onAuthSignin = async (user, provider) => {
     return await loginUser(user, provider)
@@ -94,6 +97,7 @@ export const AuthProvider = ({ children }) => {
         onAuthSignin,
         onAuthSignup,
         verifyUserExists,
+        isAuthModalOpen,
       }}
     >
       {children}

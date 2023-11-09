@@ -6,12 +6,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type ColorObject struct {
+	ID    primitive.ObjectID `json:"_id" form:"_id" bson:"_id"`
+	Color string             `json:"color" form:"color" bson:"color"`
+}
+
 type Sneaker struct {
-	ID            primitive.ObjectID   `bson:"_id,omitempty"`
+	ID            primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
 	Name          string               `json:"name" form:"name" bson:"name"`
 	Description   string               `json:"description" form:"description" bson:"description"`
 	Price         int                  `json:"price" form:"price" bson:"price"`
-	Colors        []primitive.ObjectID `json:"colors" form:"colors" bson:"colors"`
+	Brand         string               `json:"brand,omitempty" form:"brand,omitempty" bson:"brand,omitempty"`
+	Colors        []ColorObject        `json:"colors" form:"colors" bson:"colors"`
 	Tags          []string             `json:"tags" form:"tags" bson:"tags"`
 	Reviews       []primitive.ObjectID `json:"reviews" form:"reviews" bson:"reviews"`
 	Qualification int                  `json:"qualification" form:"qualification" bson:"qualification"`
@@ -26,7 +32,7 @@ func DefaultSneaker() *Sneaker {
 		Name:          "",
 		Description:   "",
 		Price:         0,
-		Colors:        []primitive.ObjectID{},
+		Colors:        []ColorObject{},
 		Tags:          []string{},
 		Reviews:       []primitive.ObjectID{},
 		Qualification: 0,

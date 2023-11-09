@@ -114,9 +114,6 @@ func AddNewImageToSneakerColor(c *fiber.Ctx) error {
 
 func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
 	toUpdate := bson.M{}
-	if updatedSneakerColor.Color != "" {
-		toUpdate["color"] = updatedSneakerColor.Color
-	}
 	if len(updatedSneakerColor.Images) > 0 {
 		toUpdate["images"] = updatedSneakerColor.Images
 	}
