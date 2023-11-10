@@ -1,3 +1,4 @@
+"use client"
 import Layout from '@/components/Layout';
 import ProductSuggestions from '@/components/products/product_renderers/ProductSuggestions';
 import '../styles/landing_page/page.css';
