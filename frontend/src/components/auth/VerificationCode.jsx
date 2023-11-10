@@ -10,7 +10,7 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified , isVisible}) => {
   const [code, setCode] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(20);
+  const [secondsLeft, setSecondsLeft] = useState(360);
 
 
   
@@ -56,12 +56,12 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified , isVisible}) => {
 
   const blockSendCode = () => {
     setIsCodeSent(true);
-    let seconds = 20;
+    let seconds = 360;
     const interval = setInterval(() => {
       setSecondsLeft(seconds);
       seconds -= 1;
       if (seconds < 0) {
-        setSecondsLeft(20)
+        setSecondsLeft(360)
         setIsCodeSent(false);
         clearInterval(interval);
         setVerificationCode("")
