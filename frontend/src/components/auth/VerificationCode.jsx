@@ -1,23 +1,26 @@
+"use client";
 import styles from "@/styles/verificationcode.module.css";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
 import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
 import { toast } from "sonner";
 import { encryptData, decryptData } from "@/utils/Encrypter";
-
-const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
+const VerificationCode = ({ onCloseToolTip, email, onVerified , isVisible}) => {
   const tooltipRef = useRef();
   const [code, setCode] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(360);
+  const [secondsLeft, setSecondsLeft] = useState(20);
 
+
+  
   useEffect(() => {
     let onClickHandler = (e) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target)) {
         onCloseToolTip();
       }
     };
+    
     document.addEventListener("mousedown", onClickHandler);
     return () => {
       document.removeEventListener("mousedown", onClickHandler);
@@ -32,6 +35,8 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
     setCode(value);
   };
 
+
+
   const sendCode = async () => {
     if(isCodeSent) return
      blockSendCode();
@@ -44,7 +49,6 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
        }else{
          toast.error("The email could not be sent, verify that it exists");
        }
-      
      }).catch((err) => {
        toast.error(err);
      })
@@ -52,20 +56,23 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
 
   const blockSendCode = () => {
     setIsCodeSent(true);
-    let seconds = 360;
+    let seconds = 20;
     const interval = setInterval(() => {
       setSecondsLeft(seconds);
       seconds -= 1;
       if (seconds < 0) {
+        setSecondsLeft(20)
         setIsCodeSent(false);
         clearInterval(interval);
-        setCode("")
+        setVerificationCode("")
       }
     }, 1000);
   };
 
+
   const verifyCode = () => {
     let originalCode = decryptData(verificationCode);
+
     if (originalCode!== "" && originalCode == code) {
       onVerified();
     } else {
@@ -87,7 +94,7 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified }) => {
       <div>
         <Button onClick={verifyCode}>Verify Code</Button>
       </div>
-      {isCodeSent && <p>Resend code in {secondsLeft} seconds</p>}
+      {isCodeSent &&  <p>Resend code in {secondsLeft} seconds</p>}
     </div>
   );
 };

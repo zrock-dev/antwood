@@ -1,3 +1,16 @@
+
+export const defaultForm = {
+  username: "",
+  email: "",
+  password: "",
+};
+
+export const defaultFormError = {
+  username: "",
+  email: "",
+  password: "",
+};
+
 export const isUsernameValid = (username) => {
   const regex = /^[a-zA-Z0-9\s.\-]+$/;
   return regex.test(username) && username.length >= 6 && !username.includes(" ");
@@ -17,13 +30,8 @@ export const isPasswordValid = (password) => {
 
 
 export const validateSignupForm = (form,setError) => {
-      const errors = {
-        username: "",
-        email: "",
-        password: "",
-      };
-
-  let isFormValid = true;
+      const errors = {...defaultFormError}
+    let isFormValid = true;
 
   if (!isUsernameValid(form.username)) {
     errors.username =
@@ -47,12 +55,7 @@ export const validateSignupForm = (form,setError) => {
 
 
 export const validateSigninForm = (form, setError) => {
-      const errors = {
-        username: "",
-        email: "",
-        password: "",
-      };
-
+  const errors = {...defaultFormError}
   let isFormValid = true;
   if (!isEmailValid(form.email)) {
     errors.email = "Please enter a valid Gmail email address";

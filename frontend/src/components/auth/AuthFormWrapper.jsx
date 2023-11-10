@@ -2,7 +2,6 @@
 import { useState } from "react";
 import authStyle from "@/styles/auth/auth.module.css";
 import Image from "next/image";
-import { useAuth } from "@/context/AuthContext";
 import VerificationCode from "./VerificationCode";
 import Button from "../Button";
 import {
@@ -10,25 +9,15 @@ import {
   validateSigninForm,
 } from "@/utils/AuthFormValidations";
 
-const defaultForm = {
-  username: "",
-  email: "",
-  password: "",
-};
+import useAuthHandler from "@/hooks/AuthOperations";
+import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
 
-const fieldError = {
-  username: "",
-  email: "",
-  password: "",
-};
-
-function AuthFormWrapper() {
+function AuthFormWrapper({isModalOpen}) {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
-  const [error, setError] = useState(fieldError);
-  const { onAuthSignin, onAuthSignup, verifyUserExists, isAuthModalOpen } =
-    useAuth();
+  const [error, setError] = useState(defaultFormError);
   const [showVerificationCode, setShowVerificationCode] = useState(false);
+  const { onSignin, onSignup, verifyUserExists } = useAuthHandler();
 
   const handleAuth = () => {
     resetForm();
@@ -37,22 +26,7 @@ function AuthFormWrapper() {
 
   const resetForm = () => {
     setForm(defaultForm);
-    setError(fieldError);
-  };
-
-  const onSignin = async (user, provider) => {
-    const result = await onAuthSignin(user, provider);
-    const success = await result.success;
-    if (success) {
-      resetForm();
-    }
-  };
-
-  const onSignup = async (user, provider) => {
-    const res = await onAuthSignup(user, provider);
-    if (res.success) {
-      resetForm();
-    }
+    setError(defaultFormError);
   };
 
   const handleOnChange = (e) => {
@@ -72,20 +46,11 @@ function AuthFormWrapper() {
     if (!hasAccount) {
       if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
     } else if (validateSignupForm(form, setError)) {
-      try{
       let exist = await verifyUserExists(form.email);
-
       if (!exist) setShowVerificationCode(true);
-    }catch(err){
-
-      }
-
     }
   };
 
-  const hideVerificationCodePopup = () => {
-    setShowVerificationCode(false);
-  };
 
   const renderErrorMessage = (fieldName) => {
     if (error[fieldName]) {
@@ -96,11 +61,11 @@ function AuthFormWrapper() {
     return null;
   };
 
-    const handleKeyPress = (e) => {
-      if (e.key === "Enter" && isAuthModalOpen) {
-        handleSignIn();
-      }
-    };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && isModalOpen) {
+      handleSignIn();
+    }
+  };
 
 
   return (
@@ -145,6 +110,7 @@ function AuthFormWrapper() {
             name="password"
             onChange={handleOnChange}
             onKeyDown={handleKeyPress}
+            autoComplete="on"
           />
           {renderErrorMessage("password")}{" "}
         </div>
@@ -158,9 +124,10 @@ function AuthFormWrapper() {
       </p>
       {showVerificationCode && (
         <VerificationCode
-          onCloseToolTip={hideVerificationCodePopup}
+          onCloseToolTip={() => setShowVerificationCode(false)}
           onVerified={() => onSignup(form, "solestyle")}
           email={form.email}
+          isVisible={showVerificationCode}
         />
       )}
     </div>

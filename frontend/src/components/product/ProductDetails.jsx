@@ -1,3 +1,4 @@
+"use client"
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
 import { useState } from 'react';
