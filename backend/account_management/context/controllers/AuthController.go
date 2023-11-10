@@ -5,6 +5,7 @@ import (
 	"account_management/app/repository"
 	"account_management/context/records"
 	"account_management/context/service"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -42,12 +43,12 @@ func Register(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    authorizarion_token,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  time.Now().Add(time.Hour * 24*7),
 		HTTPOnly: true,
 	}
 	c.Cookie(&cookie)
 
-	return c.JSON(user)
+	return c.Status(fiber.StatusOK).JSON(user)
 }
 
 
@@ -84,12 +85,12 @@ func Login(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    authorizarion_token,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  time.Now().Add(time.Hour * 24*7),
 		HTTPOnly: true,
 	}
 	c.Cookie(&cookie)
 
-	return c.JSON(user)
+	return c.Status(fiber.StatusOK).JSON(user)
 }
 
 
@@ -113,13 +114,13 @@ func GetUserByToken(c *fiber.Ctx) error {
 	user,userError := authProvider.GetUserByToken(accessToken)
 
 	if userError!= nil {
-		c.Status(fiber.StatusForbidden)
+		c.Status(fiber.StatusOK)
 		return c.JSON(fiber.Map{
 			"error": userError.Error(),
 		})
 	}
 
-	return c.JSON(user)
+	return c.Status(fiber.StatusOK).JSON(user)
 
 }
 
@@ -157,7 +158,7 @@ func Logout(c *fiber.Ctx) error {
 
 	c.Cookie(&cookie)
 
-	return c.JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "success logout",
 	})
 

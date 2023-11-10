@@ -2,7 +2,6 @@ package emailsender
 
 import (
 	"bytes"
-	"fmt"
 	"net/smtp"
 	"text/template"
 )
@@ -31,7 +30,6 @@ func SendEmailVerificationCode( to []string, code string) error{
 
 	err = smtp.SendMail("smtp.gmail.com:587", auth, "solestyle28@gmail.com",to,[]byte(msg))
 
-	fmt.Print(err)
 	if err != nil{
 		return err
 	}else{

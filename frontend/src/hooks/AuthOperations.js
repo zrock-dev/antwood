@@ -21,7 +21,7 @@ const useAuthHandler = ()=>{
             toast.error("bad credentials");
           });
       };
-    
+      
 
       const verifyUserExists = async (email) => {
         return  await getUserByEmail(email)
@@ -51,6 +51,8 @@ const useAuthHandler = ()=>{
             toast.error("Signup Error");
           });
       };
+
+   
 
       return {
         onSignin,

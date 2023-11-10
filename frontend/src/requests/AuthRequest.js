@@ -6,8 +6,10 @@ import { AUTH_DOMAIN } from "./Requester";
 
 const axiosConfig = {
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
+  withCredentials: true
 };
 
 
@@ -28,8 +30,8 @@ export const getUser = () =>
 
 
 
-export const logoutUser = (user,provider) =>
-  axios.post(`${AUTH_DOMAIN}/auth/logout?provider=${provider}`, user, axiosConfig);
+export const logoutUser = (provider) =>
+  axios.post(`${AUTH_DOMAIN}/auth/logout?provider=${provider}`, axiosConfig);
 
 export const getCodeToVerifyAccount = (email) =>
   axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig);
