@@ -5,8 +5,7 @@ import (
 	"account_management/app/repository"
 	"account_management/context/records"
 	"account_management/context/service"
-	"log"
-
+	
 	"github.com/gofiber/fiber/v2"
 
 	"time"
