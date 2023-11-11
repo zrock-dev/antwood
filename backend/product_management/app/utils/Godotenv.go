@@ -1,9 +1,11 @@
 package utils
 
-import "github.com/joho/godotenv"
+import "github.com/dotenv-org/godotenvvault"
 
 func LoadGodotenv() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenvvault.Load(); 
+	err != nil {
 		panic(err)
 	}
 }
+

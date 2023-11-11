@@ -31,3 +31,8 @@ go.work
 
 ## air tool
 tmp
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
