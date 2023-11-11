@@ -1,0 +1,17 @@
+FROM golang:1.21.4-alpine3.18 as base
+
+
+FROM base as builder
+RUN mkdir /service
+COPY . /service
+WORKDIR /service
+RUN go build -v .
+
+
+FROM base AS runner 
+COPY --from=builder /service/account_management .
+COPY --from=builder /service/.env.vault .
+LABEL org.opencontainers.image.description="Account Management Service"
+
+ENTRYPOINT ["./account_management"]
+

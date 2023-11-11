@@ -1,8 +1,16 @@
-FROM golang:1.21.3-alpine3.18
+FROM golang:1.21.4-alpine3.18 AS base
 
+
+FROM base AS builder
 RUN mkdir /service
 COPY . /service
 WORKDIR /service
 RUN go build -v .
 
-ENTRYPOINT ["go", "run", "."]
+FROM base AS runner 
+COPY --from=builder /service/product_management .
+COPY --from=builder /service/.env.vault .
+LABEL org.opencontainers.image.description="Product Management Service"
+
+ENTRYPOINT ["./product_management"]
+
