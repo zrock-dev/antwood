@@ -1,0 +1,45 @@
+name: "Backend: Account Management Workflow"
+run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - develop
+      - main
+    paths:
+      - "backend/account_management/**"
+
+jobs:
+  build:
+    name: Build
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ vars.GO_VERSION }} 
+
+      - name: Building 
+        run: cd backend/account_management && go build -v .
+
+
+  test:
+    name: Test
+    needs: build
+    runs-on:  ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ vars.GO_VERSION }} 
+
+      - name: Running tests 
+        run: cd backend/account_management/test && go test -v .
+
