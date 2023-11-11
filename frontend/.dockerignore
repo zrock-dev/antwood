@@ -7,3 +7,5 @@ npm-debug.log
 README.md
 .git
 .gitignore
+
+next.config.js
