@@ -1,13 +1,39 @@
-FROM node:20.9-alpine3.18
+FROM node:20.9-alpine3.18 as base
 
+
+FROM base AS deps
 WORKDIR /home/node/app
-COPY . /home/node/app
+COPY package*.json .
+RUN npm ci 
 
+
+FROM base as builder
+WORKDIR /home/node/app
+COPY --from=deps /home/node/app/node_modules ./node_modules
+COPY . .
+COPY next.config.prod.js next.config.js
+RUN npm run build
+
+
+FROM base AS runner
+WORKDIR /home/node/app
 ENV NODE_ENV=production
-EXPOSE 3000
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+COPY --from=builder --chown=nextjs:nodejs /home/node/app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /home/node/app/.next/static ./.next/static
+COPY --from=builder /home/node/app/public ./public
+
+LABEL org.opencontainers.image.description="frontend"
+
+
+USER nextjs
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-
-RUN npm i && npm run build
-ENTRYPOINT ["npm", "run", "start"]
+EXPOSE 3000
+ENTRYPOINT ["node", "server.js"]
 
