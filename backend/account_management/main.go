@@ -21,6 +21,7 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 		AllowCredentials: true,
 	}))
+	app.Static("/public", "./public")
 	routes.AuthRoutes(app)
 	app.Listen(":4500")
 }
