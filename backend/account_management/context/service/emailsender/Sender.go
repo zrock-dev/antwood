@@ -14,7 +14,7 @@ func SendEmailVerificationCode( to []string, code string) error{
 	auth := smtp.PlainAuth("", "solestyle28@gmail.com", "dgvo hzst lwzo sluu", "smtp.gmail.com")
 
 	var body bytes.Buffer
-	t, err := template.ParseFiles("./public/VerificationCodeTemplate.html")
+	t, err := template.ParseFiles("./public/templates/VerificationCodeTemplate.html")
 	if err != nil {
 		return err
 	}
