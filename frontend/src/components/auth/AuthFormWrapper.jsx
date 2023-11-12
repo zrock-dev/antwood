@@ -19,6 +19,7 @@ function AuthFormWrapper({ isModalOpen }) {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const { onSignin, onSignup, verifyUserExists } = useAuthHandler();
   const [verificationCode, setVerificationCode] = useState("");
+ 
 
   const handleAuth = () => {
     resetForm();
@@ -51,7 +52,6 @@ function AuthFormWrapper({ isModalOpen }) {
       if (!exist) {
         await sendCodeToVerifyAccount();
         setShowVerificationCode(true);
-
       }
     }
   };
@@ -74,11 +74,14 @@ function AuthFormWrapper({ isModalOpen }) {
 
 
   const sendCodeToVerifyAccount = async () => {
-    getCodeToVerifyAccount(form.email).then((code) => {
-      toast.info("The code has been sent, if you don't receive it, check if your email is valid");
-      setVerificationCode(code);
-    }).catch((error) => {
-      toast.error(error.message);
+    toast.promise(getCodeToVerifyAccount(form.email), {
+      loading: "Sending code",
+      success: (code)=>{
+        setVerificationCode(code)
+        toast.info("The code has been sent,if you don't receive it, check if your email is valid")
+       return "Code sent"
+      },
+      error: (error) => error.message
     })
   }
 

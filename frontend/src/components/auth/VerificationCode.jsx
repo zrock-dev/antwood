@@ -67,10 +67,16 @@ const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVer
 
 
   const verifyCode = async () => {
-    if (code === "" || verificationCode === "") {
-      toast.error("Incorrect code");
+    if (code === "" ) {
+      toast.error("Code is required");
       return
     }
+
+    if(verificationCode === "") {
+      toast.error("Send code first");
+      return
+    }
+
     const isValid = await isValidCode(code, verificationCode);
     if (!isValid) {
       toast.error("Incorrect code");
