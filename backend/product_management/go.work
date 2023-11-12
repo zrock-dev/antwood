@@ -1,9 +1,9 @@
-go 1.21.3
+go 1.21.4
 
-use(
-./app
-./context
-./router
-.
-./test
+use (
+	.
+	./app
+	./context
+	./router
+	./test
 )
