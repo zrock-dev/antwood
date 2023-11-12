@@ -17,9 +17,8 @@ export const isUsernameValid = (username) => {
 };
 
 export const isEmailValid = (email) => {
-  const regex = /^[a-zA-Z0-9\s,@.\-]+$/;
-  const emailRegex = /^[a-zA-Z0-9\s,@.\-]+@gmail\.com$/;
-  return regex.test(email) && emailRegex.test(email) && email.length <= 50 && !email.includes(" ");
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email) && email.length <= 50 && !email.includes(" ") && !email.includes("@gufum.com");
 };
 
 export const isPasswordValid = (password) => {
