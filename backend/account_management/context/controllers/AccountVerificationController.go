@@ -14,15 +14,41 @@ func VerifyAccount(c *fiber.Ctx) error {
 
 	code := service.GenerateCode()
 
-	err := emailsender.SendEmailVerificationCode([]string{email}, code)
+	encrypted, err := service.GetAESEncrypted(code)
 
-	fmt.Println(err)
+	if err != nil {
+		return err
+		
+	}
+
+	err = emailsender.SendEmailVerificationCode([]string{email}, code)
+
 	if err != nil {
 		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Please check your email for verification code",
-		"code": code,
+		"code": encrypted,
 	})
+}
+
+
+func VerifyCode (c *fiber.Ctx) error {
+	encryptedCode := c.Params("encryptedcode")
+	inserytedCode := c.Params("code")
+	decryptedCode, err := service.GetAESDecrypted(encryptedCode)
+	if  err != nil {
+		return err
+	}
+
+	if string(decryptedCode) != inserytedCode {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid code",
+		})
+	}else{
+		return c.Status(200).JSON(fiber.Map{
+			"message": "Code verified",
+		})
+	}
 }
