@@ -18,7 +18,7 @@ var Iv = "my16digitIvKey12"
 func GetAESDecrypted(encrypted string) ([]byte, error) {
 
 
-	ciphertext, err := base64.StdEncoding.DecodeString(encrypted)
+	ciphertext, err := base64.URLEncoding.DecodeString(encrypted)
 
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func GetAESEncrypted(plaintext string) (string, error) {
 	mode := cipher.NewCBCEncrypter(block, []byte(Iv))
 	mode.CryptBlocks(ciphertext, plainTextBlock)
 
-	str := base64.StdEncoding.EncodeToString(ciphertext)
+	str := base64.URLEncoding.EncodeToString(ciphertext)
 
 	return str, nil
 }

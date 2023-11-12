@@ -33,5 +33,13 @@ export const getUser = () =>
 export const logoutUser = (provider) =>
   axios.post(`${AUTH_DOMAIN}/auth/logout?provider=${provider}`, axiosConfig);
 
-export const getCodeToVerifyAccount = (email) =>
-  axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig);
+export const getCodeToVerifyAccount = async(email) =>{
+  const res = await axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig);
+  return res.data.code
+}
+  
+
+export const isValidCode = async (code, encryptedCode) =>{
+  const response = await axios.get(`${AUTH_DOMAIN}/auth/verify-code?encryptedcode=${encryptedCode}&code=${code}`, axiosConfig);
+  return response.data && response.data.status
+}

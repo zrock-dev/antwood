@@ -12,5 +12,5 @@ func AuthRoutes(app *fiber.App) {
 	app.Post("/auth/logout", controllers.Logout)
 	app.Get("/auth/user/:email", controllers.GetUserByEmail)
 	app.Get("/auth/verify-account/:email", controllers.VerifyAccount)
-	app.Get("/auth/verify-code/:encryptedcode/:code", controllers.VerifyCode)
+	app.Get("/auth/verify-code", controllers.VerifyCode)
 }

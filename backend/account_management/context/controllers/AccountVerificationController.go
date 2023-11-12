@@ -3,7 +3,6 @@ package controllers
 import (
 	"account_management/context/service"
 	"account_management/context/service/emailsender"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -35,20 +34,23 @@ func VerifyAccount(c *fiber.Ctx) error {
 
 
 func VerifyCode (c *fiber.Ctx) error {
-	encryptedCode := c.Params("encryptedcode")
-	inserytedCode := c.Params("code")
+	encryptedCode := c.Query("encryptedcode")
+	inserytedCode := c.Query("code")
 	decryptedCode, err := service.GetAESDecrypted(encryptedCode)
+
 	if  err != nil {
 		return err
 	}
 
 	if string(decryptedCode) != inserytedCode {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(200).JSON(fiber.Map{
 			"message": "Invalid code",
+			"status":false,
 		})
 	}else{
 		return c.Status(200).JSON(fiber.Map{
 			"message": "Code verified",
+			"status":true,
 		})
 	}
 }
