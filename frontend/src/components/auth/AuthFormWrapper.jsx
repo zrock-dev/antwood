@@ -82,7 +82,7 @@ function AuthFormWrapper({ isModalOpen }) {
           throw  new Error(data.message);
         }
         setVerificationCode(data.code)
-        toast.info("If you haven't received it, please double-check your email address and your spam folder");
+        toast.info("If not received, verify email or check spam.");
         return "Code sent";
       },
       error: "Incorrect email"})
