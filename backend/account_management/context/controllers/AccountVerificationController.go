@@ -16,17 +16,23 @@ func VerifyAccount(c *fiber.Ctx) error {
 	encrypted, err := service.GetAESEncrypted(code)
 
 	if err != nil {
-		return err
-		
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Internal server error",
+		})
 	}
 
 	err = emailsender.SendEmailVerificationCode([]string{email}, code)
 
 	if err != nil {
-		return err
+		return c.JSON(fiber.Map{
+			"status": fiber.StatusForbidden,
+			"message": "Invalid email",
+		})
+		
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.JSON(fiber.Map{
+		"status": fiber.StatusOK,
 		"message": "Please check your email for verification code",
 		"code": encrypted,
 	})

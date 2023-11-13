@@ -25,19 +25,19 @@ export const getUser = () =>
   axios.get(`${AUTH_DOMAIN}/auth/user?provider=${provider}`, axiosConfig);
 
 
-  export const getUserByEmail = (email) =>
-    axios.get(`${AUTH_DOMAIN}/auth/user/${email}`, axiosConfig);
+export const getUserByEmail = (email) =>
+  axios.get(`${AUTH_DOMAIN}/auth/user/${email}`, axiosConfig);
 
 
 
 export const logoutUser = (provider) =>
   axios.post(`${AUTH_DOMAIN}/auth/logout?provider=${provider}`, axiosConfig);
 
-export const getCodeToVerifyAccount = async(email) =>{
-  const res = await axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig);
-  return res.data.code
+export const getCodeToVerifyAccount = async (email) => {
+  const response = await axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig)
+  return  response.data
 }
-  
+
 
 export const isValidCode = async (code, encryptedCode) =>{
   const response = await axios.get(`${AUTH_DOMAIN}/auth/verify-code?encryptedcode=${encryptedCode}&code=${code}`, axiosConfig);

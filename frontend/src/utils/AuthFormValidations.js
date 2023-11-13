@@ -39,7 +39,7 @@ export const validateSignupForm = (form,setError) => {
   }
 
   if (!isEmailValid(form.email)) {
-    errors.email = "Please enter a valid Gmail email address";
+    errors.email = "Please enter a valid email address";
     isFormValid = false;
   }
 
@@ -57,7 +57,7 @@ export const validateSigninForm = (form, setError) => {
   const errors = {...defaultFormError}
   let isFormValid = true;
   if (!isEmailValid(form.email)) {
-    errors.email = "Please enter a valid Gmail email address";
+    errors.email = "Please enter a valid email address";
     isFormValid = false;
   }
 

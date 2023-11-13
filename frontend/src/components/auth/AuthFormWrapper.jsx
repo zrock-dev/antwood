@@ -74,15 +74,18 @@ function AuthFormWrapper({ isModalOpen }) {
 
 
   const sendCodeToVerifyAccount = async () => {
-    toast.promise(getCodeToVerifyAccount(form.email), {
-      loading: "Sending code",
-      success: (code)=>{
-        setVerificationCode(code)
-        toast.info("The code has been sent,if you don't receive it, check if your email is valid")
-       return "Code sent"
+      toast.promise(getCodeToVerifyAccount(form.email), 
+      {
+        loading: "Sending code",
+      success: (data) => {
+        if (!data.code) {
+          throw  new Error(data.message);
+        }
+        setVerificationCode(data.code)
+        toast.info("If you haven't received it, please double-check your email address and your spam folder");
+        return "Code sent";
       },
-      error: (error) => error.message
-    })
+      error: "Incorrect email"})
   }
 
   return (
