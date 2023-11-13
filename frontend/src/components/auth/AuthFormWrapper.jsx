@@ -79,6 +79,7 @@ function AuthFormWrapper({ isModalOpen }) {
         loading: "Sending code",
       success: (data) => {
         if (!data.code) {
+          setShowVerificationCode(false);
           throw  new Error(data.message);
         }
         setVerificationCode(data.code)
