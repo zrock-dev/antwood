@@ -9,7 +9,7 @@ const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVer
   const tooltipRef = useRef();
   const [code, setCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(true);
-  const [secondsLeft, setSecondsLeft] = useState(360);
+  const [secondsLeft, setSecondsLeft] = useState(45);
 
   const sendCode = async () => {
     if (isCodeSent) return;
@@ -18,12 +18,12 @@ const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVer
   }
 
   const blockSendCode = () => {
-    let seconds = 360;
+    let seconds = 45;
     const interval = setInterval(() => {
       setSecondsLeft(seconds);
       seconds -= 1;
       if (seconds < 0) {
-        setSecondsLeft(360)
+        setSecondsLeft(45)
         setIsCodeSent(false);
         clearInterval(interval);
         setVerificationCode("")
