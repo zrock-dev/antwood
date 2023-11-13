@@ -3,7 +3,7 @@ package responses
 import (
 	"context"
 	"strconv"
-	"fmt"
+	"strconv"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -126,7 +126,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 func sendSneakerByBrand(c *fiber.Ctx) error {
     var sneaker models.Sneaker
     requiredSneakerBrand := c.Params("brand")
-    objectBrand, err := String(requiredSneakerBrand)
+    objectBrand, err := strconv.Itoa(requiredSneakerBrand)
     if err != nil {
    		return err
    	}

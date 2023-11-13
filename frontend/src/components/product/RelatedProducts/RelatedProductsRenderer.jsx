@@ -5,12 +5,16 @@ import { getSneakerByFilters } from '@/requests/SneakersRequest';
 import RelatedProductsSection from './RelatedProductsSection';
 
 
-import '../../styles/product/product_details.css';
+import '../../styles/products/products.css';
 import { useRouter } from 'next/navigation';
 
 const RelatedProductsRenderer = ({ id }) => {
 	const router = useRouter();
 	const [products, setProduct] = useState(null);
+
+	for (let i = 1; i <= 5; i++) {
+        console.log(i);
+    }
 
 	useEffect(() => {
 		getSneakerByFilters(id)
