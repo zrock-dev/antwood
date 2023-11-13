@@ -1,6 +1,5 @@
 "use client";
 import { useRef, useState } from 'react'
-import { toast } from 'sonner';
 const defaultReview = {
   id: "",
   email: "",
@@ -16,8 +15,11 @@ function useReviewForm() {
   const [review, setReview] = useState(defaultReview);
   const [error, setError] = useState(defaultErrorForm)
   const maxChars = 400;
+  const inputRef = useRef();
 
   const resetReview = () => {
+    inputRef.current.value = "";
+    inputRef.current.style.height = "auto";
     setError(defaultErrorForm)
     setReview(defaultReview);
   };
@@ -61,6 +63,10 @@ function useReviewForm() {
     return isValidForm
   }
 
+  const resetError = () => {
+    setError(defaultErrorForm)
+  }
+
   const handleStarClick = (selectedRating) => {
     if (review.rate === selectedRating) {
       selectedRating--;
@@ -77,7 +83,9 @@ function useReviewForm() {
     handleStarClick,
     validateForm,
     textSize,
-    error
+    error,
+    resetError,
+    inputRef
   }
 
 }

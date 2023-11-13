@@ -7,6 +7,7 @@ import '@/styles/reviews/review_form.css';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
+import { sendError } from 'next/dist/server/api-utils';
 
 function ReviewForm({ product, setReviews }) {
   const reviewHandle = useReviewForm();
@@ -16,7 +17,12 @@ function ReviewForm({ product, setReviews }) {
 
   const onAddReview = async (e) => {
     e.preventDefault();
-    if (!reviewHandle.validateForm()) return
+    if (!reviewHandle.validateForm()){
+        setTimeout(() => {
+         reviewHandle.resetError();
+        }, 7000);
+        return
+      }
     if (!isAuthenticated) {
       setPendingAction(() => async (currentUser) => await addReviewToProduct(currentUser))
       setShowModalAuth(true);
@@ -39,7 +45,7 @@ function ReviewForm({ product, setReviews }) {
     const response = await addReview(product._id, review);
     product.reviews = response.sneakerReview;
     review = response.review;
-
+    reviewHandle.resetReview();
     setReviews((reviews) => [review, ...reviews]);
   }
 
@@ -75,6 +81,7 @@ function ReviewForm({ product, setReviews }) {
         placeholder='Add review'
         value={reviewHandle.review.description}
         onInput={reviewHandle.handleInputChange}
+        ref={reviewHandle.inputRef}
       >
       </textarea>
 

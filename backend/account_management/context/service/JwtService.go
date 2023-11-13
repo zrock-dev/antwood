@@ -8,7 +8,7 @@ import (
 )
 
 
-var secretKey = []byte("mi_clave_secreta")
+var secretKey = []byte("my32stylekey12345678901234567890")
 
 
 func GenerateAuthenticationToken(userid string, email string) (string, error) {

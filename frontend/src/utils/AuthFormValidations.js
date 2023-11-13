@@ -17,9 +17,8 @@ export const isUsernameValid = (username) => {
 };
 
 export const isEmailValid = (email) => {
-  const regex = /^[a-zA-Z0-9\s,@.\-]+$/;
-  const emailRegex = /^[a-zA-Z0-9\s,@.\-]+@gmail\.com$/;
-  return regex.test(email) && emailRegex.test(email) && email.length <= 50 && !email.includes(" ");
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email) && email.length <= 50 && !email.includes(" ") && !email.includes("@gufum.com") && !email.includes("..")&& !email.includes("--");
 };
 
 export const isPasswordValid = (password) => {
@@ -29,9 +28,9 @@ export const isPasswordValid = (password) => {
 
 
 
-export const validateSignupForm = (form,setError) => {
-      const errors = {...defaultFormError}
-    let isFormValid = true;
+export const validateSignupForm = (form, setError) => {
+  const errors = { ...defaultFormError }
+  let isFormValid = true;
 
   if (!isUsernameValid(form.username)) {
     errors.username =
@@ -40,7 +39,7 @@ export const validateSignupForm = (form,setError) => {
   }
 
   if (!isEmailValid(form.email)) {
-    errors.email = "Please enter a valid Gmail email address";
+    errors.email = "Please enter a valid email address";
     isFormValid = false;
   }
 
@@ -48,17 +47,17 @@ export const validateSignupForm = (form,setError) => {
     errors.password =
       "Minimum 6 characters, allowing letters  a-z, A-Z, 0-9, ., -";
     isFormValid = false;
-  }  
+  }
   setError(errors);
   return isFormValid;
 };
 
 
 export const validateSigninForm = (form, setError) => {
-  const errors = {...defaultFormError}
+  const errors = { ...defaultFormError }
   let isFormValid = true;
   if (!isEmailValid(form.email)) {
-    errors.email = "Please enter a valid Gmail email address";
+    errors.email = "Please enter a valid email address";
     isFormValid = false;
   }
 
@@ -68,5 +67,5 @@ export const validateSigninForm = (form, setError) => {
   }
   setError(errors)
 
-  return isFormValid ;
+  return isFormValid;
 };

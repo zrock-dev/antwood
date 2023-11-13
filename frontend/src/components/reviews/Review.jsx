@@ -4,10 +4,11 @@ import ReviewCalification from './ReviewCalification';
 import "@/styles/reviews/review.css";
 
 function Review({ review }) {
+
   const formatText = (text) => {
     const lines = text.split('\n');
     return lines.map((line, index) => (
-      <p key={index}>{line}</p>
+      <p key={index}>{line.replace(/ /g, "\u00A0")}</p>
     ));
   }
 

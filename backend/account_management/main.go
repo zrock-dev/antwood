@@ -7,7 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/joho/godotenv"
+	"github.com/dotenv-org/godotenvvault"
 )
 
 func main() {
@@ -21,13 +21,15 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 		AllowCredentials: true,
 	}))
+	app.Static("/public", "./public")
 	routes.AuthRoutes(app)
 	app.Listen(":4500")
 }
 
 func uploadEnv() {
-	err := godotenv.Load()
+	err := godotenvvault.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
+// application should panic 
 	}
 }

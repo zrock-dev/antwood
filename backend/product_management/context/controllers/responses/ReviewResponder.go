@@ -2,7 +2,6 @@ package responses
 
 import (
 	"context"
-	"fmt"
 	"product_management/app/database"
 	"product_management/app/models"
 	"strconv"
@@ -17,8 +16,6 @@ func SendReviewsByIndex(c *fiber.Ctx) error {
 	index := c.Query("index")
 	amount := c.Query("amount")
 
-	fmt.Println(index)
-	fmt.Println(amount)
 	
 	sneakerIDObjID, err := primitive.ObjectIDFromHex(sneakerID)
 	if err != nil {

@@ -2,30 +2,58 @@
 import styles from "@/styles/verificationcode.module.css";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
-import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
+import { isValidCode } from "@/requests/AuthRequest";
 import { toast } from "sonner";
-import { encryptData, decryptData } from "@/utils/Encrypter";
-const VerificationCode = ({ onCloseToolTip, email, onVerified , isVisible}) => {
+const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVerificationCode,
+  sendVeficationCode }) => {
   const tooltipRef = useRef();
   const [code, setCode] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(360);
+  const [isCodeSent, setIsCodeSent] = useState(true);
+  const [secondsLeft, setSecondsLeft] = useState(45);
+
+  const sendCode = async () => {
+    if (isCodeSent) return;
+     setIsCodeSent(true);
+     await sendVeficationCode()
+  }
+
+  const blockSendCode = () => {
+    let seconds = 45;
+    const interval = setInterval(() => {
+      setSecondsLeft(seconds);
+      seconds -= 1;
+      if (seconds < 0) {
+        setSecondsLeft(45)
+        setIsCodeSent(false);
+        clearInterval(interval);
+        setVerificationCode("")
+      }
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (isCodeSent) {
+      blockSendCode()
+    }
+  }, [isCodeSent])
 
 
-  
+
   useEffect(() => {
     let onClickHandler = (e) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target)) {
         onCloseToolTip();
       }
     };
-    
+
     document.addEventListener("mousedown", onClickHandler);
     return () => {
       document.removeEventListener("mousedown", onClickHandler);
     };
   }, []);
+
+
+
 
   const handleOnChange = (e) => {
     let value = e.target.value;
@@ -37,64 +65,53 @@ const VerificationCode = ({ onCloseToolTip, email, onVerified , isVisible}) => {
 
 
 
-  const sendCode = async () => {
-    if(isCodeSent) return
-     blockSendCode();
-     getCodeToVerifyAccount(email).then((res) => {
-      let code = res.data.code;
-       if(code!==""){
-        let encryptedData = encryptData(code);
-        setVerificationCode(encryptedData);
-        toast.info("The code has been sent, if you don't receive it, check if your email is valid");
-       }else{
-         toast.error("The email could not be sent, verify that it exists");
-       }
-     }).catch((err) => {
-       toast.error(err);
-     })
-  }
 
-  const blockSendCode = () => {
-    setIsCodeSent(true);
-    let seconds = 360;
-    const interval = setInterval(() => {
-      setSecondsLeft(seconds);
-      seconds -= 1;
-      if (seconds < 0) {
-        setSecondsLeft(360)
-        setIsCodeSent(false);
-        clearInterval(interval);
-        setVerificationCode("")
-      }
-    }, 1000);
-  };
-
-
-  const verifyCode = () => {
-    let originalCode = decryptData(verificationCode);
-
-    if (originalCode!== "" && originalCode == code) {
-      onVerified();
-    } else {
-      toast.error("incorrect code");
+  const verifyCode = async () => {
+    if (code === "" ) {
+      toast.error("Code is required");
+      return
     }
+
+    if(verificationCode === "") {
+      toast.error("Send code first");
+      return
+    }
+
+    const isValid = await isValidCode(code, verificationCode);
+    if (!isValid) {
+      toast.error("Incorrect code");
+      return
+    }
+    onCloseToolTip();
+    onVerified();
   };
+
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      verifyCode();
+    }
+  }
 
   return (
     <div ref={tooltipRef} className={styles.tooltip}>
       <div>
-        <input type="text" value={code} onChange={handleOnChange} />
+        <input 
+          type="text" 
+          value={code} 
+          onChange={handleOnChange}
+          onKeyDown={onKeyDown}  
+        />
         <Button
           onClick={sendCode}
           btnStyle={isCodeSent ? "second_btn" : "main_btn"}
         >
-          Get Code
+         <i className="fa-solid fa-repeat"></i>
         </Button>
       </div>
       <div>
         <Button onClick={verifyCode}>Verify Code</Button>
       </div>
-      {isCodeSent &&  <p>Resend code in {secondsLeft} seconds</p>}
+      {isCodeSent && <p>Resend code in {secondsLeft} seconds</p>}
     </div>
   );
 };

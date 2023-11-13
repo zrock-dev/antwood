@@ -1,9 +1,10 @@
 import { useAuth } from "@/context/AuthContext"
 import { toast } from "sonner";
-import { loginUser, registerUser, getUserByEmail } from "@/requests/AuthRequest";
+import { loginUser, registerUser, getUserByEmail} from "@/requests/AuthRequest";
 const useAuthHandler = ()=>{
 
     const {setShowModalAuth,updateUser,setIsAuthenticated} = useAuth();
+
     const onSignin = async (user, provider) => {
          loginUser(user, provider)
           .then((res) => {
@@ -39,25 +40,29 @@ const useAuthHandler = ()=>{
     
 
       const onSignup = async (user, provider) => {
-        registerUser(user, provider)
-          .then((res) => {
+        toast.promise(registerUser(user, provider),
+        {
+          loading : 'signup in progress',
+          success:(res) => {
             const data = res.data;
             updateUser(data);
             setIsAuthenticated(true);
             setShowModalAuth(false);
-            toast.success("success signup ");
-          })
-          .catch((err) => {
-            toast.error("Signup Error");
-          });
+          return "success signup ";
+          },
+          error:(err) => {
+            return "Signup Error";
+          }
+        })
       };
 
    
 
+
       return {
         onSignin,
         onSignup,
-        verifyUserExists
+        verifyUserExists,
       }
     }
 

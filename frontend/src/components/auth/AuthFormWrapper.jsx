@@ -8,16 +8,18 @@ import {
   validateSignupForm,
   validateSigninForm,
 } from "@/utils/AuthFormValidations";
-
+import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
-
-function AuthFormWrapper({isModalOpen}) {
+import { toast } from "sonner";
+function AuthFormWrapper({ isModalOpen }) {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
   const [error, setError] = useState(defaultFormError);
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const { onSignin, onSignup, verifyUserExists } = useAuthHandler();
+  const [verificationCode, setVerificationCode] = useState("");
+ 
 
   const handleAuth = () => {
     resetForm();
@@ -47,7 +49,10 @@ function AuthFormWrapper({isModalOpen}) {
       if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
     } else if (validateSignupForm(form, setError)) {
       let exist = await verifyUserExists(form.email);
-      if (!exist) setShowVerificationCode(true);
+      if (!exist) {
+        await sendCodeToVerifyAccount();
+        setShowVerificationCode(true);
+      }
     }
   };
 
@@ -67,6 +72,22 @@ function AuthFormWrapper({isModalOpen}) {
     }
   };
 
+
+  const sendCodeToVerifyAccount = async () => {
+      toast.promise(getCodeToVerifyAccount(form.email), 
+      {
+        loading: "Sending code",
+      success: (data) => {
+        if (!data.code) {
+          setShowVerificationCode(false);
+          throw  new Error(data.message);
+        }
+        setVerificationCode(data.code)
+        toast.info("If not received, verify email or check spam.");
+        return "Code sent";
+      },
+      error: "Incorrect email"})
+  }
 
   return (
     <div className={authStyle.auth_ctn}>
@@ -126,8 +147,9 @@ function AuthFormWrapper({isModalOpen}) {
         <VerificationCode
           onCloseToolTip={() => setShowVerificationCode(false)}
           onVerified={() => onSignup(form, "solestyle")}
-          email={form.email}
-          isVisible={showVerificationCode}
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          sendVeficationCode={sendCodeToVerifyAccount}
         />
       )}
     </div>
