@@ -1,0 +1,31 @@
+.review {
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+    padding: 5px 0;
+    max-width: 100%;
+}
+
+.review-username {
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+}
+
+.review-description {
+    margin-top: 6px;
+    max-width: 100%;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+.review-email{
+    font-size: 14px;
+    color: var(--dark-black);
+}
+

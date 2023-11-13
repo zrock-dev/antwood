@@ -20,9 +20,11 @@ const SingleProductRenderer = ({ id }) => {
 				router.push('/');
 			});
 	}, [id, router]);
-	
-	return product ? (
+
+	return product ? (<>
 		<ProductDetails product={product} />
+	</>
+
 	) : (
 		<div className="loader-container">
 			<span className="loader"></span>
