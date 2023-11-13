@@ -26,6 +26,7 @@ func RunServer() {
 	routes.RouteSneakers(Server)
 	routes.RouteSneakerColors(Server)
 	routes.RouteCloudinary(Server)
+	routes.RouteReview(Server)
 
 	Server.Listen(serverPort)
 }

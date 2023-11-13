@@ -19,7 +19,7 @@ type Sneaker struct {
 	Brand         string               `json:"brand,omitempty" form:"brand,omitempty" bson:"brand,omitempty"`
 	Colors        []ColorObject        `json:"colors" form:"colors" bson:"colors"`
 	Tags          []string             `json:"tags" form:"tags" bson:"tags"`
-	Reviews       []primitive.ObjectID `json:"reviews" form:"reviews" bson:"reviews"`
+	Reviews       SneakerReview `json:"reviews" form:"reviews" bson:"reviews"`
 	Qualification int                  `json:"qualification" form:"qualification" bson:"qualification"`
 	LastDate      primitive.DateTime   `json:"lastDate" form:"lastDate" bson:"lastDate"`
 	SalesQuantity int                  `json:"salesQuantity" form:"salesQuantity" bson:"salesQuantity"`
@@ -34,7 +34,7 @@ func DefaultSneaker() *Sneaker {
 		Price:         0,
 		Colors:        []ColorObject{},
 		Tags:          []string{},
-		Reviews:       []primitive.ObjectID{},
+		Reviews:       DefaultSneakerReview(),
 		Qualification: 0,
 		LastDate:      primitive.NewDateTimeFromTime(time.Now()),
 		SalesQuantity: 0,
