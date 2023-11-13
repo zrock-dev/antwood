@@ -1,17 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getSneakerById } from '@/requests/SneakersRequest';
+import { getSneakerByFilters } from '@/requests/SneakersRequest';
+import RelatedProductsSection from './RelatedProductsSection';
+
 
 import '../../styles/product/product_details.css';
 import { useRouter } from 'next/navigation';
 
-const RelatedProductRenderer = ({ id }) => {
+const RelatedProductsRenderer = ({ id }) => {
 	const router = useRouter();
-	const [product, setProduct] = useState(null);
+	const [products, setProduct] = useState(null);
 
 	useEffect(() => {
-		getSneakerById(id)
+		getSneakerByFilters(id)
 			.then((response) => {
 				setProduct(response);
 			})
@@ -21,7 +23,7 @@ const RelatedProductRenderer = ({ id }) => {
 	}, [id, router]);
 
 	return product ? (
-		<ProductDetails product={product} />
+		<RelatedProductsSection relatedProducts={products} />
 	) : (
 		<div className="loader-container">
 			<span className="loader"></span>

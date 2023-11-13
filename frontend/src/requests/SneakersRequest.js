@@ -13,7 +13,7 @@ export const getAllProductsByPagination = async (page) => {
 
 export const getSneakersByFilters = async (filters) => {
   try {
-    const response = await axios.post(`${SERVER_DOMAIN}/sneakers/filter`, filters);
+    const response = await axios.post(`${SERVER_DOMAIN}/sneakers/${filter}`, filters);
     return response.data;
   } catch (error) {
     console.error('Error when obtain sneakers by filters:', error);
