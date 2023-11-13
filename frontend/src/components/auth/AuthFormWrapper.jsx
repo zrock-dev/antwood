@@ -11,6 +11,8 @@ import {
 
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 
 function AuthFormWrapper({isModalOpen}) {
   const [form, setForm] = useState(defaultForm);
@@ -75,10 +77,16 @@ function AuthFormWrapper({isModalOpen}) {
         <p className={authStyle.subtitle}>SoleStyle*</p>
       </div>
       <div className={authStyle.three_party}>
-        <div className={authStyle.google_ctn}>
-          <Image src="/google.webp" width={40} height={18} alt="google" />
-          {hasAccount ? "Sign Up with Google" : "Sign In with Google"}
-        </div>
+      <GoogleOAuthProvider clientId="504414054298-5qafjlkm3m2gkeu4f2d3ios0gop99all.apps.googleusercontent.com">
+      <GoogleLogin
+        onSuccess={credentialResponse => {
+        console.log(credentialResponse);
+        }}
+        onError={() => {
+        console.log('Login Failed');
+        }}
+      />
+      </GoogleOAuthProvider>
       </div>
       <div className={authStyle.delimiter}>o</div>
       <form className={authStyle.form_inputs}>

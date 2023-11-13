@@ -9,13 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.11.1",
     "axios": "^1.6.0",
     "crypto-js": "^4.2.0",
+    "moment": "^2.29.4",
+    "next": "14.0.2",
     "react": "^18",
     "react-dom": "^18",
-    "sonner": "^1.2.0",
-    "moment": "^2.29.4",
-    "next": "14.0.2"
+    "sonner": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "^8",
