@@ -2,15 +2,18 @@ FROM golang:1.21.4-alpine3.18 as base
 
 
 FROM base as builder
-RUN mkdir /service
-COPY . /service
 WORKDIR /service
-RUN go build -v .
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o account_management
 
 
 FROM base AS runner 
+WORKDIR /service
 COPY --from=builder /service/account_management .
+COPY --from=builder /service/public/ public/
 COPY --from=builder /service/.env.vault .
+RUN ls public/templates/VerificationCodeTemplate.html
 LABEL org.opencontainers.image.description="Account Management Service"
 
 ENTRYPOINT ["./account_management"]
