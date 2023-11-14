@@ -2,20 +2,29 @@ version: "923fe7d"
 
 services:
 
+  web:
+    image: nginx:1.25-alpine3.18
+    volumes:
+      - ./utils/solestyle.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    expose:
+      - 3000
+
   frontend:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
-    image: solestyleimages/solestyle:frontend.923fe7d
-    ports:
-      - "3000:3000"
+    image: solestyleimages/frontend
+    expose:
+      - 3000
 
   product_management:
     build:
       context: backend/product_management
       dockerfile: Dockerfile.prod
-    image: solestyleimages/solestyle:product_management_service.923fe7d
-    ports:
+    image: solestyleimages/product_management_service
+    expose:
       - "4000:4000"
     environment:
       DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY_CI}
@@ -24,8 +33,8 @@ services:
     build:
       context: backend/account_management
       dockerfile: Dockerfile.prod
-    image: solestyleimages/solestyle:account_management_service.923fe7d
-    ports:
+    image: solestyleimages/account_management_service
+    expose:
       - "4500:4500"
     environment:
       DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY_CI}
