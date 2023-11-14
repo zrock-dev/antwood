@@ -1,0 +1,17 @@
+.btn {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.main_btn {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.second_btn {
+  background-color: var(--transparent-gray);
+  color: var(--medium-gray);
+}
