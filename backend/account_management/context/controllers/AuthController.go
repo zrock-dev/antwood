@@ -89,10 +89,10 @@ func Login(c *fiber.Ctx) error {
 func GetUserByToken(c *fiber.Ctx) error {
 	authProvider := service.UseProvider(c.Query("provider"))
 
-	authTocken := c.Cookies("jwt")
+	authTocen := c.Cookies("jwt")
 
 
-	claims, authError := service.GetAppClaims(authTocken)
+	claims, authError := service.GetAppClaims(authTocen)
 
 	if authError != nil {
 		return c.JSON(fiber.Map{
@@ -118,9 +118,9 @@ func GetUserByToken(c *fiber.Ctx) error {
 
 func Logout(c *fiber.Ctx) error {
 	authProvider := service.UseProvider(c.Query("provider"))
-	authTocken := c.Cookies("jwt")
+	authToken := c.Cookies("jwt")
 
-	claims, authError := service.GetAppClaims(authTocken)
+	claims, authError := service.GetAppClaims(authToken)
 
 	if authError != nil {
 		return c.JSON(fiber.Map{
