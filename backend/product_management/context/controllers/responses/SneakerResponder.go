@@ -123,46 +123,49 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 	})
 }
 
-func sendSneakerByBrand(c *fiber.Ctx) error {
-    var sneaker models.Sneaker
-    requiredSneakerBrand := c.Params("brand")
-    objectBrand, err := String(requiredSneakerBrand)
-    if err != nil {
-   		return err
-   	}
 
-    filter := bson.D{{Key: "brand", Value: objectBrand}}
+func SendRelatedProductsByTags(c *fiber.Ctx) error {
+	productID := c.Params("id")
 
-    err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&sneaker)
+	var currentProduct models.Sneaker
+	objectID, err := primitive.ObjectIDFromHex(productID)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid product ID"})
+	}
 
-    if err != nil {
-   		return err
-   	}
+	filter := bson.D{{Key: "_id", Value: objectID}}
+	err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&currentProduct)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Product not found"})
+	}
 
-    	var sneakerWithColors models.SneakerWithColors
-    	sneakerWithColors.ID = sneaker.ID
-    	sneakerWithColors.Name = sneaker.Name
-    	sneakerWithColors.Brand = sneaker.Brand
-    	sneakerWithColors.Price = sneaker.Price
-    	sneakerWithColors.Description = sneaker.Description
-    	sneakerWithColors.LastDate = sneaker.LastDate
-    	sneakerWithColors.Qualification = sneaker.Qualification
-    	sneakerWithColors.SalesQuantity = sneaker.SalesQuantity
-    	sneakerWithColors.PromotionCode = sneaker.PromotionCode
-    	sneakerWithColors.Tags = sneaker.Tags
-    	sneakerWithColors.Reviews = sneaker.Reviews
+	var relatedProducts []models.Sneaker
 
-    	var colorTypes []models.SneakerColor
-    	for _, color := range sneaker.Colors {
-    		var colorS models.SneakerColor
-    		filter := bson.D{{Key: "_id", Value: color.ID}}
-    		err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&colorS)
-    		if err != nil {
-    			return err
-    		}
-    		colorTypes = append(colorTypes, colorS)
-    	}
+	filter = bson.D{
+		{"tags", bson.D{{"$in", currentProduct.Tags[0]}}},
+		{"tags", bson.D{{"$in", currentProduct.Tags[1]}}},
+		{"_id", bson.D{{"$ne", currentProduct.ID}}},
+	}
 
-    	sneakerWithColors.Types = colorTypes
-    	return c.JSON(sneakerWithColors)
+    options := options.Find().SetLimit(10)
+
+	cursor, err := database.SneakerCollection.Find(context.TODO(), filter, options)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer cursor.Close(context.TODO())
+
+	for cursor.Next(context.TODO()) {
+		var product models.Sneaker
+		if err := cursor.Decode(&product); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		relatedProducts = append(relatedProducts, product)
+	}
+
+	if len(relatedProducts) == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
+	}
+
+	return c.JSON(relatedProducts)
 }

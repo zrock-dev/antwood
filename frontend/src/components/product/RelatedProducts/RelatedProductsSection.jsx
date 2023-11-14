@@ -6,7 +6,11 @@ const RelatedProducts = ({ relatedProducts }) => {
     <div className="related-products-main">
       <div className="related-products-title">
       <h2>Related Products</h2>
-            <RelatedProducts relatedProducts={relatedProducts} />
+            <div className="related-products-container">
+                  {relatedProducts.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+            </div>
       </div>
     </div>
   );

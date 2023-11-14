@@ -1,28 +1,29 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getSneakerByFilters } from '@/requests/SneakersRequest';
+import { getRelatedSneakersById } from '@/requests/SneakersRequest';
 import RelatedProductsSection from './RelatedProductsSection';
 
 
-import '../../styles/product/product_details.css';
+import '../../styles/products/products.css';
 import { useRouter } from 'next/navigation';
 
 const RelatedProductsRenderer = ({ id }) => {
 	const router = useRouter();
-	const [products, setProduct] = useState(null);
+    const [products, setProducts] = useState(null);
 
 	useEffect(() => {
-		getSneakerByFilters(id)
+		getRelatedSneakersById(id)
 			.then((response) => {
-				setProduct(response);
+				setProducts(response);
 			})
 			.catch((e) => {
+				console.error("Error fetching related sneakers:", e)
 				router.push('/');
 			});
 	}, [id, router]);
 
-	return product ? (
+	return products ? (
 		<RelatedProductsSection relatedProducts={products} />
 	) : (
 		<div className="loader-container">

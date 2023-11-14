@@ -7,7 +7,7 @@ const SingleProductPage = ({ params }) => {
 		<Layout>
 			<SingleProductRenderer id={params.id} />
 
-			<RelatedProductRenderer id={params.id} />
+			<RelatedProductsRenderer id={params.id} />
 		</Layout>
 	);
 };
