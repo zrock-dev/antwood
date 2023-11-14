@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import "@/styles/reviews/product_review.css"
 import { getReviewsByAmount } from "@/requests/ReviewRequest"
 import Button from "../Button"
+import {toast} from "sonner"
 const ProductReview = ({ product }) => {
     const [reviews, setReviews] = useState([]);
 
@@ -19,7 +20,7 @@ const ProductReview = ({ product }) => {
             let newReviews = [...reviews, ...data]
             setReviews(newReviews)
         }).catch((err) => {
-            console.log(err)
+            toast.error("could not obtain more products");
         })
     }
 
