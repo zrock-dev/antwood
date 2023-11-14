@@ -8,6 +8,7 @@ on:
       - synchronize
     branches:
       - develop
+      - testing_workflow
     paths:
       - "frontend/**"
   push:
@@ -15,6 +16,7 @@ on:
       - "frontend/**"
     branches:
       - develop
+      - testing_workflow
 
 jobs:
   build:
@@ -75,3 +77,4 @@ jobs:
           push: true
           tags: solestyleimages/frontend:${{ env.COMMIT_SHORT_SHA }}, solestyleimages/frontend:latest
           labels: ${{ steps.meta.outputs.labels }}
+

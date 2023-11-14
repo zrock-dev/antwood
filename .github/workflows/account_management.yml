@@ -8,6 +8,7 @@ on:
       - synchronize
     branches:
       - develop
+      - testing_workflow
     paths:
       - "backend/account_management/**"
   push:
@@ -15,6 +16,7 @@ on:
       - "backend/account_management/**"
     branches:
       - develop
+      - testing_workflow
 
 
 jobs:
@@ -76,3 +78,4 @@ jobs:
           push: true
           tags: solestyleimages/account_management_service:${{ env.COMMIT_SHORT_SHA }}, solestyleimages/account_management_service:latest
           labels: ${{ steps.meta.outputs.labels }}
+
