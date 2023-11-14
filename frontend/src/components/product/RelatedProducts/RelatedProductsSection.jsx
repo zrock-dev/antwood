@@ -1,7 +1,8 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 
-const RelatedProducts = ({ relatedProducts }) => {
+
+const RelatedProductsSection = ({ relatedProducts }) => {
   return (
     <div className="related-products-main">
       <div className="related-products-title">

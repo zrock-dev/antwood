@@ -12,6 +12,10 @@ const RelatedProductsRenderer = ({ id }) => {
 	const router = useRouter();
     const [products, setProducts] = useState(null);
 
+	for (let i = 1; i <= 5; i++) {
+        console.log(i);
+    }
+
 	useEffect(() => {
 		getRelatedSneakersById(id)
 			.then((response) => {
