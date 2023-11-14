@@ -36,3 +36,6 @@ tmp
 .flaskenv*
 !.env.project
 !.env.vault
+
+# go dependencies
+go.work.*
