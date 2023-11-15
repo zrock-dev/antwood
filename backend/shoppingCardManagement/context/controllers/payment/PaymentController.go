@@ -16,7 +16,7 @@ import (
 )
 
 func CreatePaymentIntent(c *fiber.Ctx) error {
-	stripe.Key = "sk_test_51OCWLLAx0MjRmRXcKRpa1l8BHpfWWOgABHD3618tkI2hQYTAasIbXwMsrZ0p5uYcbJaAVEy7qbfkSr5HfMZvqLVD00OkKmfBWA"
+	stripe.Key = os.Getenv("PAYMENT_SECRET_KEY")
 	email := c.Params("email")
 	order := models.NewOrder()
 	if err := c.BodyParser(&order); err != nil {
@@ -212,3 +212,4 @@ func HandleOnIntentSuccess(orderId string) error {
 
 	return nil
 }
+
