@@ -5,7 +5,7 @@ import { getRelatedSneakersById } from '@/requests/SneakersRequest';
 import RelatedProductsSection from './RelatedProductsSection';
 
 
-import '../../styles/products/products.css';
+import '../../styles/product/related_products.css';
 import { useRouter } from 'next/navigation';
 
 const RelatedProductsRenderer = ({ id }) => {
