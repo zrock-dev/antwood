@@ -18,12 +18,21 @@
 }
 
 .product-card-image {
-	object-fit: cover;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	width: 100%;
 	height: 40vh;
 
 	background-color: var(--gradient-tone);
+	
+	& > img {
+		object-fit: contain;
+
+		width: 100%;
+		height: 100%;
+	}
 }
 
 .product-card-name {

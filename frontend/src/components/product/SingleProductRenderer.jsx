@@ -6,6 +6,7 @@ import { getSneakerById } from '@/requests/SneakersRequest';
 
 import '../../styles/product/product_details.css';
 import { useRouter } from 'next/navigation';
+import ProductReview from '../reviews/ProductReview';
 
 const SingleProductRenderer = ({ id }) => {
 	const router = useRouter();
@@ -23,6 +24,7 @@ const SingleProductRenderer = ({ id }) => {
 
 	return product ? (<>
 		<ProductDetails product={product} />
+		<ProductReview  product={product}/>
 	</>
 
 	) : (

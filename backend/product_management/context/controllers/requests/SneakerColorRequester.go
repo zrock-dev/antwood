@@ -29,10 +29,12 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error getting the sneaker id")
 	}
 
-	sneakerID := c.Query("sneakerid")
-	isRelated, _ := AddColorsToSneaker(sneakerID, []primitive.ObjectID{insertedID})
-	if !isRelated {
-		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
+	sneakerID := c.Query("sneakerid", "")
+	if sneakerID != "" {
+		isRelated, _ := AddColorsToSneaker(sneakerID, []primitive.ObjectID{insertedID})
+		if !isRelated {
+			return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
+		}
 	}
 
 	return c.JSON(struct {
@@ -66,10 +68,12 @@ func InsertManySneakerColors(c *fiber.Ctx) error {
 		}
 	}
 
-	sneakerID := c.Query("sneakerid")
-	wasInserted, _ := AddColorsToSneaker(sneakerID, insertedIDs)
-	if !wasInserted {
-		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
+	sneakerID := c.Query("sneakerid", "")
+	if sneakerID != "" {
+		wasInserted, _ := AddColorsToSneaker(sneakerID, insertedIDs)
+		if !wasInserted {
+			return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
+		}
 	}
 
 	return c.JSON(struct {
@@ -119,9 +123,6 @@ func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
 	}
 	if len(updatedSneakerColor.Sizes) > 0 {
 		toUpdate["sizes"] = updatedSneakerColor.Sizes
-	}
-	if updatedSneakerColor.Quantity >= 0 {
-		toUpdate["quantity"] = updatedSneakerColor.Quantity
 	}
 
 	return toUpdate
