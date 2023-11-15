@@ -1,8 +1,9 @@
 "use client";
 import React from 'react';
-import { Close } from '@mui/icons-material';
 import styled from '@emotion/styled'; 
 import '../../styles/shopping_cart/Popup.css';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
 
 const PopupMain = styled.section`
   position: fixed;
@@ -27,9 +28,10 @@ const Popup = ({ handleClose, show, children }) => {
       <PopupMain rightPosition={rightPosition} show={show}>
         <div className="popup-header">
           <h2>Your Cart</h2>
-          <button className="close-button" onClick={handleClose}>
+
+          <IconButton className='close-button' color="inherit" aria-label="Shopping Cart" onClick={handleClose}>
             <Close />
-          </button>
+          </IconButton>
         </div>
         <div className="popup-content">
           {children}
