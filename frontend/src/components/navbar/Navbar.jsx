@@ -2,6 +2,7 @@
 import Button from "@/components/Button";
 import useAuthHandler from "@/hooks/AuthOperations";
 import {AuthProvider, useAuth } from "@/context/AuthContext";
+import SideModal from '../SideModal'
 
 
 const Navbar = () => {
@@ -17,6 +18,8 @@ const {signoutUser} = useAuthHandler();
           log out
         </Button>
       )}
+
+      <button onClick={() => SideModal.openModal()}>Abrir Modal</button>
     </div>
   );
 };
