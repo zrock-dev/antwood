@@ -21,17 +21,21 @@ export const registerUser = (user,provider) =>
 
 
 
-export const getUser = () =>
-  axios.get(`${AUTH_DOMAIN}/auth/user?provider=${provider}`, axiosConfig);
+export const getUser = async () =>{
+  const res = await axios.get(`${AUTH_DOMAIN}/auth/user`, axiosConfig)
+  return res.data
+}
+  
+
+export const getUserByEmail = (email) =>{
+  return axios.get(`${AUTH_DOMAIN}/auth/user/${email}`, axiosConfig);
+
+}
+  
 
 
-export const getUserByEmail = (email) =>
-  axios.get(`${AUTH_DOMAIN}/auth/user/${email}`, axiosConfig);
-
-
-
-export const logoutUser = (provider) =>
-  axios.post(`${AUTH_DOMAIN}/auth/logout?provider=${provider}`, axiosConfig);
+export const logoutUser = () =>
+  axios.get(`${AUTH_DOMAIN}/auth/logout`, axiosConfig);
 
 export const getCodeToVerifyAccount = async (email) => {
   const response = await axios.get(`${AUTH_DOMAIN}/auth/verify-account/${email}`, axiosConfig)
