@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled'; 
 import '../../styles/shopping_cart/Popup.css';
 import IconButton from '@material-ui/core/IconButton';
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const PopupMain = styled.section`
   position: fixed;
