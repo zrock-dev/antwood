@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { Close } from '@mui/icons-material';
-import styled from 'styled-components'; 
+import styled from '@emotion/styled'; 
 import '../../styles/shopping_cart/Popup.css';
 
 const PopupMain = styled.section`
