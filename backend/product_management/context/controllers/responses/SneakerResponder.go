@@ -121,3 +121,65 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		Page:     pageInt,
 	})
 }
+func SendColorRelatedProduct(c *fiber.Ctx) error {
+	sneakerId := c.Params("sneakerId")
+	sneakerObjectID, err := primitive.ObjectIDFromHex(sneakerId)
+	if err != nil {
+		return err
+	}
+
+	sneakerColorId := c.Params("sneakerColorId")
+	sneakerColorObjectID, err := primitive.ObjectIDFromHex(sneakerColorId)
+	if err != nil {
+		return err
+	}
+
+	pipeline := mongo.Pipeline{
+		bson.D{
+			{Key: "$match", Value: bson.D{{Key: "_id", Value: sneakerObjectID}}},
+		},
+		bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "sneakerColors"},
+				{Key: "localField", Value: "colors._id"},
+				{Key: "foreignField", Value: "_id"},
+				{Key: "as", Value: "types"},
+			}},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "name", Value: 1},
+				{Key: "price", Value: 1},
+				{Key: "colors", Value: 1},
+				{Key: "reviews", Value: 1},
+				{Key: "lastDate", Value: 1},
+				{Key: "salesQuantity", Value: 1},
+				{Key: "promotionCode", Value: 1},
+				{Key: "types", Value: bson.D{
+					{Key: "$filter", Value: bson.D{
+						{Key: "input", Value: "$types"},
+						{Key: "as", Value: "type"},
+						{Key: "cond", Value: bson.D{
+							{Key: "$eq", Value: bson.A{"$$type._id", sneakerColorObjectID}},
+						}},
+					}},
+				}},
+			}},
+		},
+	}
+
+	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer cursor.Close(context.TODO())
+
+	var sneakersWithColors models.SneakerWithColors
+	for cursor.Next(context.TODO()) {
+		if err := cursor.Decode(&sneakersWithColors); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+	}
+
+	return c.JSON(sneakersWithColors)
+}

@@ -10,6 +10,7 @@ import (
 func RouteSneakers(server *fiber.App) {
 	server.Get("/sneakers", responses.SendSneakersByPagination)
 	server.Get("/sneaker/:id", responses.SendSneakerByID)
+	server.Get("/sneakers/colors/:sneakerId/:sneakerColorId", responses.SendColorRelatedProduct)
 
 	server.Post("/sneaker", requests.InsertSneaker)
 
