@@ -3,12 +3,14 @@ import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
 import { useState } from 'react';
 import DetailSection from './DetailSection';
+import QuantityRenderer from '../cart/QuantityRenderer';
 
 const ProductDetails = ({ product }) => {
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
-		sizeIndex: 0
+		sizeIndex: 0,
+		amount: 1
 	});
 
 	const colorData = product.types[color.colorIndex];
@@ -63,7 +65,9 @@ const ProductDetails = ({ product }) => {
 							className={`product-details-images-image ${
 								color.imageIndex === index && 'selected'
 							}`}
-							onClick={() => setColor({ ...color, imageIndex: index })}
+							onClick={() =>
+								setColor({ ...color, imageIndex: index, amount: 1 })
+							}
 							key={index}
 						>
 							<img src={image.url} alt="" />
@@ -78,9 +82,17 @@ const ProductDetails = ({ product }) => {
 				>
 					<div className="secction-item-row">
 						{colorData.sizes.map((size, index) => (
-							<span className="sneaker-size" key={index}>
+							<button
+								className={`sneaker-size ${
+									color.sizeIndex === index && 'selected'
+								}`}
+								key={index}
+								onClick={() =>
+									setColor({ ...color, sizeIndex: index, amount: 1 })
+								}
+							>
 								{size.value}
-							</span>
+							</button>
 						))}
 					</div>
 				</DetailSection>
@@ -92,7 +104,14 @@ const ProductDetails = ({ product }) => {
 						{product.types.map((type, index) => (
 							<div
 								key={index}
-								onClick={() => setColor({ imageIndex: 0, colorIndex: index, sizeIndex: 0 })}
+								onClick={() =>
+									setColor({
+										imageIndex: 0,
+										colorIndex: index,
+										sizeIndex: 0,
+										amount: 1
+									})
+								}
 								className={`product-details-images-image gray ${
 									index === color.colorIndex && 'selected'
 								}`}
@@ -108,10 +127,19 @@ const ProductDetails = ({ product }) => {
 					</p>
 				</DetailSection>
 				<div className="product-details-cart-management">
-					<button className="cart-sneaker-quantity">
-						{colorData.sizes[color.sizeIndex].quantity}
+					<QuantityRenderer
+						quantity={colorData.sizes[color.sizeIndex].quantity}
+						amount={color.amount}
+						onChange={(amount) => setColor({ ...color, amount: amount })}
+					/>
+					<button
+						disabled={colorData.sizes[color.sizeIndex].quantity <= 0}
+						className={`general-button ${
+							colorData.sizes[color.sizeIndex].quantity <= 0 && 'disabled'
+						}`}
+					>
+						ADD TO THE CART
 					</button>
-					<button className="general-button">ADD TO THE CART</button>
 				</div>
 			</div>
 		</div>

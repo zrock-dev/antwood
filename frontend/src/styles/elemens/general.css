@@ -22,12 +22,19 @@
 	padding: 10px;
 
 	cursor: pointer;
+	background-color: var(--primary-color);
 
 	&:hover {
 		border-color: black;
 		background-color: black;
 		color: white;
 	}
+}
+
+.sneaker-size.to-sizes {
+	border: none;
+	border-bottom: 1px solid var(--medium-gray);
+	border-right: 1px solid var(--medium-gray);
 }
 
 .sneaker-size.selected {
@@ -51,5 +58,17 @@
 
 		background-color: var(--primary-color);
 		color: var(--secondary-color);
+	}
+}
+
+.general-button.disabled {
+	opacity: 0.3;
+
+	&:hover {
+		border: none;
+
+		cursor: default;
+		background-color: var(--secondary-color);
+		color: var(--primary-color);
 	}
 }
