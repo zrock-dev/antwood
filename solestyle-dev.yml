@@ -77,6 +77,8 @@ services:
     image: solestyle_dev/shopping_cart_management
     expose:
       - "5000:5000"
+    environment:
+      DOTENV_KEY: ${DOTENV_SHOPPING_CART_MANAGEMENT_KEY}
     networks:
       solestyle_network:
         ipv4_address: "172.25.0.14"
