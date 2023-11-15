@@ -6,7 +6,7 @@ import CartButton from "./CartButton";
 import '../../styles/navbar/navbar.css'; 
 
 
-const Navbar = () => {
+const Navbar = ({ openPopup }) => {
 	const { setShowModalAuth,updateUser,setIsAuthenticated,isAuthenticated} = useAuth();
 const {signoutUser} = useAuthHandler();
 
@@ -21,18 +21,18 @@ const {signoutUser} = useAuthHandler();
       )}
 
       <div className="Button_container">
-        <CartButton />
-      </div>    
+        <CartButton openPopup={openPopup} />
+      </div>   
 
 
       <div className="Button_container">
-        <button >fav</button>
+        
       </div>
       <div className="Button_container">
-        <button >acount</button>
+        
       </div>
       <div className="find_bar_container">
-        <button >find bar</button>
+        
       </div>
     </div>
   );

@@ -1,15 +1,10 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import SideModal from '../shopping_Cart/Shopping_Cart_Modal'; 
 
-const CartButton = () => {
-  const showPopup = () => {
-    SideModal.openModal(); 
-  };
-
+const CartButton = ({ openPopup }) => {
   return (
-    <IconButton color="inherit" aria-label="Shopping Cart" onClick={showPopup}>
+    <IconButton color="inherit" aria-label="Shopping Cart" onClick={openPopup}>
       <ShoppingCartIcon />
     </IconButton>
   );
