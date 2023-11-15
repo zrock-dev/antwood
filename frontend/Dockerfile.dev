@@ -1,0 +1,17 @@
+FROM node:20.9-alpine3.18 as base
+
+
+FROM base AS deps
+WORKDIR /home/node/app
+COPY package*.json .
+RUN npm ci 
+
+
+FROM base as runner 
+WORKDIR /home/node/app
+LABEL org.opencontainers.image.description="frontend"
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+ENTRYPOINT ["npm", "run", "dev"]
+
