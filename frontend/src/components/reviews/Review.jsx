@@ -7,9 +7,10 @@ function Review({ review }) {
 
   const formatText = (text) => {
     const lines = text.split('\n');
-    return lines.map((line, index) => (
-      <p key={index}>{line.replace(/ /g, "\u00A0")}</p>
-    ));
+    return lines.map((line, index) => {
+     if (line === "") return <br key={index}/>
+   return   <p key={index}>{line.replace(/ /g, "\u00A0")}</p>
+  });
   }
 
   return (

@@ -23,7 +23,7 @@ func SendReviewsByIndex(c *fiber.Ctx) error {
 	}
 
 	amountInt, err := strconv.Atoi(amount)
-	if err != nil || amountInt <= 0 || amountInt > 50 {
+	if err != nil || amountInt <= 0 || amountInt > 1000 {
 		return c.Status(400).SendString("Invalid amount")
 	}
 
@@ -53,7 +53,17 @@ func SendReviewsByIndex(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error while processing reviews")
 	}
 
-	return c.JSON(resultReviews)
+	currentSneaker := models.Sneaker{}
+	err = database.SneakerCollection.FindOne(context.TODO(), bson.M{"_id": sneakerIDObjID}).Decode(&currentSneaker)
+
+	if err != nil {
+		return c.Status(500).SendString("Error while querying sneaker")
+	}
+
+	return c.JSON(fiber.Map{
+		"reviews": resultReviews,
+		"summaryUpdate":   currentSneaker.Reviews,
+	})
 }
 
 

@@ -37,8 +37,9 @@ function useReviewForm() {
     setReview({ ...review, [name]: value });
   }
 
+
   const textSize  = () => {
-    return review.description.length
+    return review.description.trim().length
   }
 
   const validateForm = () => {

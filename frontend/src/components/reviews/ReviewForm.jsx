@@ -7,11 +7,11 @@ import '@/styles/reviews/review_form.css';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { sendError } from 'next/dist/server/api-utils';
 
 function ReviewForm({ product, setReviews }) {
   const reviewHandle = useReviewForm();
-  const { isAuthenticated, setShowModalAuth, user } = useAuth();
+  const { isAuthenticated, setShowModalAuth, user, setIsAuthenticated } =
+    useAuth();
   const [pendingAction, setPendingAction] = useState(null)
   const maxChars = 400;
 
@@ -40,6 +40,7 @@ function ReviewForm({ product, setReviews }) {
     }
 
     let review = reviewHandle.review;
+    review.description  = review.description.trim();
     review.username = currentUser.username;
     review.userEmail = currentUser.email;
     const response = await addReview(product._id, review);
@@ -50,15 +51,16 @@ function ReviewForm({ product, setReviews }) {
   }
 
   useEffect(() => {
+    
     if (pendingAction) {
       pendingAction(user)
       setPendingAction(null)
     }
+    if(!isAuthenticated){
+      reviewHandle.resetReview();
+    }
   }, [isAuthenticated]
   )
-
-
-
 
 
   return (

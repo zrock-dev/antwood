@@ -3,17 +3,17 @@ package controllers
 import (
 	"account_management/context/records"
 	"account_management/context/service"
-	
+
 	"github.com/gofiber/fiber/v2"
 
 	"time"
 )
 
 func Register(c *fiber.Ctx) error {
-	
+
 	authProvider := service.UseProvider(c.Query("provider"))
 
-	authentication_token, user , authError:= authProvider.Register(c)
+	authentication_token, user, authError := authProvider.Register(c)
 
 	if authError != nil {
 		c.Status(fiber.StatusInternalServerError)
@@ -23,11 +23,10 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	authorizarion_token, signError := service.GenerateAuthorizationToken(records.Payload{
-		Id: user.Id.Hex(),
-		Role: user.Role,
-		Provider: user.ProviderAuth,
+		Id:        user.Id.Hex(),
+		Role:      user.Role,
+		Provider:  user.ProviderAuth,
 		AuthToken: authentication_token,
-
 	})
 
 	if signError != nil {
@@ -40,23 +39,18 @@ func Register(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    authorizarion_token,
-		Expires:  time.Now().Add(time.Hour * 24*7),
+		Expires:  time.Now().Add(time.Hour * 24 * 7),
 		HTTPOnly: true,
 	}
 	c.Cookie(&cookie)
 
 	return c.Status(fiber.StatusOK).JSON(user)
 }
-
-
-
-
-
 
 func Login(c *fiber.Ctx) error {
 	authProvider := service.UseProvider(c.Query("provider"))
 
-	authentication_token, user ,authError:= authProvider.Login(c)
+	authentication_token, user, authError := authProvider.Login(c)
 
 	if authError != nil {
 		c.Status(fiber.StatusOK)
@@ -66,9 +60,9 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	authorizarion_token, signError := service.GenerateAuthorizationToken(records.Payload{
-		Id: user.Id.Hex(),
-		Role: user.Role,
-		Provider: user.ProviderAuth,
+		Id:        user.Id.Hex(),
+		Role:      user.Role,
+		Provider:  user.ProviderAuth,
 		AuthToken: authentication_token,
 	})
 
@@ -82,7 +76,7 @@ func Login(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    authorizarion_token,
-		Expires:  time.Now().Add(time.Hour * 24*7),
+		Expires:  time.Now().Add(time.Hour * 24 * 7),
 		HTTPOnly: true,
 	}
 	c.Cookie(&cookie)
@@ -90,29 +84,28 @@ func Login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(user)
 }
 
-
-
 func GetUserByToken(c *fiber.Ctx) error {
 	authProvider := service.UseProvider(c.Query("provider"))
 
-	authTocken := c.Cookies("jwt")
+	authToken := c.Cookies("jwt")
 
-	claims ,authError := service.GetAppClaims(authTocken)
+
+	claims, authError := service.GetAppClaims(authToken)
 
 	if authError != nil {
-		c.Status(fiber.StatusForbidden)
 		return c.JSON(fiber.Map{
+			"status": fiber.StatusForbidden,
 			"error": authError.Error(),
 		})
 	}
 
-	accessToken := (*claims)["accessToken"].( string)
+	accessToken := (*claims)["accessToken"].(string)
 
-	user,userError := authProvider.GetUserByToken(accessToken)
+	user, userError := authProvider.GetUserByToken(accessToken)
 
-	if userError!= nil {
-		c.Status(fiber.StatusOK)
+	if userError != nil {
 		return c.JSON(fiber.Map{
+			"status": fiber.StatusForbidden,
 			"error": userError.Error(),
 		})
 	}
@@ -122,26 +115,25 @@ func GetUserByToken(c *fiber.Ctx) error {
 }
 
 func Logout(c *fiber.Ctx) error {
-	authProvider := service.UseProvider("solestyle")
+	authProvider := service.UseProvider(c.Query("provider"))
+	authToken := c.Cookies("jwt")
 
-	authTocken := c.Cookies("jwt")
-
-	claims ,authError := service.GetAppClaims(authTocken)
+	claims, authError := service.GetAppClaims(authToken)
 
 	if authError != nil {
-		c.Status(fiber.StatusForbidden)
 		return c.JSON(fiber.Map{
+			"status": fiber.StatusForbidden,
 			"error": authError.Error(),
 		})
 	}
 
-	accessToken := (*claims)["accessToken"].( string)
+	accessToken := (*claims)["accessToken"].(string)
 
 	_, err := authProvider.Logout(accessToken)
 
 	if err != nil {
-		c.Status(fiber.StatusForbidden)
 		return c.JSON(fiber.Map{
+			"status": fiber.StatusForbidden,
 			"error": err.Error(),
 		})
 	}
@@ -149,13 +141,14 @@ func Logout(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    "",
-		Expires:  time.Now().Add(-time.Hour*24*7),
+		Expires:  time.Now().Add(-time.Hour * 24 * 7),
 		HTTPOnly: true,
 	}
 
 	c.Cookie(&cookie)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.JSON(fiber.Map{
+		"status": fiber.StatusOK,
 		"message": "success logout",
 	})
 

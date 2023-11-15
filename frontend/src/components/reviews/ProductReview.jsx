@@ -4,7 +4,6 @@ import Review from "./Review"
 import { useState, useEffect } from "react"
 import "@/styles/reviews/product_review.css"
 import { getReviewsByAmount } from "@/requests/ReviewRequest"
-import Button from "../Button"
 import {toast} from "sonner"
 const ProductReview = ({ product }) => {
     const [reviews, setReviews] = useState([]);
@@ -15,10 +14,9 @@ const ProductReview = ({ product }) => {
 
 
     const showMoreReviews = () => {
-        let index = reviews.length === 0 ? 0 : reviews.length
-        getReviewsByAmount(product._id, index, 3).then((data) => {
-            let newReviews = [...reviews, ...data]
-            setReviews(newReviews)
+        getReviewsByAmount(product._id, 0, reviews.length+3).then((data) => {
+            product.reviews  = data.summaryUpdate
+            setReviews(data.reviews)
         }).catch((err) => {
             toast.error("could not obtain more products");
         })
