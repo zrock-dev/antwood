@@ -40,6 +40,20 @@ const CartProvider = ({ children }) => {
 		});
 	};
 
+	const removeProduct = (product) => {
+		const initialSize = cartState.products.length;
+		const products = cartState.products.filter((productCart) =>
+			equalsProduct(productCart, product)
+		);
+		if (initialSize > products.length) {
+			setCartState({
+				...cartState,
+				products,
+				subTotal: cartState.subTotal - product.subTotal
+			});
+		}
+	};
+
 	const equalsProduct = (product1, product2) => {
 		return (
 			product1.snakerId === product2.snakerId &&
@@ -72,6 +86,7 @@ const CartProvider = ({ children }) => {
 			value={{
 				cartState: cartState,
 				addSneaker,
+				removeProduct,
 				findProduct
 			}}
 		>

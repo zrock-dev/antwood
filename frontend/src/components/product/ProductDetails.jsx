@@ -7,7 +7,7 @@ import QuantityRenderer from '../cart/QuantityRenderer';
 import { CartContext } from '@/context/CartContext';
 
 const ProductDetails = ({ product }) => {
-	const { addSneaker, findProduct } = useContext(CartContext);
+	const { addSneaker, removeProduct, findProduct } = useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
@@ -49,7 +49,14 @@ const ProductDetails = ({ product }) => {
 		);
 	};
 
-	const removeToCart = () => {};
+	const removeToCart = () => {
+		removeProduct({
+			snakerId: product._id,
+			sneakerColorId: colorData.ID,
+			size: colorData.sizes[color.sizeIndex].value,
+			subTotal: color.amount * product.price
+		});
+	};
 
 	useEffect(() => {
 		const productFound = findProduct({
