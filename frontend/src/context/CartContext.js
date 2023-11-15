@@ -12,7 +12,7 @@ export const EmptyCart = {
 };
 
 const CartProvider = ({ children }) => {
-	let cartState = EmptyCart;
+	const [cartState, setCartState] = useState(EmptyCart);
 
 	const addSneaker = (
 		snakerId,
@@ -45,10 +45,11 @@ const CartProvider = ({ children }) => {
 
 	const removeProduct = (product) => {
 		const initialSize = cartState.products.length;
-		const products = cartState.products.filter((productCart) =>
-			equalsProduct(productCart, product)
+		const products = cartState.products.filter(
+			(productCart) => !equalsProduct(productCart, product)
 		);
-		if (initialSize > products.length) {
+
+		if (products.length < initialSize) {
 			saveItem(
 				'cart',
 				JSON.stringify({
@@ -79,7 +80,7 @@ const CartProvider = ({ children }) => {
 	useEffect(() => {
 		const cart = getItem('cart');
 		if (cart) {
-			cartState = stringToJson(cart);
+			setCartState(stringToJson(cart));
 		}
 	}, []);
 
