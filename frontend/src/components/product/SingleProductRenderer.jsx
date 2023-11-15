@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ProductDetails from './ProductDetails';
 import { getSneakerById } from '@/requests/SneakersRequest';
 
 import '../../styles/product/product_details.css';
-import { useRouter } from 'next/navigation';
+import '../../styles/cart/cart.css';
 
 const SingleProductRenderer = ({ id }) => {
 	const router = useRouter();
@@ -20,7 +21,7 @@ const SingleProductRenderer = ({ id }) => {
 				router.push('/');
 			});
 	}, [id, router]);
-	
+
 	return product ? (
 		<ProductDetails product={product} />
 	) : (

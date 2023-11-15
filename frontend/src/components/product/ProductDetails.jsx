@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
 import { useState } from 'react';
@@ -7,7 +7,8 @@ import DetailSection from './DetailSection';
 const ProductDetails = ({ product }) => {
 	const [color, setColor] = useState({
 		colorIndex: 0,
-		imageIndex: 0
+		imageIndex: 0,
+		sizeIndex: 0
 	});
 
 	const colorData = product.types[color.colorIndex];
@@ -91,7 +92,7 @@ const ProductDetails = ({ product }) => {
 						{product.types.map((type, index) => (
 							<div
 								key={index}
-								onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
+								onClick={() => setColor({ imageIndex: 0, colorIndex: index, sizeIndex: 0 })}
 								className={`product-details-images-image gray ${
 									index === color.colorIndex && 'selected'
 								}`}
@@ -106,6 +107,12 @@ const ProductDetails = ({ product }) => {
 						{product.description}
 					</p>
 				</DetailSection>
+				<div className="product-details-cart-management">
+					<button className="cart-sneaker-quantity">
+						{colorData.sizes[color.sizeIndex].quantity}
+					</button>
+					<button className="general-button">ADD TO THE CART</button>
+				</div>
 			</div>
 		</div>
 	);

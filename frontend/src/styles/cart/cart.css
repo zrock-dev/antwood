@@ -1,0 +1,10 @@
+.cart-sneaker-quantity {
+	padding: 15px;
+
+	border: 1px solid var(--medium-gray);
+	color: var(--secondary-color);
+
+	& svg {
+		fill: var(--secondary-color);
+	}
+}
