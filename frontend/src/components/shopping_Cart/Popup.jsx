@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled'; 
 import '../../styles/shopping_cart/Popup.css';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const PopupMain = styled.section`
   position: fixed;
@@ -30,7 +30,7 @@ const Popup = ({ handleClose, show, children }) => {
           <h2>Your Cart</h2>
 
           <IconButton className='close-button' color="inherit" aria-label="Shopping Cart" onClick={handleClose}>
-            <CloseIcon />
+            <CancelIcon />
           </IconButton>
         </div>
         <div className="popup-content">
