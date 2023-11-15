@@ -1,0 +1,18 @@
+.rating-summary{
+    border: 1px solid black;
+    padding : 30px;
+    margin: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    width: fit-content;
+    box-sizing: border-box;
+}
+.rating-summary ul {
+    padding-right: 140px;
+}
+.rating-summary li {
+    display: flex;
+    flex-wrap: nowrap;
+    gap : 1rem;
+}

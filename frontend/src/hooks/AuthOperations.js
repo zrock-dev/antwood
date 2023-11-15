@@ -1,6 +1,11 @@
 import { useAuth } from "@/context/AuthContext"
 import { toast } from "sonner";
-import { loginUser, registerUser, getUserByEmail} from "@/requests/AuthRequest";
+import {
+  loginUser,
+  registerUser,
+  getUserByEmail,
+  logoutUser,
+} from "@/requests/AuthRequest";
 const useAuthHandler = ()=>{
 
     const {setShowModalAuth,updateUser,setIsAuthenticated} = useAuth();
@@ -56,6 +61,19 @@ const useAuthHandler = ()=>{
         })
       };
 
+      const signoutUser = async () => {
+        toast.promise(logoutUser(), {
+          loading: "signout in progress",
+          success: (res) => {
+      
+            setIsAuthenticated(false);
+            updateUser(null);
+            return "success signout ";
+          },
+          error: "Signout Error",
+        });
+      }
+
    
 
 
@@ -63,7 +81,8 @@ const useAuthHandler = ()=>{
         onSignin,
         onSignup,
         verifyUserExists,
-      }
+        signoutUser,
+      };
     }
 
 export default useAuthHandler;

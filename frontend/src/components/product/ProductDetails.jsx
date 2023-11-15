@@ -78,7 +78,7 @@ const ProductDetails = ({ product }) => {
 					<div className="secction-item-row">
 						{colorData.sizes.map((size, index) => (
 							<span className="sneaker-size" key={index}>
-								{size}
+								{size.value}
 							</span>
 						))}
 					</div>

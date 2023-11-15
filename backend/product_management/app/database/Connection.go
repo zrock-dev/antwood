@@ -12,6 +12,7 @@ import (
 var SoleStyleDatabase mongo.Database
 var SneakerCollection mongo.Collection
 var SneakerColorsCollection mongo.Collection
+var ReviewCollection mongo.Collection
 
 func ConnectToTheDatabase() {
 	URI := os.Getenv("MONGO_URI")
@@ -30,6 +31,7 @@ func initDatabase(client mongo.Client) {
 	SoleStyleDatabase = *client.Database("solestyle")
 	initSneakerCollection(SoleStyleDatabase)
 	initSneakerColorCollection(SoleStyleDatabase)
+	initReviewCollection(SoleStyleDatabase)
 }
 
 func initSneakerCollection(database mongo.Database) {
@@ -38,4 +40,9 @@ func initSneakerCollection(database mongo.Database) {
 
 func initSneakerColorCollection(database mongo.Database) {
 	SneakerColorsCollection = *database.Collection("sneakerColors")
+}
+
+
+func initReviewCollection(database mongo.Database) {
+	ReviewCollection = *database.Collection("reviews")
 }

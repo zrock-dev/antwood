@@ -1,0 +1,11 @@
+*.next
+node_modules/*
+src/test/*
+Dockerfile.*
+.dockerignore
+npm-debug.log
+README.md
+.git
+.gitignore
+
+next.config.js
