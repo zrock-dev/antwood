@@ -49,7 +49,9 @@ const ProductDetails = ({ product }) => {
 			color.amount,
 			colorData.sizes[color.sizeIndex].value,
 			product.price,
-			colorData.sizes[color.sizeIndex].quantity
+			colorData.sizes[color.sizeIndex].quantity,
+			colorData.images[0].url,
+			product.name
 		);
 		setColor({
 			...color,
@@ -59,7 +61,7 @@ const ProductDetails = ({ product }) => {
 
 	const removeToCart = () => {
 		removeProduct({
-			snakerId: product._id,
+			sneakerId: product._id,
 			sneakerColorId: colorData.ID,
 			size: colorData.sizes[color.sizeIndex].value,
 			subTotal: color.amount * product.price
@@ -79,7 +81,7 @@ const ProductDetails = ({ product }) => {
 				cart.products.map((productCart) => {
 					if (
 						equalsProduct(productCart, {
-							snakerId: product._id,
+							sneakerId: product._id,
 							sneakerColorId: colorData.ID,
 							size: colorData.sizes[color.sizeIndex].value
 						})
@@ -110,7 +112,7 @@ const ProductDetails = ({ product }) => {
 	useEffect(() => {
 		if (color.onCart && dataLoaded) {
 			updateProduct({
-				snakerId: product._id,
+				sneakerId: product._id,
 				sneakerColorId: colorData.ID,
 				size: colorData.sizes[color.sizeIndex].value,
 				amount: color.amount,

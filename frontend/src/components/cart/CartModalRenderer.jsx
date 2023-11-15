@@ -2,34 +2,41 @@
 
 import { CartContext } from '@/context/CartContext';
 import { getCartProductsInformation } from '@/requests/CartRequest';
+import { stringToJson } from '@/utils/Parser';
+import { getItem } from '@/utils/StorageManagement';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
-	const { cartState } = useContext(CartContext);
-	const [productData, setProductData] = useState(null);
-	const hasProducts = cartState.products.lenght > 1;
+	const [cartState, setCartState] = useState(null);
+	const [hasProducts, setHasProducts] = useState(false);
 
 	useEffect(() => {
-		getCartProductsInformation(cartState.products)
-			.then(setProductData)
-			.catch((e) => {
-				console.log(e);
-			});
+		let cart = getItem('cart');
+		if (cart) {
+			cart = stringToJson(cart);
+			setCartState(cart);
+			setHasProducts(cart.products.length > 1);
+		}
 	}, []);
 
-	return productData ? (
+	return cartState ? (
 		<div>
 			{hasProducts ? (
 				<>
 					<div>
 						<h2>YOUR CART</h2>
 					</div>
-					{productData.map((product, index) => (
+					{cartState.products.map((product, index) => (
 						<div key={index}>
-							<img src="" alt="" />
-							<div></div>
+							<img src={product.image} alt="" />
+							<div>
+								<h4>{product.name}</h4>
+								<span>Size: {product.size}</span>
+								<button>{product.amount}</button>
+								<b>Subtotal: {product.subTotal}</b>
+							</div>
 						</div>
 					))}
 				</>

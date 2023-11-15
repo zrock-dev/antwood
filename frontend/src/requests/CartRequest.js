@@ -1,9 +1,16 @@
-export const getCartProductsInformation = async (products) => {
-	// const productsData = []
-	// let response
-	// products.map((product) => {
-	// 	response = await axios.get(`/sneakers/colors/${product.sneakerId}/${product.sneakerColorId}`);
+import axios from 'axios';
 
-	// })
-	return [];
+export const getCartProductsInformation = async (products) => {
+	console.log(products);
+	const response = await axios.post(
+		'/sneakers/colors/all',
+		products,
+		{
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json'
+			}
+		}
+	);
+	return response.data;
 };

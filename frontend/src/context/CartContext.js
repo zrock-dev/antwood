@@ -15,21 +15,25 @@ const CartProvider = ({ children }) => {
 	const [cartState, setCartState] = useState(EmptyCart);
 
 	const addSneaker = (
-		snakerId,
+		sneakerId,
 		sneakerColorId,
 		amount,
 		size,
 		price,
-		quantity
+		quantity,
+		image,
+		name
 	) => {
 		const snakerSubTotal = price * amount;
 		cartState.products.push({
-			snakerId,
+			sneakerId,
 			sneakerColorId,
 			size,
 			amount,
 			subTotal: snakerSubTotal,
-			quantity
+			quantity,
+			image,
+			name
 		});
 		saveItem(
 			'cart',
@@ -88,7 +92,7 @@ const CartProvider = ({ children }) => {
 
 	const equalsProduct = (product1, product2) => {
 		return (
-			product1.snakerId === product2.snakerId &&
+			product1.sneakerId === product2.sneakerId &&
 			product1.sneakerColorId === product2.sneakerColorId &&
 			product1.size === product2.size
 		);
@@ -106,28 +110,6 @@ const CartProvider = ({ children }) => {
 		const cart = getItem('cart');
 		if (cart) {
 			setCartState(stringToJson(cart));
-			console.log(stringToJson(cart));
-			// const cartNose = {
-				// products: [
-				// 	{
-				// 		snakerId: '6543c443d88b1c5386061b89',
-				// 		sneakerColorId: '6543c46cd88b1c5386061b8b',
-				// 		size: 3,
-				// 		amount: 4,
-				// 		subTotal: 340,
-				// 		quantity: 11
-				// 	},
-				// 	{
-				// 		snakerId: '6543c443d88b1c5386061b89',
-				// 		sneakerColorId: '6543c46cd88b1c5386061b8b',
-				// 		size: 4,
-				// 		amount: 17,
-				// 		subTotal: 1445,
-				// 		quantity: 17
-				// 	}
-				// ],
-			// 	total: 0
-			// };
 		}
 	}, []);
 
