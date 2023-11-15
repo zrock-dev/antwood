@@ -1,9 +1,11 @@
 .btn {
   border: none;
   outline: none;
-  border-radius: 8px;
+  border-radius: 1px;
   padding: 10px 20px;
   cursor: pointer;
+  box-sizing: border-box;
+  font-weight: bold;
 }
 
 .main_btn {
@@ -14,4 +16,11 @@
 .second_btn {
   background-color: var(--transparent-gray);
   color: var(--medium-gray);
+}
+
+.third_btn {
+  background-color: var(--primary-color);
+
+  color: var(--secondary-color);
+  border: 3px solid var(--secondary-color);
 }

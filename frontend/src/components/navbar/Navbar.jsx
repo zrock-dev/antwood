@@ -1,16 +1,22 @@
 "use client";
 import Button from "@/components/Button";
-import {logoutUser} from "@/requests/AuthRequest"
+import useAuthHandler from "@/hooks/AuthOperations";
 import {AuthProvider, useAuth } from "@/context/AuthContext";
 
 
 const Navbar = () => {
-	const { setShowModalAuth} = useAuth();
-
+	const { setShowModalAuth,updateUser,setIsAuthenticated,isAuthenticated} = useAuth();
+const {signoutUser} = useAuthHandler();
 
 	return (
     <div className="navbar-main-container">
-      <Button onClick={() => setShowModalAuth(true)}>login</Button>
+      {!isAuthenticated ? (
+        <Button onClick={() => setShowModalAuth(true)}>log in</Button>
+      ) : (
+        <Button   onClick={signoutUser}>
+          log out
+        </Button>
+      )}
     </div>
   );
 };

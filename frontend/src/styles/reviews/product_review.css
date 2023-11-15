@@ -1,0 +1,9 @@
+.review_form_ctn{
+    max-width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 100px;
+    box-sizing: content-box;
+}

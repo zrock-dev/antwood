@@ -9,7 +9,7 @@
 	--light-gray: #dddddd;
 	--medium-gray: #999999;
 	--transparent-gray: rgba(196, 196, 196, 0.295);
-	--dark-black: #333333;
+	--dark-black: #4e4e4e;
 	--medium-black: #222222;
 	--light-black: #111111;
 
@@ -51,7 +51,7 @@ button {
 
 /* Link Styles */
 a {
-	color: inherit;
+	color: var(--dark-black);
 	text-decoration: none;
 }
 
