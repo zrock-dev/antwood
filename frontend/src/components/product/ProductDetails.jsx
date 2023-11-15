@@ -66,7 +66,7 @@ const ProductDetails = ({ product }) => {
 								color.imageIndex === index && 'selected'
 							}`}
 							onClick={() =>
-								setColor({ ...color, imageIndex: index, amount: 1 })
+								setColor({ ...color, imageIndex: index })
 							}
 							key={index}
 						>
