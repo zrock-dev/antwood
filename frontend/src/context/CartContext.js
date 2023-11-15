@@ -23,21 +23,19 @@ const CartProvider = ({ children }) => {
 		quantity
 	) => {
 		const snakerSubTotal = price * amount;
+		cartState.products.push({
+			snakerId,
+			sneakerColorId,
+			size,
+			amount,
+			subTotal: snakerSubTotal,
+			quantity
+		});
 		saveItem(
 			'cart',
 			JSON.stringify({
 				...cartState,
-				products: [
-					...cartState.products,
-					{
-						snakerId,
-						sneakerColorId,
-						size,
-						amount,
-						subTotal: snakerSubTotal,
-						quantity
-					}
-				],
+				products: cartState.products,
 				subTotal: cartState.subTotal + snakerSubTotal
 			})
 		);
