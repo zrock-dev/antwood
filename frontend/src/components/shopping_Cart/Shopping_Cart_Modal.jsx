@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-let openModalFunc; // Variable para almacenar la función de abrir el modal
+let openModalFunc; 
 
 const SideModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,6 @@ const SideModal = () => {
   );
 };
 
-// Función para abrir el modal desde fuera del componente
 SideModal.openModal = openModalFunc;
 
 export default SideModal;

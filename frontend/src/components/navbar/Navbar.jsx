@@ -2,7 +2,8 @@
 import Button from "@/components/Button";
 import useAuthHandler from "@/hooks/AuthOperations";
 import {AuthProvider, useAuth } from "@/context/AuthContext";
-import SideModal from '../SideModal'
+import CartButton from "./CartButton"; 
+import '../../styles/navbar/navbar.css'; 
 
 
 const Navbar = () => {
@@ -19,7 +20,20 @@ const {signoutUser} = useAuthHandler();
         </Button>
       )}
 
-      <button onClick={() => SideModal.openModal()}>Abrir Modal</button>
+      <div className="Button_container">
+        <CartButton />
+      </div>    
+
+
+      <div className="Button_container">
+        <button >fav</button>
+      </div>
+      <div className="Button_container">
+        <button >acount</button>
+      </div>
+      <div className="find_bar_container">
+        <button >find bar</button>
+      </div>
     </div>
   );
 };

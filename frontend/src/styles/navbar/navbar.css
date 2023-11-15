@@ -1,5 +1,24 @@
 .navbar-main-container {
 	height: 7vh;
-
 	background-color: var(--secondary-color);
+
+	display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px;
+}
+
+
+
+
+.Button_container{
+    width: 60px;
+}
+
+
+
+
+.find_bar_container{
+
+	width: 250px;
 }
