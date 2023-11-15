@@ -47,6 +47,10 @@ const ProductDetails = ({ product }) => {
 			product.price,
 			colorData.sizes[color.sizeIndex].quantity
 		);
+		setColor({
+			...color,
+			onCart: true
+		});
 	};
 
 	const removeToCart = () => {
@@ -55,6 +59,10 @@ const ProductDetails = ({ product }) => {
 			sneakerColorId: colorData.ID,
 			size: colorData.sizes[color.sizeIndex].value,
 			subTotal: color.amount * product.price
+		});
+		setColor({
+			...color,
+			onCart: false
 		});
 	};
 
@@ -175,7 +183,7 @@ const ProductDetails = ({ product }) => {
 							colorData.sizes[color.sizeIndex].quantity <= 0 && 'disabled'
 						}`}
 					>
-						ADD TO THE CART
+						{color.onCart ? 'REMOVE FROM CART' : 'ADD TO THE CART'}
 					</button>
 				</div>
 			</div>
