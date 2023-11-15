@@ -1,16 +1,19 @@
 'use client';
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DetailSection from './DetailSection';
 import QuantityRenderer from '../cart/QuantityRenderer';
+import { CartContext } from '@/context/CartContext';
 
 const ProductDetails = ({ product }) => {
+	const { addSneaker, findProduct } = useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
 		sizeIndex: 0,
-		amount: 1
+		amount: 1,
+		onCart: false
 	});
 
 	const colorData = product.types[color.colorIndex];
@@ -34,6 +37,34 @@ const ProductDetails = ({ product }) => {
 					: color.imageIndex - 1
 		});
 	};
+
+	const addToCart = () => {
+		addSneaker(
+			product._id,
+			colorData.ID,
+			color.amount,
+			colorData.sizes[color.sizeIndex].value,
+			product.price,
+			colorData.sizes[color.sizeIndex].quantity
+		);
+	};
+
+	const removeToCart = () => {};
+
+	useEffect(() => {
+		const productFound = findProduct({
+			snakerId: product._id,
+			sneakerColorId: colorData.ID,
+			size: colorData.sizes[color.sizeIndex].value
+		});
+		if (productFound != null) {
+			setColor({
+				...color,
+				amount: productFound.amount,
+				onCart: true
+			});
+		}
+	}, [color.colorIndex, color.sizeIndex]);
 
 	return (
 		<div className="product-details-main-container">
@@ -65,9 +96,7 @@ const ProductDetails = ({ product }) => {
 							className={`product-details-images-image ${
 								color.imageIndex === index && 'selected'
 							}`}
-							onClick={() =>
-								setColor({ ...color, imageIndex: index })
-							}
+							onClick={() => setColor({ ...color, imageIndex: index })}
 							key={index}
 						>
 							<img src={image.url} alt="" />
@@ -133,6 +162,7 @@ const ProductDetails = ({ product }) => {
 						onChange={(amount) => setColor({ ...color, amount: amount })}
 					/>
 					<button
+						onClick={color.onCart ? removeToCart : addToCart}
 						disabled={colorData.sizes[color.sizeIndex].quantity <= 0}
 						className={`general-button ${
 							colorData.sizes[color.sizeIndex].quantity <= 0 && 'disabled'

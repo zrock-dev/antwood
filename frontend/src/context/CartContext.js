@@ -38,11 +38,30 @@ const CartProvider = ({ children }) => {
 		});
 	};
 
+	const equalsProduct = (product1, product2) => {
+		return (
+			product1.snakerId === product2.snakerId &&
+			product1.sneakerColorId === product2.sneakerColorId &&
+			product1.size === product2.size
+		);
+	};
+
+	const findProduct = (product) => {
+		cartState.products.map((productCart) => {
+			if (equalsProduct(productCart, product)) {
+				return product;
+			}
+		});
+
+		return null;
+	};
+
 	return (
 		<CartContext.Provider
 			value={{
 				cartState: cartState,
-				addSneaker
+				addSneaker,
+				findProduct
 			}}
 		>
 			{children}
