@@ -1,5 +1,7 @@
 'use client';
-import { createContext, useState } from 'react';
+import { stringToJson } from '@/utils/Parser';
+import { getItem, saveItem } from '@/utils/StorageManagement';
+import { createContext, useEffect, useState } from 'react';
 
 export const CartContext = createContext();
 
@@ -55,6 +57,15 @@ const CartProvider = ({ children }) => {
 
 		return null;
 	};
+
+	useEffect(() => {
+		const cart = getItem('cart');
+		setCartState(cart ? stringToJson(cart) : EmptyCart);
+	}, []);
+
+	useEffect(() => {
+		saveItem('cart', JSON.stringify(cartState));
+	}, [cartState]);
 
 	return (
 		<CartContext.Provider
