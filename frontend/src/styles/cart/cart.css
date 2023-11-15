@@ -19,6 +19,12 @@
 	}
 }
 
+.cart-sneaker-amount.active {
+	& svg {
+		transform: rotate(180deg);
+	}
+}
+
 .cart-sneaker-amount-sizes {
 	display: flex;
 	flex-direction: column;

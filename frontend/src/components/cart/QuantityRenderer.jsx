@@ -18,8 +18,10 @@ const QuantityRenderer = ({ quantity, amount, onChange }) => {
 	useEffect(() => {
 		if (isOpen) {
 			document.body.style.overflow = 'hidden';
+			quantityButton?.current.classList.add('active');
 		} else {
 			document.body.style.overflow = 'auto';
+			quantityButton?.current.classList.remove('active');
 		}
 	}, [isOpen]);
 
