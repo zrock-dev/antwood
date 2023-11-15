@@ -108,24 +108,24 @@ const CartProvider = ({ children }) => {
 			setCartState(stringToJson(cart));
 			console.log(stringToJson(cart));
 			// const cartNose = {
-			// 	products: [
-			// 		{
-			// 			snakerId: '6543c443d88b1c5386061b89',
-			// 			sneakerColorId: '6543c46cd88b1c5386061b8b',
-			// 			size: 3,
-			// 			amount: 4,
-			// 			subTotal: 340,
-			// 			quantity: 11
-			// 		},
-			// 		{
-			// 			snakerId: '6543c443d88b1c5386061b89',
-			// 			sneakerColorId: '6543c46cd88b1c5386061b8b',
-			// 			size: 4,
-			// 			amount: 17,
-			// 			subTotal: 1445,
-			// 			quantity: 17
-			// 		}
-			// 	],
+				// products: [
+				// 	{
+				// 		snakerId: '6543c443d88b1c5386061b89',
+				// 		sneakerColorId: '6543c46cd88b1c5386061b8b',
+				// 		size: 3,
+				// 		amount: 4,
+				// 		subTotal: 340,
+				// 		quantity: 11
+				// 	},
+				// 	{
+				// 		snakerId: '6543c443d88b1c5386061b89',
+				// 		sneakerColorId: '6543c46cd88b1c5386061b8b',
+				// 		size: 4,
+				// 		amount: 17,
+				// 		subTotal: 1445,
+				// 		quantity: 17
+				// 	}
+				// ],
 			// 	total: 0
 			// };
 		}

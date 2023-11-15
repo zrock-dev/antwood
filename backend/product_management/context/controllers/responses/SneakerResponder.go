@@ -121,17 +121,17 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		Page:     pageInt,
 	})
 }
-func SendColorRelatedProduct(c *fiber.Ctx) error {
-	sneakerId := c.Params("sneakerId")
+
+func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
 	sneakerObjectID, err := primitive.ObjectIDFromHex(sneakerId)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	sneakerColorId := c.Params("sneakerColorId")
 	sneakerColorObjectID, err := primitive.ObjectIDFromHex(sneakerColorId)
 	if err != nil {
-		return err
+		panic(err)
+
 	}
 
 	pipeline := mongo.Pipeline{
@@ -170,16 +170,44 @@ func SendColorRelatedProduct(c *fiber.Ctx) error {
 
 	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		panic(err)
 	}
 	defer cursor.Close(context.TODO())
 
-	var sneakersWithColors models.SneakerWithColors
+	var sneakersWithColor models.SneakerWithColors
 	for cursor.Next(context.TODO()) {
-		if err := cursor.Decode(&sneakersWithColors); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		if err := cursor.Decode(&sneakersWithColor); err != nil {
+			panic(err)
 		}
 	}
 
-	return c.JSON(sneakersWithColors)
+	return sneakersWithColor
+}
+
+func SendColorRelatedProduct(c *fiber.Ctx) error {
+	sneakerId := c.Params("sneakerId")
+	sneakerColorId := c.Params("sneakerColorId")
+	sneakersWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+
+	return c.JSON(sneakersWithColor)
+}
+
+func SendColorRelatedProducts(c *fiber.Ctx) error {
+	type SneakerIds struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+	}
+	var data []SneakerIds
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	var sneakersData []models.SneakerWithColors
+	var sneakerWithColor models.SneakerWithColors
+	for _, sneaker := range data {
+		sneakerWithColor = getSeakerRelatedWithColor(sneaker.SneakerId, sneaker.SneakerColorId)
+		sneakersData = append(sneakersData, sneakerWithColor)
+	}
+
+	return c.JSON(sneakersData)
 }
