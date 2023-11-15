@@ -3,7 +3,6 @@ package responses
 import (
 	"context"
 	"strconv"
-	"fmt"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -12,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func SendSneakerByID(c *fiber.Ctx) error {
