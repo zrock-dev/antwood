@@ -109,7 +109,6 @@ const ProductDetails = ({ product }) => {
 	useEffect(verifyProductOnCart, [color.colorIndex, color.sizeIndex]);
 	useEffect(() => {
 		if (color.onCart && dataLoaded) {
-			console.log('updating...');
 			updateProduct({
 				snakerId: product._id,
 				sneakerColorId: colorData.ID,
