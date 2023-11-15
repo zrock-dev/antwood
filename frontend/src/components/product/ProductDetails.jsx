@@ -9,7 +9,8 @@ import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
 import { stringToJson } from '@/utils/Parser';
 
 const ProductDetails = ({ product }) => {
-	const { addSneaker, removeProduct, equalsProduct } = useContext(CartContext);
+	const { addSneaker, removeProduct, updateProduct, equalsProduct } =
+		useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
@@ -17,6 +18,7 @@ const ProductDetails = ({ product }) => {
 		amount: 1,
 		onCart: false
 	});
+	const [dataLoaded, setColorLoaded] = useState(false);
 
 	const colorData = product.types[color.colorIndex];
 
@@ -100,10 +102,24 @@ const ProductDetails = ({ product }) => {
 				}
 			}
 		}
+		setColorLoaded(true);
 	};
 
 	useEffect(verifyProductOnCart, []);
 	useEffect(verifyProductOnCart, [color.colorIndex, color.sizeIndex]);
+	useEffect(() => {
+		if (color.onCart && dataLoaded) {
+			console.log('updating...');
+			updateProduct({
+				snakerId: product._id,
+				sneakerColorId: colorData.ID,
+				size: colorData.sizes[color.sizeIndex].value,
+				amount: color.amount,
+				price: product.price,
+				quantity: colorData.sizes[color.sizeIndex].quantity
+			});
+		}
+	}, [color.amount]);
 
 	return (
 		<div className="product-details-main-container">
@@ -196,7 +212,7 @@ const ProductDetails = ({ product }) => {
 					<QuantityRenderer
 						quantity={colorData.sizes[color.sizeIndex].quantity}
 						amount={color.amount}
-						onChange={(amount) => setColor({ ...color, amount: amount })}
+						onChange={(amount) => setColor({ ...color, amount })}
 					/>
 					<button
 						onClick={color.onCart ? removeToCart : addToCart}

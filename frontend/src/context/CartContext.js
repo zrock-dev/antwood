@@ -36,7 +36,7 @@ const CartProvider = ({ children }) => {
 			JSON.stringify({
 				...cartState,
 				products: cartState.products,
-				subTotal: cartState.subTotal + snakerSubTotal
+				subTotal: calculateSubTotal(cartState.products)
 			})
 		);
 	};
@@ -53,10 +53,37 @@ const CartProvider = ({ children }) => {
 				JSON.stringify({
 					...cartState,
 					products,
-					subTotal: cartState.subTotal - product.subTotal
+					subTotal: calculateSubTotal(products)
 				})
 			);
 		}
+	};
+
+	const updateProduct = (product) => {
+		const products = cartState.products;
+		for (let index = 0; index < products.length; index++) {
+			if (equalsProduct(cartState.products[index], product)) {
+				products[index].amount = product.amount;
+				products[index].subTotal = product.amount * product.price;
+				products[index].quantity = product.quantity;
+			}
+		}
+
+		saveItem(
+			'cart',
+			JSON.stringify({
+				...cartState,
+				products,
+				subTotal: calculateSubTotal(products)
+			})
+		);
+	};
+
+	const calculateSubTotal = (products) => {
+		let subTotal = 0;
+		products.map((product) => {
+			subTotal += product.subTotal;
+		});
 	};
 
 	const equalsProduct = (product1, product2) => {
@@ -88,6 +115,7 @@ const CartProvider = ({ children }) => {
 				cartState: cartState,
 				addSneaker,
 				removeProduct,
+				updateProduct,
 				findProduct,
 				equalsProduct
 			}}
