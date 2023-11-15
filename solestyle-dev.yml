@@ -41,3 +41,9 @@ services:
     environment:
       DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY_CI}
 
+  shopping_cart_management:
+    build:
+      context: backend/shoppingCardManagement
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/shopping_cart_management
+
