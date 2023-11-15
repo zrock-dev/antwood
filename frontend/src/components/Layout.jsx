@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
 		<div>
 			<CartProvider>
 				<Navbar />
+				<div id="overlay"></div>
 				{children}
 			</CartProvider>
 		</div>
