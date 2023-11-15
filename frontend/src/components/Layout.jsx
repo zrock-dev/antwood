@@ -4,12 +4,15 @@ import '../styles/elemens/animations.css';
 import '../styles/elemens/loader.css';
 import '../styles/navbar/navbar.css';
 import Navbar from './navbar/Navbar';
+import CartProvider from '@/context/CartContext';
 
 const Layout = ({ children }) => {
 	return (
 		<div>
-			<Navbar />
-			{children}
+			<CartProvider>
+				<Navbar />
+				{children}
+			</CartProvider>
 		</div>
 	);
 };
