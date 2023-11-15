@@ -12,7 +12,7 @@ export const EmptyCart = {
 };
 
 const CartProvider = ({ children }) => {
-	const [cartState, setCartState] = useState(EmptyCart);
+	let cartState = EmptyCart;
 
 	const addSneaker = (
 		snakerId,
@@ -23,21 +23,24 @@ const CartProvider = ({ children }) => {
 		quantity
 	) => {
 		const snakerSubTotal = price * amount;
-		setCartState({
-			...cartState,
-			products: [
-				...cartState.products,
-				{
-					snakerId,
-					sneakerColorId,
-					size,
-					amount,
-					subTotal: snakerSubTotal,
-					quantity
-				}
-			],
-			subTotal: cartState.subTotal + snakerSubTotal
-		});
+		saveItem(
+			'cart',
+			JSON.stringify({
+				...cartState,
+				products: [
+					...cartState.products,
+					{
+						snakerId,
+						sneakerColorId,
+						size,
+						amount,
+						subTotal: snakerSubTotal,
+						quantity
+					}
+				],
+				subTotal: cartState.subTotal + snakerSubTotal
+			})
+		);
 	};
 
 	const removeProduct = (product) => {
@@ -46,11 +49,14 @@ const CartProvider = ({ children }) => {
 			equalsProduct(productCart, product)
 		);
 		if (initialSize > products.length) {
-			setCartState({
-				...cartState,
-				products,
-				subTotal: cartState.subTotal - product.subTotal
-			});
+			saveItem(
+				'cart',
+				JSON.stringify({
+					...cartState,
+					products,
+					subTotal: cartState.subTotal - product.subTotal
+				})
+			);
 		}
 	};
 
@@ -65,21 +71,17 @@ const CartProvider = ({ children }) => {
 	const findProduct = (product) => {
 		cartState.products.map((productCart) => {
 			if (equalsProduct(productCart, product)) {
-				return product;
+				return productCart;
 			}
 		});
-
-		return null;
 	};
 
 	useEffect(() => {
 		const cart = getItem('cart');
-		setCartState(cart ? stringToJson(cart) : EmptyCart);
+		if (cart) {
+			cartState = stringToJson(cart);
+		}
 	}, []);
-
-	useEffect(() => {
-		saveItem('cart', JSON.stringify(cartState));
-	}, [cartState]);
 
 	return (
 		<CartContext.Provider
@@ -87,7 +89,8 @@ const CartProvider = ({ children }) => {
 				cartState: cartState,
 				addSneaker,
 				removeProduct,
-				findProduct
+				findProduct,
+				equalsProduct
 			}}
 		>
 			{children}

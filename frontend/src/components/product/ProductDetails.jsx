@@ -5,9 +5,11 @@ import { useContext, useEffect, useState } from 'react';
 import DetailSection from './DetailSection';
 import QuantityRenderer from '../cart/QuantityRenderer';
 import { CartContext } from '@/context/CartContext';
+import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
+import { stringToJson } from '@/utils/Parser';
 
 const ProductDetails = ({ product }) => {
-	const { addSneaker, removeProduct, findProduct } = useContext(CartContext);
+	const { addSneaker, removeProduct, equalsProduct } = useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
@@ -66,20 +68,42 @@ const ProductDetails = ({ product }) => {
 		});
 	};
 
-	useEffect(() => {
-		const productFound = findProduct({
-			snakerId: product._id,
-			sneakerColorId: colorData.ID,
-			size: colorData.sizes[color.sizeIndex].value
-		});
-		if (productFound != null) {
-			setColor({
-				...color,
-				amount: productFound.amount,
-				onCart: true
-			});
+	const verifyProductOnCart = () => {
+		if (isValidToRequestStorage) {
+			let cart = getItem('cart');
+			if (cart) {
+				cart = stringToJson(cart);
+				let wasFound = false;
+				cart.products.map((productCart) => {
+					if (
+						equalsProduct(productCart, {
+							snakerId: product._id,
+							sneakerColorId: colorData.ID,
+							size: colorData.sizes[color.sizeIndex].value
+						})
+					) {
+						setColor({
+							...color,
+							amount: productCart.amount,
+							onCart: true
+						});
+						wasFound = true;
+					}
+				});
+
+				if (!wasFound) {
+					setColor({
+						...color,
+						amount: 1,
+						onCart: false
+					});
+				}
+			}
 		}
-	}, [color.colorIndex, color.sizeIndex]);
+	};
+
+	useEffect(verifyProductOnCart, []);
+	useEffect(verifyProductOnCart, [color.colorIndex, color.sizeIndex]);
 
 	return (
 		<div className="product-details-main-container">
@@ -131,9 +155,7 @@ const ProductDetails = ({ product }) => {
 									color.sizeIndex === index && 'selected'
 								}`}
 								key={index}
-								onClick={() =>
-									setColor({ ...color, sizeIndex: index, amount: 1 })
-								}
+								onClick={() => setColor({ ...color, sizeIndex: index })}
 							>
 								{size.value}
 							</button>

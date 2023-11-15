@@ -1,4 +1,4 @@
-const isValidToRequestStorage = () => {
+export const isValidToRequestStorage = () => {
 	return typeof window !== 'undefined';
 };
 
