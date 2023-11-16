@@ -11,7 +11,7 @@ import (
 
 
 var  DB *mongo.Database
-var  OrdernsCollection *mongo.Collection
+var  OrdersCollection *mongo.Collection
 
 func Connect() {
 	mongodb_uri := os.Getenv("MONGODB_URI")
@@ -23,6 +23,6 @@ func Connect() {
 	}
 
 	DB = client.Database("authentication_app")
-	OrdernsCollection = DB.Collection("orders")
+	OrdersCollection = DB.Collection("orders")
 
 }

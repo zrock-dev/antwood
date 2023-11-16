@@ -25,3 +25,23 @@ type Order struct {
     Paid string `json:"paid" bson:"paid"`
 	Email string `json:"email" bson:"email"`
 }
+
+
+func NewShoppingCard() *ShoppingCard {
+	return &ShoppingCard{
+		ID: primitive.NewObjectID(),
+		Products: []Product{},
+		Subtotal: 0,
+		Total: 0,
+	}
+}
+
+
+func NewOrder() *Order {
+	return &Order{
+		ID: primitive.NewObjectID(),
+		ShoppingCardID: primitive.NewObjectID(),
+		Paid: "no-payed",
+		Email: "",
+	}
+}

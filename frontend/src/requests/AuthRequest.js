@@ -10,7 +10,6 @@ const axiosConfig = {
 };
 
 
-
 export const loginUser =(user, provider) => axios.post(`/auth/login?provider=${provider}`,user,axiosConfig)
 
 export const registerUser = (user,provider) =>

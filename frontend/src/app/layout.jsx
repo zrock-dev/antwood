@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import { AuthProvider } from "@/context/AuthContext";
 const inter = Inter({ subsets: ['latin'] })
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 
 export const metadata = {
   title: 'Solestyle',
@@ -11,6 +11,9 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
+
+
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>

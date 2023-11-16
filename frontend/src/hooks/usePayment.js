@@ -7,7 +7,8 @@ const usePayment  =()=>{
     const initPayment = async (email) => {
     try{
         const link = await createPayment(email)
-        window.location.href = link
+
+        window.location.href = link.url
     }catch(error){
         console.log(error)
     }

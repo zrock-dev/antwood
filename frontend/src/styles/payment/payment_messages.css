@@ -1,0 +1,21 @@
+.payment-status-container{
+    display: flex;
+    background-color: rgb(8, 230, 8);
+    padding: 20px;
+    justify-content: center;
+    position: fixed;
+    top : -100px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: top 0.5s;
+}
+
+
+.payment-status-container.active{
+    transform:  translateY(100px);
+}
+
+
+
+
