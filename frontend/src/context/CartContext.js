@@ -8,6 +8,7 @@ export const CartContext = createContext();
 export const EmptyCart = {
 	products: [],
 	subTotal: 0,
+	extra: 100,
 	total: 0
 };
 
@@ -101,9 +102,14 @@ const CartProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (cartState) {
+			const subTotal = calculateSubTotal();
 			saveItem(
 				'cart',
-				JSON.stringify({ ...cartState, subTotal: calculateSubTotal() })
+				JSON.stringify({
+					...cartState,
+					subTotal,
+					total: subTotal + cartState.extra
+				})
 			);
 		}
 		console.log(cartState);
