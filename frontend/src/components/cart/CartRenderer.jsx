@@ -1,16 +1,15 @@
 'use client';
 
 import { CartContext } from '@/context/CartContext';
-import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import TrashCan from '@/icons/TrashCan';
 
 import '../../styles/cart/cart.css';
 import '../../styles/cart/cartPage.css';
+import QuantityRenderer from './QuantityRenderer';
 
 const CartRenderer = () => {
-	const router = useRouter();
-	const { cartState, products } = useContext(CartContext);
+	const { cartState, products, updateProduct } = useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 
 	useEffect(() => {
@@ -39,9 +38,22 @@ const CartRenderer = () => {
 									<span>Subtotal: {product.subTotal} $</span>
 									<div className="cart-page-product-details margin-top-15">
 										<h3 className="cart-page-amount">Size {product.size}</h3>
-										<button className="cart-page-amount">
-											Quantity {product.amount}
-										</button>
+										<QuantityRenderer
+											text="Quantity"
+											amount={product.amount}
+											quantity={product.quantity}
+											onChange={(amount) => {
+												updateProduct({
+													sneakerId: product.sneakerId,
+													sneakerColorId: product.sneakerColorId,
+													size: product.size,
+													amount: amount,
+													price: product.price,
+													quantity: product.quantity
+												});
+											}}
+											style="cart-sneaker-amount cart-page-amount amount-button"
+										/>
 									</div>
 								</div>
 							</div>

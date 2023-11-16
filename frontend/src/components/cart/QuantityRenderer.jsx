@@ -2,6 +2,7 @@ import ChevronDown from '@/icons/ChevronDown';
 import { useState, useRef, useEffect } from 'react';
 
 const QuantityRenderer = ({
+	text = '',
 	quantity,
 	amount,
 	onChange,
@@ -66,7 +67,7 @@ const QuantityRenderer = ({
 					))}
 				</div>
 			)}
-			{amount} <ChevronDown />
+			{text} {amount} <ChevronDown />
 		</button>
 	);
 };
