@@ -12,7 +12,7 @@ import '../../styles/cart/cart.css';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
-	const { cartState, products, updateProduct, subTotal } =
+	const { cartState, products, updateProduct } =
 		useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 	const [isOpen, setOpen] = useState(false);
@@ -130,6 +130,9 @@ const CartModalRenderer = () => {
 			)}
 			<button className="cart-modal-nav-icon" onClick={() => setOpen(!isOpen)}>
 				<CartShopping />
+				{hasProducts && (
+					<span className="cart-modal-nav-amount">{products.length}</span>
+				)}
 			</button>
 		</div>
 	);

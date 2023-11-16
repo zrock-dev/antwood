@@ -1,4 +1,5 @@
 .cart-modal-nav-icon {
+	position: relative;
 	background-color: transparent;
 	border: none;
 
@@ -10,9 +11,21 @@
 		fill: #ddd;
 	}
 }
+.cart-modal-nav-amount {
+	position: absolute;
+	bottom: 60%;
+	left: 50%;
+
+	border-radius: 50%;
+	padding: 2px 4px;
+	font-weight: 900;
+	font-size: 12px;
+	color: white;
+	background-color: var(--warning-color);
+}
 
 .cart-modal-main-container {
-	position: absolute;
+	position: fixed;
 	top: 7vh;
 	right: 0;
 	display: flex;

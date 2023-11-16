@@ -9,7 +9,8 @@ import '../../styles/cart/cartPage.css';
 import QuantityRenderer from './QuantityRenderer';
 
 const CartRenderer = () => {
-	const { cartState, products, updateProduct } = useContext(CartContext);
+	const { cartState, products, updateProduct, removeProduct } =
+		useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 
 	useEffect(() => {
@@ -30,7 +31,16 @@ const CartRenderer = () => {
 								<div className="cart-page-product-info-container">
 									<div className="cart-page-product-details">
 										<h4>{product.name}</h4>
-										<button>
+										<button
+											onClick={() => {
+												removeProduct({
+													sneakerId: product.sneakerId,
+													sneakerColorId: product.sneakerColorId,
+													size: product.size,
+													subTotal: product.subTotal
+												});
+											}}
+										>
 											<TrashCan />
 										</button>
 									</div>
@@ -61,7 +71,12 @@ const CartRenderer = () => {
 					</div>
 				</div>
 			) : (
-				<span>You don't have any sneakers in your cart.</span>
+				<div className="cart-empty">
+					<span className="cart-page-title">
+						You don't have any sneakers in your cart.
+					</span>
+					<img src="https://statementclothing.net/images/cart.gif" alt="" />
+				</div>
 			)}
 
 			<div className="cart-page-info-container">
