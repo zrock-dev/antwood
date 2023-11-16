@@ -3,6 +3,10 @@
 import { CartContext } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
+import TrashCan from '@/icons/TrashCan';
+
+import '../../styles/cart/cart.css';
+import '../../styles/cart/cartPage.css';
 
 const CartRenderer = () => {
 	const router = useRouter();
@@ -10,40 +14,53 @@ const CartRenderer = () => {
 	const [hasProducts, setHasProducts] = useState(false);
 
 	useEffect(() => {
-		if (cartState && products.length > 0) {
-			setHasProducts(true);
-		} else {
-			router.push('/');
+		if (cartState) {
+			setHasProducts(products.length > 0);
 		}
-	}, []);
+	}, [cartState]);
 
 	return cartState ? (
-		<div>
+		<div className="cart-page-main-container">
 			{hasProducts ? (
 				<div>
-					<h2>YOUR CART</h2>
-					{products.map((product, index) => (
-						<div key={index}>
-							<img src={product.image} alt="" />
-							<div>
-								<h4>{product.name}</h4>
-								<span>Size: {product.size}</span>
-								<button>{product.amount}</button>
-								<b>Subtotal: {product.subTotal}</b>
+					<h2 className="cart-page-title">YOUR CART</h2>
+					<div className="cart-page-products-container margin-top-15">
+						{products.map((product, index) => (
+							<div className="cart-page-product-container" key={index}>
+								<img src={product.image} alt="" />
+								<div className="cart-page-product-info-container">
+									<div className="cart-page-product-details">
+										<h4>{product.name}</h4>
+										<button>
+											<TrashCan />
+										</button>
+									</div>
+									<span>Price: {product.price} $</span>
+									<span>Subtotal: {product.subTotal} $</span>
+									<div className="cart-page-product-details margin-top-15">
+										<h3 className="cart-page-amount">Size {product.size}</h3>
+										<button className="cart-page-amount">
+											Quantity {product.amount}
+										</button>
+									</div>
+								</div>
 							</div>
-						</div>
-					))}
+						))}
+					</div>
 				</div>
 			) : (
 				<span>You don't have any sneakers in your cart.</span>
 			)}
 
-			<div>
+			<div className="cart-page-info-container">
+				<h2 className="cart-page-title">SUMMARY</h2>
 				<b>Subtotal: {cartState.subTotal} $</b>
 				<b>Shipping & Handling: {100} $</b>
+				<span className="horizontal-separator"></span>
 				<b>TOTAL {cartState.total} $</b>
+				<span className="horizontal-separator"></span>
 
-				<p className="description margin-top-15">
+				<p className="description">
 					You can choose from these payment options to purchase.
 				</p>
 				<img
@@ -56,7 +73,7 @@ const CartRenderer = () => {
 						!hasProducts && 'disabled'
 					}`}
 					disabled={!hasProducts}
-					onClick={() => router.push('/cart')}
+					onClick={() => alert('checkout in progres...')}
 				>
 					CHECKOUT CART
 				</button>

@@ -16,6 +16,12 @@
 	background-color: black;
 }
 
+.horizontal-separator {
+	width: 100%;
+	border-top: 1px solid #eee;
+	margin: 15px 0;
+}
+
 .secction-item-row {
 	display: flex;
 	gap: 5px;
