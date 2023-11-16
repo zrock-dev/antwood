@@ -1,10 +1,10 @@
 import Layout from '@/components/Layout';
-import CartModalRenderer from '@/components/cart/CartModalRenderer';
+import CartRenderer from '@/components/cart/CartRenderer';
 
 const CartPage = () => {
 	return (
 		<Layout>
-			<CartModalRenderer />
+			<CartRenderer />
 		</Layout>
 	);
 };
