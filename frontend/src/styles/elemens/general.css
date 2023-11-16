@@ -4,6 +4,12 @@
 	font-size: 50px;
 }
 
+.description {
+	font-weight: bold;
+	font-size: 12px;
+	color: var(--medium-gray);
+}
+
 .vertical-separator {
 	margin-inline: auto;
 	padding: 25px 2px;

@@ -6,7 +6,7 @@
 
 	padding: 15px;
 
-	background-color: transparent;
+	background-color: white;
 	border: 1px solid var(--medium-gray);
 	color: var(--secondary-color);
 
@@ -16,6 +16,18 @@
 
 	&:hover {
 		background-color: #eee;
+	}
+}
+
+.cart-sneaker-amount.reverse {
+	padding: 5px 15px;
+	border: 1px solid white;
+
+	background-color: black;
+	color: white;
+
+	& svg {
+		fill: white;
 	}
 }
 

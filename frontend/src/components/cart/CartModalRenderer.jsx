@@ -2,18 +2,18 @@
 
 import { CartContext } from '@/context/CartContext';
 import CartShopping from '@/icons/CartShopping';
-import { stringToJson } from '@/utils/Parser';
-import { getItem } from '@/utils/StorageManagement';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState, useRef } from 'react';
 import QuantityRenderer from './QuantityRenderer';
+import XMark from '@/icons/XMark';
 
 import '../../styles/cart/cartModal.css';
 import '../../styles/cart/cart.css';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
-	const { cartState, products, updateProduct } = useContext(CartContext);
+	const { cartState, products, updateProduct, subTotal } =
+		useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 	const [isOpen, setOpen] = useState(false);
 	const quantityButton = useRef();
@@ -54,50 +54,54 @@ const CartModalRenderer = () => {
 		<div ref={quantityButton}>
 			{isOpen && (
 				<div className="cart-modal-main-container">
+					<div className="cart-modal-header-container">
+						<h2>YOUR CART</h2>
+						<button onClick={() => setOpen(false)}>
+							<XMark />
+						</button>
+					</div>
 					{cartState ? (
 						<div>
 							{hasProducts ? (
-								<>
-									<div>
-										<h2>YOUR CART</h2>
-									</div>
-									<div className="cart-modal-products-container">
-										{products.map((product, index) => (
-											<div
-												className="cart-modal-product-main-container"
-												key={index}
-											>
-												<img src={product.image} alt="" />
-												<div className="cart-modal-product-info-container">
-													<h4>{product.name}</h4>
-													<span>Size: {product.size}</span>
-													<QuantityRenderer
-														amount={product.amount}
-														quantity={product.quantity}
-														onChange={(amount) =>
-															updateProduct({
-																sneakerId: product.sneakerId,
-																sneakerColorId: product.sneakerColorId,
-																size: product.size,
-																amount: amount,
-																price: product.price,
-																quantity: product.quantity
-															})
-														}
-													/>
-													<b>Subtotal: {product.subTotal}</b>
-												</div>
+								<div className="cart-modal-products-container">
+									{products.map((product, index) => (
+										<div
+											className="cart-modal-product-main-container"
+											key={index}
+										>
+											<img src={product.image} alt="" />
+											<div className="cart-modal-product-info-container">
+												<h4>{product.name}</h4>
+												<span>Size: {product.size}</span>
+												<QuantityRenderer
+													amount={product.amount}
+													quantity={product.quantity}
+													onChange={(amount) =>
+														updateProduct({
+															sneakerId: product.sneakerId,
+															sneakerColorId: product.sneakerColorId,
+															size: product.size,
+															amount: amount,
+															price: product.price,
+															quantity: product.quantity
+														})
+													}
+													style="cart-sneaker-amount reverse"
+												/>
+												<b>Subtotal: {product.subTotal}$</b>
 											</div>
-										))}
-									</div>
-								</>
+										</div>
+									))}
+								</div>
 							) : (
 								<span>You don't have any sneakers in your cart.</span>
 							)}
 
-							<div className="cart-modal-checkout-container">
+							<div className="cart-modal-checkout-container margin-top-15">
 								{hasProducts && (
-									<span>Total products in cart: {cartState.subTotal}</span>
+									<span className="cart-modal-cart-total">
+										Cart total: {cartState.subTotal} $
+									</span>
 								)}
 								<button
 									className={`general-button white ${
@@ -108,7 +112,13 @@ const CartModalRenderer = () => {
 								>
 									CHECKOUT CART
 								</button>
-								<p>You can choose from these payment options to purchase.</p>
+								<p className="description margin-top-15">
+									You can choose from these payment options to purchase.
+								</p>
+								<img
+									src="https://res.cloudinary.com/dex16gvvy/image/upload/v1700097392/solestyle/ggbomtfumdkoggc5gjqk.png"
+									alt=""
+								/>
 							</div>
 						</div>
 					) : (

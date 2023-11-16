@@ -15,20 +15,35 @@
 	position: absolute;
 	top: 7vh;
 	right: 0;
-	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+	overflow-y: auto;
 
 	max-width: 30%;
-	height: 100vh;
-	max-height: 100vh;
+	height: 93vh;
+	max-height: 93vh;
 	padding: 30px;
 
 	color: white;
 	text-align: left;
 	background-color: black;
 	cursor: default;
+}
+
+.cart-modal-header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	& button {
+		background-color: transparent;
+		border: none;
+	}
+
+	& button svg {
+		fill: white;
+	}
 }
 
 .cart-modal-products-container {
@@ -73,6 +88,11 @@
 
 .cart-modal-checkout-container {
 	position: relative;
-	bottom: 0;
-	left: 0;
+}
+
+.cart-modal-cart-total {
+	font-size: 16px;
+	font-weight: 700;
+
+	padding: 5px 0;
 }

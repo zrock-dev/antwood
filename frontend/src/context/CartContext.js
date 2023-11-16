@@ -32,21 +32,14 @@ const CartProvider = ({ children }) => {
 			amount,
 			subTotal: snakerSubTotal,
 			quantity,
+			price,
 			image,
 			name
 		});
-		// saveItem(
-		// 	'cart',
-		// 	JSON.stringify({
-		// 		...cartState,
-		// 		products: cartState.products,
-		// 		subTotal: calculateSubTotal(cartState.products)
-		// 	})
-		// );
+
 		setCartState({
 			...cartState,
-			products: cartState.products,
-			subTotal: calculateSubTotal(cartState.products)
+			products: cartState.products
 		});
 	};
 
@@ -57,18 +50,9 @@ const CartProvider = ({ children }) => {
 		);
 
 		if (products.length < initialSize) {
-			// saveItem(
-			// 	'cart',
-			// 	JSON.stringify({
-			// 		...cartState,
-			// 		products,
-			// 		subTotal: calculateSubTotal(products)
-			// 	})
-			// );
 			setCartState({
 				...cartState,
-				products,
-				subTotal: calculateSubTotal(products)
+				products
 			});
 		}
 	};
@@ -82,26 +66,21 @@ const CartProvider = ({ children }) => {
 				products[index].quantity = product.quantity;
 			}
 		}
-		// saveItem(
-		// 	'cart',
-		// 	JSON.stringify({
-		// 		...cartState,
-		// 		products,
-		// 		subTotal: calculateSubTotal(products)
-		// 	})
-		// );
+
 		setCartState({
 			...cartState,
-			products,
-			subTotal: calculateSubTotal(products)
+			products
 		});
 	};
 
-	const calculateSubTotal = (products) => {
+	const calculateSubTotal = () => {
 		let subTotal = 0;
-		products.map((product) => {
-			subTotal += product.subTotal;
-		});
+		if (cartState) {
+			cartState.products.map((product) => {
+				subTotal += product.subTotal;
+			});
+		}
+		return subTotal;
 	};
 
 	const equalsProduct = (product1, product2) => {
@@ -122,8 +101,12 @@ const CartProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (cartState) {
-			saveItem('cart', JSON.stringify(cartState));
+			saveItem(
+				'cart',
+				JSON.stringify({ ...cartState, subTotal: calculateSubTotal() })
+			);
 		}
+		console.log(cartState);
 	}, [cartState]);
 
 	useEffect(() => {
@@ -140,6 +123,7 @@ const CartProvider = ({ children }) => {
 			value={{
 				cartState: cartState,
 				products: cartState?.products,
+				subTotal: cartState?.subTotal,
 				addSneaker,
 				removeProduct,
 				updateProduct,

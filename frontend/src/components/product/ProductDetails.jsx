@@ -80,9 +80,7 @@ const ProductDetails = ({ product }) => {
 
 	const verifyProductOnCart = () => {
 		if (isValidToRequestStorage) {
-			// let cart = getItem('cart');
 			if (cartState) {
-				// cart = stringToJson(cart);
 				let wasFound = false;
 				products.map((productCart) => {
 					if (

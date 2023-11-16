@@ -1,7 +1,12 @@
 import ChevronDown from '@/icons/ChevronDown';
 import { useState, useRef, useEffect } from 'react';
 
-const QuantityRenderer = ({ quantity, amount, onChange }) => {
+const QuantityRenderer = ({
+	quantity,
+	amount,
+	onChange,
+	style = 'cart-sneaker-amount'
+}) => {
 	const [isOpen, setOpen] = useState(false);
 	const quantityButton = useRef();
 
@@ -44,7 +49,7 @@ const QuantityRenderer = ({ quantity, amount, onChange }) => {
 	return (
 		<button
 			name="quantity-button"
-			className="cart-sneaker-amount"
+			className={style}
 			onClick={() => setOpen(!isOpen)}
 			ref={quantityButton}
 		>
