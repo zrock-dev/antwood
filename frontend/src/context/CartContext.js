@@ -12,7 +12,7 @@ export const EmptyCart = {
 };
 
 const CartProvider = ({ children }) => {
-	const [cartState, setCartState] = useState(EmptyCart);
+	const [cartState, setCartState] = useState(null);
 
 	const addSneaker = (
 		sneakerId,
@@ -35,14 +35,19 @@ const CartProvider = ({ children }) => {
 			image,
 			name
 		});
-		saveItem(
-			'cart',
-			JSON.stringify({
-				...cartState,
-				products: cartState.products,
-				subTotal: calculateSubTotal(cartState.products)
-			})
-		);
+		// saveItem(
+		// 	'cart',
+		// 	JSON.stringify({
+		// 		...cartState,
+		// 		products: cartState.products,
+		// 		subTotal: calculateSubTotal(cartState.products)
+		// 	})
+		// );
+		setCartState({
+			...cartState,
+			products: cartState.products,
+			subTotal: calculateSubTotal(cartState.products)
+		});
 	};
 
 	const removeProduct = (product) => {
@@ -52,14 +57,19 @@ const CartProvider = ({ children }) => {
 		);
 
 		if (products.length < initialSize) {
-			saveItem(
-				'cart',
-				JSON.stringify({
-					...cartState,
-					products,
-					subTotal: calculateSubTotal(products)
-				})
-			);
+			// saveItem(
+			// 	'cart',
+			// 	JSON.stringify({
+			// 		...cartState,
+			// 		products,
+			// 		subTotal: calculateSubTotal(products)
+			// 	})
+			// );
+			setCartState({
+				...cartState,
+				products,
+				subTotal: calculateSubTotal(products)
+			});
 		}
 	};
 
@@ -72,15 +82,19 @@ const CartProvider = ({ children }) => {
 				products[index].quantity = product.quantity;
 			}
 		}
-
-		saveItem(
-			'cart',
-			JSON.stringify({
-				...cartState,
-				products,
-				subTotal: calculateSubTotal(products)
-			})
-		);
+		// saveItem(
+		// 	'cart',
+		// 	JSON.stringify({
+		// 		...cartState,
+		// 		products,
+		// 		subTotal: calculateSubTotal(products)
+		// 	})
+		// );
+		setCartState({
+			...cartState,
+			products,
+			subTotal: calculateSubTotal(products)
+		});
 	};
 
 	const calculateSubTotal = (products) => {
@@ -107,9 +121,17 @@ const CartProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
+		if (cartState) {
+			saveItem('cart', JSON.stringify(cartState));
+		}
+	}, [cartState]);
+
+	useEffect(() => {
 		const cart = getItem('cart');
 		if (cart) {
 			setCartState(stringToJson(cart));
+		} else {
+			setCartState(EmptyCart);
 		}
 	}, []);
 
@@ -117,6 +139,7 @@ const CartProvider = ({ children }) => {
 		<CartContext.Provider
 			value={{
 				cartState: cartState,
+				products: cartState?.products,
 				addSneaker,
 				removeProduct,
 				updateProduct,

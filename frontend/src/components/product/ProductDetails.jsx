@@ -9,7 +9,7 @@ import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
 import { stringToJson } from '@/utils/Parser';
 
 const ProductDetails = ({ product }) => {
-	const { addSneaker, removeProduct, updateProduct, equalsProduct } =
+	const { cartState, addSneaker, removeProduct, updateProduct, equalsProduct } =
 		useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
@@ -74,11 +74,11 @@ const ProductDetails = ({ product }) => {
 
 	const verifyProductOnCart = () => {
 		if (isValidToRequestStorage) {
-			let cart = getItem('cart');
-			if (cart) {
-				cart = stringToJson(cart);
+			// let cart = getItem('cart');
+			if (cartState) {
+				// cart = stringToJson(cart);
 				let wasFound = false;
-				cart.products.map((productCart) => {
+				cartState.products.map((productCart) => {
 					if (
 						equalsProduct(productCart, {
 							sneakerId: product._id,

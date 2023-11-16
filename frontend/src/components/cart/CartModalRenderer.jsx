@@ -8,10 +8,12 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState, useRef } from 'react';
 
 import '../../styles/cart/cartModal.css';
+import '../../styles/cart/cart.css';
+import ProductCartModal from './ProductCartModal';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
-	const [cartState, setCartState] = useState(null);
+	const { cartState, products, updateProduct } = useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 	const [isOpen, setOpen] = useState(false);
 	const quantityButton = useRef();
@@ -19,10 +21,10 @@ const CartModalRenderer = () => {
 	useEffect(() => {
 		if (isOpen) {
 			document.body.style.overflow = 'hidden';
-			document.getElementById('overlay').style.display = 'flex'
+			document.getElementById('overlay').style.display = 'flex';
 		} else {
 			document.body.style.overflow = 'auto';
-			document.getElementById('overlay').style.display = 'none'
+			document.getElementById('overlay').style.display = 'none';
 		}
 	}, [isOpen]);
 
@@ -43,21 +45,13 @@ const CartModalRenderer = () => {
 	}, []);
 
 	useEffect(() => {
-		let cart = getItem('cart');
-		if (cart) {
-			cart = stringToJson(cart);
-			setCartState(cart);
-			setHasProducts(cart.products.length > 1);
+		if (cartState) {
+			setHasProducts(products.length > 0);
 		}
-	}, []);
+	}, [cartState]);
 
 	return (
-		<button
-			className="cart-modal-nav-icon"
-			ref={quantityButton}
-			onClick={() => setOpen(!isOpen)}
-		>
-			<CartShopping />
+		<div ref={quantityButton}>
 			{isOpen && (
 				<div className="cart-modal-main-container">
 					{cartState ? (
@@ -68,19 +62,12 @@ const CartModalRenderer = () => {
 										<h2>YOUR CART</h2>
 									</div>
 									<div className="cart-modal-products-container">
-										{cartState.products.map((product, index) => (
-											<div
+										{products.map((product, index) => (
+											<ProductCartModal
+												product={product}
 												key={index}
-												className="cart-modal-product-main-container"
-											>
-												<img src={product.image} alt="" />
-												<div className="cart-modal-product-info-container">
-													<h4>{product.name}</h4>
-													<span>Size: {product.size}</span>
-													<button>{product.amount}</button>
-													<b>Subtotal: {product.subTotal}</b>
-												</div>
-											</div>
+												updateProduct={updateProduct}
+											/>
 										))}
 									</div>
 								</>
@@ -111,7 +98,10 @@ const CartModalRenderer = () => {
 					)}
 				</div>
 			)}
-		</button>
+			<button className="cart-modal-nav-icon" onClick={() => setOpen(!isOpen)}>
+				<CartShopping />
+			</button>
+		</div>
 	);
 };
 
