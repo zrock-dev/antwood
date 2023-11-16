@@ -6,10 +6,10 @@ import { stringToJson } from '@/utils/Parser';
 import { getItem } from '@/utils/StorageManagement';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState, useRef } from 'react';
+import QuantityRenderer from './QuantityRenderer';
 
 import '../../styles/cart/cartModal.css';
 import '../../styles/cart/cart.css';
-import ProductCartModal from './ProductCartModal';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
@@ -63,11 +63,31 @@ const CartModalRenderer = () => {
 									</div>
 									<div className="cart-modal-products-container">
 										{products.map((product, index) => (
-											<ProductCartModal
-												product={product}
+											<div
+												className="cart-modal-product-main-container"
 												key={index}
-												updateProduct={updateProduct}
-											/>
+											>
+												<img src={product.image} alt="" />
+												<div className="cart-modal-product-info-container">
+													<h4>{product.name}</h4>
+													<span>Size: {product.size}</span>
+													<QuantityRenderer
+														amount={product.amount}
+														quantity={product.quantity}
+														onChange={(amount) =>
+															updateProduct({
+																sneakerId: product.sneakerId,
+																sneakerColorId: product.sneakerColorId,
+																size: product.size,
+																amount: amount,
+																price: product.price,
+																quantity: product.quantity
+															})
+														}
+													/>
+													<b>Subtotal: {product.subTotal}</b>
+												</div>
+											</div>
 										))}
 									</div>
 								</>

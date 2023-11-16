@@ -9,8 +9,14 @@ import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
 import { stringToJson } from '@/utils/Parser';
 
 const ProductDetails = ({ product }) => {
-	const { cartState, addSneaker, removeProduct, updateProduct, equalsProduct } =
-		useContext(CartContext);
+	const {
+		cartState,
+		products,
+		addSneaker,
+		removeProduct,
+		updateProduct,
+		equalsProduct
+	} = useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
 		imageIndex: 0,
@@ -78,7 +84,7 @@ const ProductDetails = ({ product }) => {
 			if (cartState) {
 				// cart = stringToJson(cart);
 				let wasFound = false;
-				cartState.products.map((productCart) => {
+				products.map((productCart) => {
 					if (
 						equalsProduct(productCart, {
 							sneakerId: product._id,
@@ -108,7 +114,11 @@ const ProductDetails = ({ product }) => {
 	};
 
 	useEffect(verifyProductOnCart, []);
-	useEffect(verifyProductOnCart, [color.colorIndex, color.sizeIndex]);
+	useEffect(verifyProductOnCart, [
+		color.colorIndex,
+		color.sizeIndex,
+		cartState
+	]);
 	useEffect(() => {
 		if (color.onCart && dataLoaded) {
 			updateProduct({
