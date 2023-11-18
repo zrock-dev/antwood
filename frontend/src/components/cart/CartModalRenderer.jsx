@@ -53,49 +53,53 @@ const CartModalRenderer = () => {
 	return (
 		<div ref={quantityButton}>
 			{isOpen && (
-				<div className="cart-modal-main-container">
-					<div className="cart-modal-header-container">
-						<h2>YOUR CART</h2>
-						<button onClick={() => setOpen(false)}>
-							<XMark />
-						</button>
-					</div>
+				<>
 					{cartState ? (
-						<div>
-							{hasProducts ? (
-								<div className="cart-modal-products-container">
-									{products.map((product, index) => (
-										<div
-											className="cart-modal-product-main-container"
-											key={index}
-										>
-											<img src={product.image} alt="" />
-											<div className="cart-modal-product-info-container">
-												<h4>{product.name}</h4>
-												<span>Size: {product.size}</span>
-												<QuantityRenderer
-													amount={product.amount}
-													quantity={product.quantity}
-													onChange={(amount) =>
-														updateProduct({
-															sneakerId: product.sneakerId,
-															sneakerColorId: product.sneakerColorId,
-															size: product.size,
-															amount: amount,
-															price: product.price,
-															quantity: product.quantity
-														})
-													}
-													style="cart-sneaker-amount reverse"
-												/>
-												<b>Subtotal: {product.subTotal}$</b>
-											</div>
-										</div>
-									))}
+						<div className="cart-modal-main-container">
+							<div>
+								<div className="cart-modal-header-container margin-top-15">
+									<h2>YOUR CART</h2>
+									<button onClick={() => setOpen(false)}>
+										<XMark />
+									</button>
 								</div>
-							) : (
-								<span>You don't have any sneakers in your cart.</span>
-							)}
+								<div>
+									{hasProducts ? (
+										<div className="cart-modal-products-container  margin-top-15">
+											{products.map((product, index) => (
+												<div
+													className="cart-modal-product-main-container"
+													key={index}
+												>
+													<img src={product.image} alt="" />
+													<div className="cart-modal-product-info-container">
+														<h4>{product.name}</h4>
+														<span>Size: {product.size}</span>
+														<QuantityRenderer
+															amount={product.amount}
+															quantity={product.quantity}
+															onChange={(amount) =>
+																updateProduct({
+																	sneakerId: product.sneakerId,
+																	sneakerColorId: product.sneakerColorId,
+																	size: product.size,
+																	amount: amount,
+																	price: product.price,
+																	quantity: product.quantity
+																})
+															}
+															style="cart-sneaker-amount reverse small"
+														/>
+														<b>Subtotal: {product.subTotal}$</b>
+													</div>
+												</div>
+											))}
+										</div>
+									) : (
+										<span>You don't have any sneakers in your cart.</span>
+									)}
+								</div>
+							</div>
 
 							<div className="cart-modal-checkout-container margin-top-15">
 								{hasProducts && (
@@ -126,7 +130,7 @@ const CartModalRenderer = () => {
 							<span className="loader"></span>
 						</div>
 					)}
-				</div>
+				</>
 			)}
 			<button
 				className="cart-modal-nav-icon"

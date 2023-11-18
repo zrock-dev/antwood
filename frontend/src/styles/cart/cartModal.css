@@ -31,13 +31,14 @@
 	right: 0;
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	gap: 20px;
 	overflow-y: auto;
 
 	width: 30%;
 	height: 93vh;
 	max-height: 93vh;
-	padding: 30px;
+	padding: 0 30px;
 
 	color: white;
 	text-align: left;
@@ -102,6 +103,13 @@
 
 .cart-modal-checkout-container {
 	position: sticky;
+	bottom: 0px;
+	left: 0;
+
+	width: 100%;
+	padding: 10px 0;
+
+	background-color: black;
 }
 
 .cart-modal-cart-total {
