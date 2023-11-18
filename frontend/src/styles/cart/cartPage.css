@@ -4,9 +4,9 @@
 }
 
 .cart-page-main-container {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	column-gap: 35px;
 
 	margin-inline: auto;
 	width: 65%;
@@ -19,6 +19,7 @@
 	overflow-y: auto;
 	gap: 20px;
 
+	width: 100%;
 	max-height: 72vh;
 	border-right: 1px solid #eee;
 }
@@ -27,6 +28,7 @@
 	display: flex;
 	gap: 20px;
 
+	width: 100%;
 	padding-right: 20px;
 
 	& button {
@@ -45,21 +47,27 @@
 .cart-page-product-info-container {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
+
+	width: 100%;
 
 	& h4 {
 		font-size: 25px;
 	}
 
 	& span {
-		font-size: 14px;
+		font-size: 16px;
 	}
+
 }
 
 .cart-page-product-details {
 	display: flex;
 	justify-content: space-between;
-	align-items: start;
+	align-items: center;
 	gap: 20px;
+
+	width: 100%;
 }
 
 .cart-page-info-container {
@@ -67,7 +75,7 @@
 	flex-direction: column;
 	gap: 10px;
 
-	width: 30%;
+	width: 100%;
 
 	& img {
 		width: 60%;
@@ -80,18 +88,19 @@
 }
 
 .cart-page-amount.amount-button {
-    display: flex;
+	display: flex;
 }
 
 .cart-empty {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: start;
+	gap: 10px;
 
-	width: 50%;
+	width: 100%;
 
 	& img {
-		height: 300px;
+		height: 150px;
 		object-fit: contain;
 	}
 }

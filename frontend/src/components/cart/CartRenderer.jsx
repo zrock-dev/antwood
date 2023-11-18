@@ -7,6 +7,7 @@ import TrashCan from '@/icons/TrashCan';
 import '../../styles/cart/cart.css';
 import '../../styles/cart/cartPage.css';
 import QuantityRenderer from './QuantityRenderer';
+import Link from 'next/link';
 
 const CartRenderer = () => {
 	const { cartState, products, updateProduct, removeProduct } =
@@ -29,24 +30,26 @@ const CartRenderer = () => {
 							<div className="cart-page-product-container" key={index}>
 								<img src={product.image} alt="" />
 								<div className="cart-page-product-info-container">
-									<div className="cart-page-product-details">
-										<h4>{product.name}</h4>
-										<button
-											onClick={() => {
-												removeProduct({
-													sneakerId: product.sneakerId,
-													sneakerColorId: product.sneakerColorId,
-													size: product.size,
-													subTotal: product.subTotal
-												});
-											}}
-										>
-											<TrashCan />
-										</button>
+									<div className="column-container">
+										<div className="cart-page-product-details">
+											<h4>{product.name}</h4>
+											<button
+												onClick={() => {
+													removeProduct({
+														sneakerId: product.sneakerId,
+														sneakerColorId: product.sneakerColorId,
+														size: product.size,
+														subTotal: product.subTotal
+													});
+												}}
+											>
+												<TrashCan />
+											</button>
+										</div>
+										<span>Price: {product.price} $</span>
+										<span>Subtotal: {product.subTotal} $</span>
 									</div>
-									<span>Price: {product.price} $</span>
-									<span>Subtotal: {product.subTotal} $</span>
-									<div className="cart-page-product-details margin-top-15">
+									<div className="cart-page-product-details">
 										<h3 className="cart-page-amount">Size {product.size}</h3>
 										<QuantityRenderer
 											text="Quantity"
@@ -62,7 +65,7 @@ const CartRenderer = () => {
 													quantity: product.quantity
 												});
 											}}
-											style="cart-sneaker-amount cart-page-amount amount-button"
+											style="cart-sneaker-amount cart-page-amount amount-button small"
 										/>
 									</div>
 								</div>
@@ -75,7 +78,14 @@ const CartRenderer = () => {
 					<span className="cart-page-title">
 						You don't have any sneakers in your cart.
 					</span>
-					<img src="https://statementclothing.net/images/cart.gif" alt="" />
+					<p>
+						Discover your unique style in our virtual store! In every corner of
+						our catalog, you will find a wide range of products that adapt to
+						your personality and highlight your essence.
+					</p>
+					<Link href="/products">
+						<button className="general-button">GO TO SNEAKERS</button>
+					</Link>
 				</div>
 			)}
 
@@ -100,7 +110,7 @@ const CartRenderer = () => {
 						!hasProducts && 'disabled'
 					}`}
 					disabled={!hasProducts}
-					onClick={() => alert('checkout in progres...')}
+					onClick={() => alert('THE PAYMENT METHOD WILL BE COMING SOON')}
 				>
 					CHECKOUT CART
 				</button>
