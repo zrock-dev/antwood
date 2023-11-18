@@ -82,9 +82,9 @@ const CartRenderer = () => {
 			<div className="cart-page-info-container">
 				<h2 className="cart-page-title">SUMMARY</h2>
 				<b>Subtotal: {cartState.subTotal} $</b>
-				<b>Shipping & Handling: {cartState.extra} $</b>
+				<b>Shipping & Handling: {hasProducts ? cartState.extra : 0} $</b>
 				<span className="horizontal-separator"></span>
-				<b>TOTAL {cartState.total} $</b>
+				<b>TOTAL {hasProducts ? cartState.total : 0} $</b>
 				<span className="horizontal-separator"></span>
 
 				<p className="description">

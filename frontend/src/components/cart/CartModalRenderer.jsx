@@ -128,7 +128,11 @@ const CartModalRenderer = () => {
 					)}
 				</div>
 			)}
-			<button className="cart-modal-nav-icon" onClick={() => setOpen(!isOpen)}>
+			<button
+				className="cart-modal-nav-icon"
+				onClick={() => setOpen(!isOpen)}
+				title="cart"
+			>
 				<CartShopping />
 				{hasProducts && (
 					<span className="cart-modal-nav-amount">{products.length}</span>

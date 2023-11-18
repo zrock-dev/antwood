@@ -9,14 +9,14 @@ export const EMPTY_CART = {
 	products: [],
 	subTotal: 0,
 	extra: 100,
-	total: 0
+	total: 100
 };
 
 const CartProvider = ({ children }) => {
 	const [cartState, setCartState] = useState(null);
 
 	const updateProducts = (products) => {
-		const subTotal = calculateSubTotal();
+		const subTotal = calculateSubTotal(products);
 		setCartState({
 			...cartState,
 			products,
@@ -52,14 +52,12 @@ const CartProvider = ({ children }) => {
 	};
 
 	const removeProduct = (product) => {
-		const initialSize = cartState.products.length;
 		const products = cartState.products.filter(
 			(productCart) => !equalsProduct(productCart, product)
 		);
 
-		if (products.length < initialSize) {
-			updateProducts(products);
-		}
+		console.log(products);
+		updateProducts(products);
 	};
 
 	const updateProduct = (product) => {
@@ -75,10 +73,10 @@ const CartProvider = ({ children }) => {
 		updateProducts(products);
 	};
 
-	const calculateSubTotal = () => {
+	const calculateSubTotal = (products) => {
 		let subTotal = 0;
 		if (cartState) {
-			cartState.products.map((product) => {
+			products.map((product) => {
 				subTotal += product.subTotal;
 			});
 		}
