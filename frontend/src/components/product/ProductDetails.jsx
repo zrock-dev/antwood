@@ -218,19 +218,31 @@ const ProductDetails = ({ product }) => {
 					</p>
 				</DetailSection>
 				<div className="product-details-cart-management">
-					<QuantityRenderer
-						quantity={colorData.sizes[color.sizeIndex].quantity}
-						amount={color.amount}
-						onChange={(amount) => setColor({ ...color, amount })}
-					/>
+					{colorData.sizes[color.sizeIndex].quantity > 0 && (
+						<QuantityRenderer
+							quantity={colorData.sizes[color.sizeIndex].quantity}
+							amount={color.amount}
+							onChange={(amount) => setColor({ ...color, amount })}
+						/>
+					)}
 					<button
-						onClick={color.onCart ? removeToCart : addToCart}
+						onClick={
+							colorData.sizes[color.sizeIndex].quantity > 0
+								? color.onCart
+									? removeToCart
+									: addToCart
+								: () => {}
+						}
 						disabled={colorData.sizes[color.sizeIndex].quantity <= 0}
 						className={`general-button ${
 							colorData.sizes[color.sizeIndex].quantity <= 0 && 'disabled'
 						}`}
 					>
-						{color.onCart ? 'REMOVE FROM CART' : 'ADD TO THE CART'}
+						{colorData.sizes[color.sizeIndex].quantity > 0
+							? color.onCart
+								? 'REMOVE FROM CART'
+								: 'ADD TO THE CART'
+							: 'SOLD OUT'}
 					</button>
 				</div>
 			</div>
