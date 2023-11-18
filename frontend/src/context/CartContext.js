@@ -5,7 +5,7 @@ import { createContext, useEffect, useState } from 'react';
 
 export const CartContext = createContext();
 
-export const EmptyCart = {
+export const EMPTY_CART = {
 	products: [],
 	subTotal: 0,
 	extra: 100,
@@ -14,6 +14,16 @@ export const EmptyCart = {
 
 const CartProvider = ({ children }) => {
 	const [cartState, setCartState] = useState(null);
+
+	const updateProducts = (products) => {
+		const subTotal = calculateSubTotal();
+		setCartState({
+			...cartState,
+			products,
+			subTotal,
+			total: subTotal + cartState.extra
+		});
+	};
 
 	const addSneaker = (
 		sneakerId,
@@ -38,10 +48,7 @@ const CartProvider = ({ children }) => {
 			name
 		});
 
-		setCartState({
-			...cartState,
-			products: cartState.products
-		});
+		updateProducts(cartState.products);
 	};
 
 	const removeProduct = (product) => {
@@ -51,10 +58,7 @@ const CartProvider = ({ children }) => {
 		);
 
 		if (products.length < initialSize) {
-			setCartState({
-				...cartState,
-				products
-			});
+			updateProducts(products);
 		}
 	};
 
@@ -68,10 +72,7 @@ const CartProvider = ({ children }) => {
 			}
 		}
 
-		setCartState({
-			...cartState,
-			products
-		});
+		updateProducts(products);
 	};
 
 	const calculateSubTotal = () => {
@@ -102,17 +103,13 @@ const CartProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (cartState) {
-			const subTotal = calculateSubTotal();
 			saveItem(
 				'cart',
 				JSON.stringify({
-					...cartState,
-					subTotal,
-					total: subTotal + cartState.extra
+					...cartState
 				})
 			);
 		}
-		console.log(cartState);
 	}, [cartState]);
 
 	useEffect(() => {
@@ -120,7 +117,7 @@ const CartProvider = ({ children }) => {
 		if (cart) {
 			setCartState(stringToJson(cart));
 		} else {
-			setCartState(EmptyCart);
+			setCartState(EMPTY_CART);
 		}
 	}, []);
 

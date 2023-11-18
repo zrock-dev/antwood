@@ -12,7 +12,7 @@ import '../../styles/cart/cart.css';
 
 const CartModalRenderer = () => {
 	const router = useRouter();
-	const { cartState, products, updateProduct } =
+	const { cartState, products, subTotal, updateProduct } =
 		useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
 	const [isOpen, setOpen] = useState(false);
@@ -100,7 +100,7 @@ const CartModalRenderer = () => {
 							<div className="cart-modal-checkout-container margin-top-15">
 								{hasProducts && (
 									<span className="cart-modal-cart-total">
-										Cart total: {cartState.subTotal} $
+										Cart total: {subTotal} $
 									</span>
 								)}
 								<button
