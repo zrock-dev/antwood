@@ -7,9 +7,11 @@ function Button({
   btnStyle = "main_btn",
   onClick,
   children,
+  disabled = false,
 }) {
   return (
     <button
+      disabled={disabled}
       type={type}
       className={` ${className}  ${styles.btn} ${styles[btnStyle]}`}
       onClick={onClick}

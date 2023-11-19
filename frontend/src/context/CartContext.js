@@ -7,6 +7,7 @@ export const CartContext = createContext();
 
 export const EMPTY_CART = {
 	products: [],
+	totalItems: 0,
 	subTotal: 0,
 	extra: 100,
 	total: 100
@@ -20,6 +21,7 @@ const CartProvider = ({ children }) => {
 		setCartState({
 			...cartState,
 			products,
+			totalItems: calculateTotalItems(),
 			subTotal,
 			total: subTotal + cartState.extra
 		});
@@ -51,12 +53,21 @@ const CartProvider = ({ children }) => {
 		updateProducts(cartState.products);
 	};
 
+	const calculateTotalItems = () => {
+		let totalItems = 0;
+		if (cartState) {
+			cartState.products.map((product) => {
+				totalItems += product.amount;
+			});
+		}
+		return totalItems;
+	}
+
 	const removeProduct = (product) => {
 		const products = cartState.products.filter(
 			(productCart) => !equalsProduct(productCart, product)
 		);
 
-		console.log(products);
 		updateProducts(products);
 	};
 
