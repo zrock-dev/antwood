@@ -76,7 +76,7 @@ const CartRenderer = () => {
 			) : (
 				<div className="cart-empty">
 					<span className="cart-page-title">
-						You don't have any sneakers in your cart.
+						You do not have any sneakers in your cart.
 					</span>
 					<p>
 						Discover your unique style in our virtual store! In every corner of

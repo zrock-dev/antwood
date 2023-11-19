@@ -96,7 +96,7 @@ const CartModalRenderer = () => {
 											))}
 										</div>
 									) : (
-										<span>You don't have any sneakers in your cart.</span>
+										<span>You do not have any sneakers in your cart.</span>
 									)}
 								</div>
 							</div>
