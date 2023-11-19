@@ -9,3 +9,10 @@ export const getAllProductsByPagination = async (page) => {
 	const response = await axios.get(`/sneakers?page=${page}`);
 	return response.data;
 };
+
+export const getSneakerSearchSuggestions = async (input = '') => {
+	const response = await axios.get(
+		`/sneakers/search/suggestions?input=${input}`
+	);
+	return response.data;
+};

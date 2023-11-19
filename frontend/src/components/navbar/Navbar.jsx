@@ -3,6 +3,7 @@ import Button from '@/components/Button';
 import useAuthHandler from '@/hooks/AuthOperations';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import CartModalRenderer from '../cart/CartModalRenderer';
+import Searcher from '../search/Searcher';
 
 const Navbar = () => {
 	const { setShowModalAuth, updateUser, setIsAuthenticated, isAuthenticated } =
@@ -17,6 +18,7 @@ const Navbar = () => {
 				<Button onClick={signoutUser}>log out</Button>
 			)}
 			<CartModalRenderer />
+			<Searcher />
 		</div>
 	);
 };
