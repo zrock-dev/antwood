@@ -60,7 +60,11 @@ func SendSearchSuggestions(c *fiber.Ctx) error {
 			suggestionResult = append(suggestionResult, suggestion)
 		}
 
-		return c.JSON(suggestionResult[0])
+		if len(suggestionResult) > 0 {
+			return c.JSON(suggestionResult[0])
+		}
+		return c.JSON([]string{})
+
 	}
 	return c.JSON([]string{})
 
