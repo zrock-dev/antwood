@@ -50,6 +50,7 @@
 .search-suggestion {
 	padding: 15px;
 
+    font-weight: 300;
 	color: white;
 	background-color: transparent;
 	border: none;
@@ -65,4 +66,8 @@
 		fill: var(--medium-gray);
 		margin-right: 10px;
 	}
+
+    & b {
+        font-weight: 900;
+    }
 }
