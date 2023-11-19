@@ -1,55 +1,90 @@
 'use client';
 
 import { getSneakerSearchSuggestions } from '@/requests/SneakersRequest';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import '../../styles/search/search.css';
 import SearchIcon from '@/icons/SearchIcon';
+import SearchSuggestion from './SearchSuggestion';
 
 const Searcher = () => {
 	const [input, setInput] = useState('');
 	const [suggestions, setSuggestions] = useState([]);
+	const [isOpen, setOpen] = useState({
+		isTyping: true,
+		noSuggested: true
+	});
+	const suggestionContainer = useRef();
 
-	const highlightMatch = (suggestion, input) => {
-		const regex = new RegExp(`(${input})`, 'gi');
-		return suggestion
-			.split(regex)
-			.map((part, index) =>
-				regex.test(part) ? <b key={index}>{part}</b> : part
-			);
+	const selectSuggestion = (suggestion) => {
+		setInput(suggestion);
+		setOpen({
+			isTyping: false,
+			noSuggested: false
+		});
 	};
 
 	useEffect(() => {
-		if (input.trim() !== '') {
-			getSneakerSearchSuggestions(input)
-				.then((data) => setSuggestions(data.names))
-				.catch((e) => console.log(e));
-		} else {
-			setSuggestions([]);
+		if (isOpen.noSuggested && isOpen.isTyping) {
+			setOpen({
+				...isOpen,
+				isTyping: true
+			});
+			if (input.trim() !== '') {
+				getSneakerSearchSuggestions(input)
+					.then((data) => setSuggestions(data.names))
+					.catch((e) => console.log(e));
+			} else {
+				setSuggestions([]);
+			}
 		}
 	}, [input]);
 
+	useEffect(() => {
+		let onClickHandler = (e) => {
+			if (
+				suggestionContainer.current &&
+				!suggestionContainer.current.contains(e.target)
+			) {
+				setOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', onClickHandler);
+		return () => {
+			document.removeEventListener('mousedown', onClickHandler);
+		};
+	}, []);
+
 	return (
-		<div className="search-main-container">
+		<div ref={suggestionContainer} className="search-main-container">
 			<div className="search-searcher-container">
 				<input
 					type="text"
 					placeholder="Search"
 					value={input}
-					onChange={(e) => setInput(e.target.value)}
+					onChange={(e) => {
+						setInput(e.target.value);
+						setOpen({
+							isTyping: true,
+							noSuggested: true
+						});
+					}}
 					autoComplete="false"
 				/>
 				<button title="search">
 					<SearchIcon />
 				</button>
 			</div>
-			{suggestions?.length > 0 && (
+			{isOpen.noSuggested && isOpen.isTyping && suggestions?.length > 0 && (
 				<div className="search-suggestions-container">
 					{suggestions.map((suggestion, index) => (
-						<button className="search-suggestion" name={suggestion} key={index}>
-							<SearchIcon />
-							{highlightMatch(suggestion, input)}
-						</button>
+						<SearchSuggestion
+							key={index}
+							suggestion={suggestion}
+							input={input}
+							selectSuggestion={selectSuggestion}
+						/>
 					))}
 				</div>
 			)}

@@ -14,11 +14,11 @@
 
 	& input {
 		width: 100%;
-		padding: 5px 0;
+		padding: 5px 10px 5px 0;
 		border: none;
 		outline: none;
 		border-radius: 20px;
-        font-size: 17px;
+		font-size: 17px;
 
 		background-color: transparent;
 		color: white;
@@ -50,7 +50,7 @@
 .search-suggestion {
 	padding: 15px;
 
-    font-weight: 300;
+	font-weight: 300;
 	color: white;
 	background-color: transparent;
 	border: none;
@@ -63,11 +63,11 @@
 
 	& svg {
 		height: 0.8em;
-		fill: var(--medium-gray);
+		fill: var(--light-gray);
 		margin-right: 10px;
 	}
 
-    & b {
-        font-weight: 900;
-    }
+	& b {
+		font-weight: 900;
+	}
 }
