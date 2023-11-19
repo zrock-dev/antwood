@@ -7,5 +7,8 @@ import (
 )
 
 func RouteSearch(server *fiber.App) {
-	server.Get("/sneakers/search/suggestions", responses.SendSearchSuggestions)
+	server.Get("/sneakers/search/products/:input",
+		responses.SendSneakersSearchedByPagination)
+	server.Get("/sneakers/search/suggestions",
+		responses.SendSearchSuggestions)
 }
