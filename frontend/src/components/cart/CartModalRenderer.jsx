@@ -20,10 +20,10 @@ const CartModalRenderer = () => {
 
 	useEffect(() => {
 		if (isOpen) {
-			document.body.style.overflow = 'hidden';
+			document.body.classList.add('hidden-container');
 			document.getElementById('overlay').style.display = 'flex';
 		} else {
-			document.body.style.overflow = 'auto';
+			document.body.classList.remove('hidden-container');
 			document.getElementById('overlay').style.display = 'none';
 		}
 	}, [isOpen]);
@@ -77,7 +77,7 @@ const CartModalRenderer = () => {
 														<span>Size: {product.size}</span>
 														<QuantityRenderer
 															amount={product.amount}
-															quantity={product.quantity}
+															quantityAvailable={product.quantity}
 															onChange={(amount) =>
 																updateProduct({
 																	sneakerId: product.sneakerId,

@@ -220,7 +220,7 @@ const ProductDetails = ({ product }) => {
 				<div className="product-details-cart-management">
 					{colorData.sizes[color.sizeIndex].quantity > 0 && (
 						<QuantityRenderer
-							quantity={colorData.sizes[color.sizeIndex].quantity}
+							quantityAvailable={colorData.sizes[color.sizeIndex].quantity}
 							amount={color.amount}
 							onChange={(amount) => setColor({ ...color, amount })}
 						/>

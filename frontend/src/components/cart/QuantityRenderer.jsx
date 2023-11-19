@@ -3,13 +3,14 @@ import { useState, useRef, useEffect } from 'react';
 
 const QuantityRenderer = ({
 	text = '',
-	quantity,
+	quantityAvailable,
 	amount,
 	onChange,
 	style = 'cart-sneaker-amount'
 }) => {
 	const [isOpen, setOpen] = useState(false);
 	const quantityButton = useRef();
+	const quantity = quantityAvailable > 10 ? 10 : quantityAvailable;
 
 	let sizes = [];
 	for (let index = 1; index < quantity + 1; index++) {
@@ -23,10 +24,8 @@ const QuantityRenderer = ({
 
 	useEffect(() => {
 		if (isOpen) {
-			document.body.style.overflow = 'hidden';
 			quantityButton?.current.classList.add('active');
 		} else {
-			document.body.style.overflow = 'auto';
 			quantityButton?.current.classList.remove('active');
 		}
 	}, [isOpen]);
