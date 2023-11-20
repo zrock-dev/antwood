@@ -1,13 +1,15 @@
 'use client';
 
-import { getSneakerSearchSuggestions } from '@/requests/SneakersRequest';
+import { getSearchSuggestions } from '@/requests/SneakersRequest';
 import { useEffect, useState, useRef } from 'react';
 
 import '../../styles/search/search.css';
 import SearchIcon from '@/icons/SearchIcon';
 import SearchSuggestion from './SearchSuggestion';
+import { useRouter } from 'next/navigation';
 
 const Searcher = () => {
+	const router = useRouter();
 	const [input, setInput] = useState('');
 	const [suggestions, setSuggestions] = useState([]);
 	const [isOpen, setOpen] = useState({
@@ -16,12 +18,19 @@ const Searcher = () => {
 	});
 	const suggestionContainer = useRef();
 
+	const search = (inputToSearch) => {
+		if (inputToSearch.trim() !== '') {
+			router.push(`/products/search/${inputToSearch}`);
+		}
+	};
+
 	const selectSuggestion = (suggestion) => {
 		setInput(suggestion);
 		setOpen({
 			isTyping: false,
 			noSuggested: false
 		});
+		search(suggestion);
 	};
 
 	useEffect(() => {
@@ -31,7 +40,7 @@ const Searcher = () => {
 				isTyping: true
 			});
 			if (input.trim() !== '') {
-				getSneakerSearchSuggestions(input)
+				getSearchSuggestions(input)
 					.then((data) => setSuggestions(data.names))
 					.catch((e) => console.log(e));
 			} else {
@@ -71,8 +80,11 @@ const Searcher = () => {
 						});
 					}}
 					autoComplete="false"
+					onKeyDown={(e) => {
+						e.key === 'Enter' && search(input);
+					}}
 				/>
-				<button title="search">
+				<button title="search" onClick={() => search(input)}>
 					<SearchIcon />
 				</button>
 			</div>

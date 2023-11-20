@@ -112,7 +112,7 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 		},
 		bson.D{
 			{Key: "$project", Value: bson.D{
-				{Key: "name", Value: 0},
+				{Key: "tags", Value: 0},
 				{Key: "qualification", Value: 0},
 				{Key: "description", Value: 0},
 				{Key: "reviews", Value: 0},
