@@ -62,3 +62,42 @@
     gap: 3rem;
     padding: 50px;
 }
+
+
+.checkout-form-section{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.checkout-email-input{
+    width: 100%;
+    border: 1px solid rgba(216, 216, 216, 0.726);
+    font-size: 16px;
+    font-family: var(--primary-font);
+    padding: 15px;
+    outline: none;
+    border-radius: 4px;
+    
+}
+.checkout-email-input:focus{
+box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;}
+
+.hidden-email-element{
+    visibility: hidden;
+    position: absolute;
+}
+
+.checkout-form-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.checkout-email-error{
+    color: red;
+}
+
+
+.checkout-disabled-addresss{
+     pointer-events: none;
+}

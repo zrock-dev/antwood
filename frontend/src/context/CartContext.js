@@ -6,6 +6,7 @@ import { createContext, useEffect, useState } from 'react';
 export const CartContext = createContext();
 
 export const EMPTY_CART = {
+	id: null,
 	products: [],
 	totalItems: 0,
 	subTotal: 0,
@@ -18,10 +19,11 @@ const CartProvider = ({ children }) => {
 
 	const updateProducts = (products) => {
 		const subTotal = calculateSubTotal(products);
+		const totalItems  = calculateTotalItems(products);
 		setCartState({
 			...cartState,
 			products,
-			totalItems: calculateTotalItems(),
+			totalItems: totalItems,
 			subTotal,
 			total: subTotal + cartState.extra
 		});
@@ -53,10 +55,10 @@ const CartProvider = ({ children }) => {
 		updateProducts(cartState.products);
 	};
 
-	const calculateTotalItems = () => {
+	const calculateTotalItems = (products) => {
 		let totalItems = 0;
-		if (cartState) {
-			cartState.products.map((product) => {
+		if (products && products.length > 0) {
+			products.map((product) => {
 				totalItems += product.amount;
 			});
 		}
@@ -130,6 +132,10 @@ const CartProvider = ({ children }) => {
 		}
 	}, []);
 
+	const resetCartState = () => {
+		setCartState(EMPTY_CART);
+	}
+
 	return (
 		<CartContext.Provider
 			value={{
@@ -140,7 +146,9 @@ const CartProvider = ({ children }) => {
 				removeProduct,
 				updateProduct,
 				findProduct,
-				equalsProduct
+				equalsProduct,
+				setCartState,
+				resetCartState
 			}}
 		>
 			{children}

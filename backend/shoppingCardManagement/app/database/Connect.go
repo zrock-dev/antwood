@@ -13,6 +13,7 @@ import (
 
 var  DB *mongo.Database
 var  OrdersCollection *mongo.Collection
+var  UnpaidOrdersCollection *mongo.Collection
 
 func Connect() {
 	mongodb_uri := os.Getenv("MONGODB_URI")
@@ -24,7 +25,7 @@ func Connect() {
 		log.Println("Connected to MongoDB")
 	}
 
-	DB = client.Database("authentication_app")
+	DB = client.Database("orders")
 	OrdersCollection = DB.Collection("orders")
-
+	UnpaidOrdersCollection = DB.Collection("unpaid-orders")
 }

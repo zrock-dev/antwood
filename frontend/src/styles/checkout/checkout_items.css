@@ -21,3 +21,11 @@
 .checkout-item-details p{
     font-size: 15px;
 }
+
+
+.checkout-pay-btn-ctn{
+   text-align: center;
+}
+.checkout-pay-btn{
+    width: 150px;
+}

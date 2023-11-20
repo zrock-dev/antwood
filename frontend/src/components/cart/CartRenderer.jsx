@@ -8,10 +8,12 @@ import '../../styles/cart/cart.css';
 import '../../styles/cart/cartPage.css';
 import QuantityRenderer from './QuantityRenderer';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const CartRenderer = () => {
 	const { cartState, products, updateProduct, removeProduct } =
 		useContext(CartContext);
+		const router = useRouter();
 	const [hasProducts, setHasProducts] = useState(false);
 
 	useEffect(() => {
@@ -110,7 +112,9 @@ const CartRenderer = () => {
 						!hasProducts && 'disabled'
 					}`}
 					disabled={!hasProducts}
-					onClick={() => alert('THE PAYMENT METHOD WILL BE COMING SOON')}
+					onClick={() => {
+						router.push('/checkout');
+					}}
 				>
 					CHECKOUT CART
 				</button>

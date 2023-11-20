@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"shopping-card-management/app/database"
 	"shopping-card-management/router"
 
 	"github.com/dotenv-org/godotenvvault"
@@ -12,7 +13,7 @@ import (
 
 func main (){
 	uploadEnv()
-
+	database.Connect()
 	//database.Connect()
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{

@@ -4,7 +4,7 @@ import "@/styles/checkout/checkout_items.css";
 import Image from "next/image";
 const CheckoutItems = () => {
     const { cartState, products} =  useContext(CartContext);
-    console.log(products)
+
   return <>
     {products &&
         products.map((product, index) => {

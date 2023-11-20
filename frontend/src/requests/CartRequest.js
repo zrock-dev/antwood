@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const getCartProductsInformation = async (products) => {
-	console.log(products);
 	const response = await axios.post(
 		'/sneakers/colors/all',
 		products,
