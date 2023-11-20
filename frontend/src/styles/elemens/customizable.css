@@ -7,3 +7,7 @@
 	flex-direction: column;
 	gap: 5px;
 }
+
+.hidden-container {
+	overflow: hidden !important;
+}

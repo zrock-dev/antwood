@@ -56,7 +56,7 @@ const CartRenderer = () => {
 										<QuantityRenderer
 											text="Quantity"
 											amount={product.amount}
-											quantity={product.quantity}
+											quantityAvailable={product.quantity}
 											onChange={(amount) => {
 												updateProduct({
 													sneakerId: product.sneakerId,
@@ -86,7 +86,7 @@ const CartRenderer = () => {
 						your personality and highlight your essence.
 					</p>
 					<Link href="/products">
-						<button className="general-button">GO TO SNEAKERS</button>
+						<h4 className="general-button">GO TO SNEAKERS</h4>
 					</Link>
 				</div>
 			)}
