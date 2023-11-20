@@ -2,7 +2,9 @@ package responses
 
 import (
 	"context"
+	"net/url"
 	"strconv"
+	"strings"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -80,10 +82,18 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 	skip := (pageInt - 1) * pageSizeInt
 	limit := pageSizeInt
 
+	searchInput = strings.TrimSpace(searchInput)
+	searchInput, err := url.QueryUnescape(searchInput)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	pipeline := mongo.Pipeline{
 		bson.D{
 			{Key: "$match", Value: bson.D{
-				{Key: "name", Value: primitive.Regex{Pattern: searchInput, Options: "i"}},
+				{Key: "name", Value: bson.D{
+					{Key: "$regex", Value: primitive.Regex{Pattern: searchInput, Options: "i"}},
+				}},
 			}},
 		},
 		bson.D{
@@ -102,7 +112,7 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 		},
 		bson.D{
 			{Key: "$project", Value: bson.D{
-				{Key: "tags", Value: 0},
+				{Key: "name", Value: 0},
 				{Key: "qualification", Value: 0},
 				{Key: "description", Value: 0},
 				{Key: "reviews", Value: 0},
