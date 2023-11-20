@@ -11,6 +11,6 @@ export const getAllProductsByPagination = async (page) => {
 };
 
 export const getRelatedSneakersById = async (tags) => {
-	const response = await axios.get(`${SERVER_DOMAIN}/sneaker/${tags}`);
+	const response = await axios.get(`/sneaker/${tags}`);
 	return response.data;
 };

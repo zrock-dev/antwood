@@ -125,6 +125,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 
 
 func SendRelatedProductsByTags(c *fiber.Ctx) error {
+    const relatedProductsLimit = 10
 	productID := c.Params("id")
 
 	var currentProduct models.Sneaker
@@ -141,19 +142,27 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 
 	var relatedProducts []models.Sneaker
 
-	filter = bson.D{
-		{"tags", bson.D{{"$in", currentProduct.Tags[0]}}},
-		{"tags", bson.D{{"$in", currentProduct.Tags[1]}}},
-		{"_id", bson.D{{"$ne", currentProduct.ID}}},
-	}
+	var tagsFilter []bson.E
+    for _, tag := range currentProduct.Tags {
+    	tagsFilter = append(tagsFilter, bson.E{"tags", bson.D{{"$in", tag}}})
+    }
 
-    options := options.Find().SetLimit(10)
+    filter = bson.D{
+    	{"$or", tagsFilter},
+    	{"_id", bson.D{{"$ne", currentProduct.ID}}},
+    }
+
+    options := options.Find().SetLimit(relatedProductsLimit)
 
 	cursor, err := database.SneakerCollection.Find(context.TODO(), filter, options)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 	defer cursor.Close(context.TODO())
+
+	if !cursor.TryNext(context.TODO()) {
+    	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
+    }
 
 	for cursor.Next(context.TODO()) {
 		var product models.Sneaker

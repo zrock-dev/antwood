@@ -25,6 +25,7 @@ const SingleProductRenderer = ({ id }) => {
 	return product ? (<>
 		<ProductDetails product={product} />
 		<ProductReview  product={product}/>
+        <RelatedProductRenderer id={id} />
 	</>
 
 	) : (
