@@ -1,0 +1,43 @@
+version: "1.0"
+
+services:
+
+  web:
+    image: nginx:1.25-alpine3.18
+    volumes:
+      - ./utils/nginx/solestyle.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    expose:
+      - 3000
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/frontend
+    volumes:
+      - $PWD/frontend:/home/node/app/
+    expose:
+      - 3000
+
+  product_management:
+    build:
+      context: backend/product_management
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/product_management_service
+    expose:
+      - "4000:4000"
+    environment:
+      DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY_CI}
+
+  account_management:
+    build:
+      context: backend/account_management
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/account_management_service
+    expose:
+      - "4500:4500"
+    environment:
+      DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY_CI}
+

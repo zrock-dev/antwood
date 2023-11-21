@@ -1,5 +1,14 @@
 .navbar-main-container {
+	position: sticky;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	z-index: 600;
+	
 	height: 7vh;
+	padding: 0 50px;
 
 	background-color: var(--secondary-color);
 }

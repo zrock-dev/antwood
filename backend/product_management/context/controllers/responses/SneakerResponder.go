@@ -124,6 +124,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 }
 
 
+
 func SendRelatedProductsByTags(c *fiber.Ctx) error {
     const relatedProductsLimit = 10
 	productID := c.Params("id")
@@ -178,3 +179,94 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 
 	return c.JSON(relatedProducts)
 }
+
+func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
+	sneakerObjectID, err := primitive.ObjectIDFromHex(sneakerId)
+	if err != nil {
+		panic(err)
+	}
+
+	sneakerColorObjectID, err := primitive.ObjectIDFromHex(sneakerColorId)
+	if err != nil {
+		panic(err)
+
+	}
+
+	pipeline := mongo.Pipeline{
+		bson.D{
+			{Key: "$match", Value: bson.D{{Key: "_id", Value: sneakerObjectID}}},
+		},
+		bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "sneakerColors"},
+				{Key: "localField", Value: "colors._id"},
+				{Key: "foreignField", Value: "_id"},
+				{Key: "as", Value: "types"},
+			}},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "name", Value: 1},
+				{Key: "price", Value: 1},
+				{Key: "colors", Value: 1},
+				{Key: "reviews", Value: 1},
+				{Key: "lastDate", Value: 1},
+				{Key: "salesQuantity", Value: 1},
+				{Key: "promotionCode", Value: 1},
+				{Key: "types", Value: bson.D{
+					{Key: "$filter", Value: bson.D{
+						{Key: "input", Value: "$types"},
+						{Key: "as", Value: "type"},
+						{Key: "cond", Value: bson.D{
+							{Key: "$eq", Value: bson.A{"$$type._id", sneakerColorObjectID}},
+						}},
+					}},
+				}},
+			}},
+		},
+	}
+
+	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		panic(err)
+	}
+	defer cursor.Close(context.TODO())
+
+	var sneakersWithColor models.SneakerWithColors
+	for cursor.Next(context.TODO()) {
+		if err := cursor.Decode(&sneakersWithColor); err != nil {
+			panic(err)
+		}
+	}
+
+	return sneakersWithColor
+}
+
+func SendColorRelatedProduct(c *fiber.Ctx) error {
+	sneakerId := c.Params("sneakerId")
+	sneakerColorId := c.Params("sneakerColorId")
+	sneakersWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+
+	return c.JSON(sneakersWithColor)
+}
+
+func SendColorRelatedProducts(c *fiber.Ctx) error {
+	type SneakerIds struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+	}
+	var data []SneakerIds
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	var sneakersData []models.SneakerWithColors
+	var sneakerWithColor models.SneakerWithColors
+	for _, sneaker := range data {
+		sneakerWithColor = getSeakerRelatedWithColor(sneaker.SneakerId, sneaker.SneakerColorId)
+		sneakersData = append(sneakersData, sneakerWithColor)
+	}
+
+	return c.JSON(sneakersData)
+}
+

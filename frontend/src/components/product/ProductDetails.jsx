@@ -1,14 +1,30 @@
-"use client"
+'use client';
 import ArrowLeft from '@/icons/ArrowLeft';
 import ArrowRight from '@/icons/ArrowRight';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DetailSection from './DetailSection';
+import QuantityRenderer from '../cart/QuantityRenderer';
+import { CartContext } from '@/context/CartContext';
+import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
+import { stringToJson } from '@/utils/Parser';
 
 const ProductDetails = ({ product }) => {
+	const {
+		cartState,
+		products,
+		addSneaker,
+		removeProduct,
+		updateProduct,
+		equalsProduct
+	} = useContext(CartContext);
 	const [color, setColor] = useState({
 		colorIndex: 0,
-		imageIndex: 0
+		imageIndex: 0,
+		sizeIndex: 0,
+		amount: 1,
+		onCart: false
 	});
+	const [dataLoaded, setColorLoaded] = useState(false);
 
 	const colorData = product.types[color.colorIndex];
 
@@ -31,6 +47,88 @@ const ProductDetails = ({ product }) => {
 					: color.imageIndex - 1
 		});
 	};
+
+	const addToCart = () => {
+		addSneaker(
+			product._id,
+			colorData.ID,
+			color.amount,
+			colorData.sizes[color.sizeIndex].value,
+			product.price,
+			colorData.sizes[color.sizeIndex].quantity,
+			colorData.images[0].url,
+			product.name
+		);
+		setColor({
+			...color,
+			onCart: true
+		});
+	};
+
+	const removeToCart = () => {
+		removeProduct({
+			sneakerId: product._id,
+			sneakerColorId: colorData.ID,
+			size: colorData.sizes[color.sizeIndex].value,
+			subTotal: color.amount * product.price
+		});
+		setColor({
+			...color,
+			onCart: false
+		});
+	};
+
+	const verifyProductOnCart = () => {
+		if (isValidToRequestStorage) {
+			if (cartState) {
+				let wasFound = false;
+				products.map((productCart) => {
+					if (
+						equalsProduct(productCart, {
+							sneakerId: product._id,
+							sneakerColorId: colorData.ID,
+							size: colorData.sizes[color.sizeIndex].value
+						})
+					) {
+						setColor({
+							...color,
+							amount: productCart.amount,
+							onCart: true
+						});
+						wasFound = true;
+					}
+				});
+
+				if (!wasFound) {
+					setColor({
+						...color,
+						amount: 1,
+						onCart: false
+					});
+				}
+			}
+		}
+		setColorLoaded(true);
+	};
+
+	useEffect(verifyProductOnCart, []);
+	useEffect(verifyProductOnCart, [
+		color.colorIndex,
+		color.sizeIndex,
+		cartState
+	]);
+	useEffect(() => {
+		if (color.onCart && dataLoaded) {
+			updateProduct({
+				sneakerId: product._id,
+				sneakerColorId: colorData.ID,
+				size: colorData.sizes[color.sizeIndex].value,
+				amount: color.amount,
+				price: product.price,
+				quantity: colorData.sizes[color.sizeIndex].quantity
+			});
+		}
+	}, [color.amount]);
 
 	return (
 		<div className="product-details-main-container">
@@ -77,9 +175,15 @@ const ProductDetails = ({ product }) => {
 				>
 					<div className="secction-item-row">
 						{colorData.sizes.map((size, index) => (
-							<span className="sneaker-size" key={index}>
+							<button
+								className={`sneaker-size ${
+									color.sizeIndex === index && 'selected'
+								}`}
+								key={index}
+								onClick={() => setColor({ ...color, sizeIndex: index })}
+							>
 								{size.value}
-							</span>
+							</button>
 						))}
 					</div>
 				</DetailSection>
@@ -91,7 +195,14 @@ const ProductDetails = ({ product }) => {
 						{product.types.map((type, index) => (
 							<div
 								key={index}
-								onClick={() => setColor({ imageIndex: 0, colorIndex: index })}
+								onClick={() =>
+									setColor({
+										imageIndex: 0,
+										colorIndex: index,
+										sizeIndex: 0,
+										amount: 1
+									})
+								}
 								className={`product-details-images-image gray ${
 									index === color.colorIndex && 'selected'
 								}`}
@@ -106,6 +217,34 @@ const ProductDetails = ({ product }) => {
 						{product.description}
 					</p>
 				</DetailSection>
+				<div className="product-details-cart-management">
+					{colorData.sizes[color.sizeIndex].quantity > 0 && (
+						<QuantityRenderer
+							quantityAvailable={colorData.sizes[color.sizeIndex].quantity}
+							amount={color.amount}
+							onChange={(amount) => setColor({ ...color, amount })}
+						/>
+					)}
+					<button
+						onClick={
+							colorData.sizes[color.sizeIndex].quantity > 0
+								? color.onCart
+									? removeToCart
+									: addToCart
+								: () => {}
+						}
+						disabled={colorData.sizes[color.sizeIndex].quantity <= 0}
+						className={`general-button ${
+							colorData.sizes[color.sizeIndex].quantity <= 0 && 'disabled'
+						}`}
+					>
+						{colorData.sizes[color.sizeIndex].quantity > 0
+							? color.onCart
+								? 'REMOVE FROM CART'
+								: 'ADD TO THE CART'
+							: 'SOLD OUT'}
+					</button>
+				</div>
 			</div>
 		</div>
 	);

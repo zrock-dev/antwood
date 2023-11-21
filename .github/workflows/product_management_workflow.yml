@@ -1,4 +1,4 @@
-name: "Backend Product Management Workflow"
+name: 'Backend Product Management Workflow'
 run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
 
 on:
@@ -9,66 +9,63 @@ on:
     branches:
       - develop
     paths:
-      - "backend/product_management/**"
+      - 'backend/product_management/**'
   push:
     paths:
-      - "backend/product_management/**"
+      - 'backend/product_management/**'
     branches:
       - develop
-
 
 jobs:
   build:
     if: ${{ github.event_name == 'pull_request' }}
     name: Build
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ vars.GO_VERSION }} 
+          go-version: ${{ vars.GO_VERSION }}
 
-      - name: Building 
+      - name: Building
         run: cd backend/product_management && go build -v .
-
 
   test:
     if: ${{ github.event_name == 'pull_request' }}
     name: Test
     needs: build
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ vars.GO_VERSION }} 
+          go-version: ${{ vars.GO_VERSION }}
 
-      - name: Running tests 
+      - name: Running tests
         run: cd backend/product_management/test && go test -v .
 
   push_image:
     if: ${{ github.event_name == 'push' }}
     name: Publish to DockerHub
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Set short git commit SHA
         id: short_sha
         run: |
-            echo 'COMMIT_SHORT_SHA='"${GITHUB_SHA::7}"'' >> $GITHUB_ENV
-
+          echo 'COMMIT_SHORT_SHA='"${GITHUB_SHA::7}"'' >> $GITHUB_ENV
       - name: Log in to Docker Hub
         uses: docker/login-action@v3.0.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build-Push 
+      - name: Build-Push
         uses: docker/build-push-action@v5.0.0
         with:
           context: backend/product_management/
