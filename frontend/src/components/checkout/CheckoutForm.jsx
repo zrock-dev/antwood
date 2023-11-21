@@ -35,7 +35,8 @@ export default function CheckoutForm({ clientSecret }) {
 
     const res = await confirmAvailableSizes(products);
     if (!res.areAvailable) {
-      toast.error(res.message);
+      toast.error("Sneakers in Stock");
+      window.history.back();
       return;
     }
 
