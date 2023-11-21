@@ -8,6 +8,7 @@ import { getSneakerById } from '@/requests/SneakersRequest';
 import '../../styles/product/product_details.css';
 import '../../styles/cart/cart.css';
 import ProductReview from '../reviews/ProductReview';
+import RelatedProductsRenderer from './RelatedProducts/RelatedProductsRenderer';
 
 const SingleProductRenderer = ({ id }) => {
 	const router = useRouter();
@@ -25,10 +26,10 @@ const SingleProductRenderer = ({ id }) => {
 
 	return product ? (
     <>
-		  <ProductDetails product={product} />
-		  <ProductReview  product={product}/>
-      <RelatedProductRenderer id={id} />
-	  </>
+		<ProductDetails product={product} />
+		<ProductReview  product={product}/>
+        <RelatedProductsRenderer id={id} />
+	</>
 
 	) : (
 		<div className="loader-container">
