@@ -11,6 +11,10 @@
 	}
 }
 
+.product-card-container.space {
+	justify-content: space-between;
+}
+
 .product-card-heart {
 	position: absolute;
 	top: 20px;
@@ -26,12 +30,23 @@
 	height: 40vh;
 
 	background-color: var(--gradient-tone);
-	
+
 	& > img {
 		object-fit: contain;
 
 		width: 100%;
 		height: 100%;
+	}
+
+	& > b {
+		display: flex;
+		flex-direction: column;
+
+		text-align: center;
+		font-size: 20px;
+		font-weight: 900;
+
+		color: black;
 	}
 }
 
@@ -63,4 +78,15 @@
 .product-card-tag.new {
 	background-color: var(--success-color);
 	color: black;
+}
+
+.product-card-buttons {
+	display: flex;
+	gap: 10px;
+
+	& button {
+		font-size: 16px;
+		font-weight: 500;
+		padding: 5px;
+	}
 }

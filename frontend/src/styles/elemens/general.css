@@ -109,6 +109,25 @@
 	}
 }
 
+.general-button.gray {
+	background-color: var(--medium-gray);
+	color: white;
+	border: none;
+
+	&:hover {
+		background-color: var(--dark-black);
+	}
+}
+
+.general-button.gray.disabled {
+	opacity: 0.3;
+
+	&:hover {
+		background-color: var(--medium-gray);
+		color: white;
+	}
+}
+
 #overlay {
 	display: none;
 	position: fixed;
