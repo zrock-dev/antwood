@@ -7,6 +7,7 @@ import { verifyOrderStatus } from "@/requests/OrderRequest";
 
 const PaymentMessage = ({resetCartState}) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [badRequest , setBadRequest] = useState(false);
 
   useEffect(() => {
     let timer;
@@ -33,20 +34,29 @@ const PaymentMessage = ({resetCartState}) => {
       (async () => {
         const data = await verifyOrderStatus(paymentIntent, redirectStatus);
         if (data.status === 200 ) {
+             setBadRequest(false);
+             resetCartState();
+             setModalOpen(true);
+        }else if (data.status === 400) {
+          setBadRequest(true);
+             setModalOpen(true);
+        }
           const newUrl = window.location.origin + window.location.pathname;
           window.history.replaceState({}, document.title, newUrl);
-          setModalOpen(true);
-          resetCartState();
-        }
+          
       })();
     }
   });
 
   return (
     <Modal isModalOpen={isModalOpen} setModalOpen={setModalOpen}>
-      <div className="message-ctn">
-        <i className="fa-regular fa-circle-check"></i>
-        <h3>Payment Successful!</h3>
+      <div className={`message-ctn  ${badRequest ? "bad-request" : "ok-request"}`}>
+        <i
+          className={
+            badRequest ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-check"
+          }
+        ></i>
+        <h3>{badRequest ? "Payment Failed" : "Payment Successful!"}</h3>
       </div>
     </Modal>
   );

@@ -13,17 +13,29 @@ import { useEffect, useState, useContext } from "react";
 import AddressForm from "./AddressForm";
 import CheckoutItems from "./CheckoutItems";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 const stripePromise = loadStripe(
   "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
 );
 
 const CheckoutPageRenderer = () => {
   const [clientSecret, setClientSecret] = useState(undefined);
+    const { products } = useContext(CartContext);
   const { user, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [emailSaved, setEmailSaved] = useState(false);
   const [addresConfirmed, setAddresConfirmed] = useState(false);
-  const [address, setAddress] = useState();
+
+
+  const [address, setAddress] = useState({
+    name: "",
+    address: {
+      line1: "",
+      line2: "",
+      city: "",
+      postal_code: "",
+    },
+  });
   const { cartState, setCartState } = useContext(CartContext);
   const tax = 100;
 
@@ -31,7 +43,6 @@ const CheckoutPageRenderer = () => {
     if (addresConfirmed) {
       let cart  = {...cartState}
       cart.shipping = address;
-      console.log(address)
       fetch(
         `http://localhost:5000/api/payment/create-payment-intent/${email}`,
         {
@@ -54,6 +65,15 @@ const CheckoutPageRenderer = () => {
     }
   }, [addresConfirmed]);
 
+  const verifyAvailableOrder = () => {
+    let isAvailable = products.length > 0;
+    if (!isAvailable) {
+      toast.error("Cart is empty");
+      return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
     if (isAuthenticated) {
       setEmail(user?.email);
@@ -75,18 +95,18 @@ const CheckoutPageRenderer = () => {
       fontFamily: `'Lato', sans-serif`,
     },
   };
-  const options = {
+
+
+  return (
+    <Elements stripe={stripePromise} options={{
     mode: "payment",
-    clientSecret,
+    clientSecret : clientSecret,
     appearance,
     amount: 120,
     currency: "usd",
     paymentMethodTypes: ["card"],
     locale: "en",
-  };
-
-  return (
-    <Elements stripe={stripePromise} options={options}>
+  }}>
       <div className="checkout-page">
         <div className="checkout-page-header">
           <h2>CHECKOUT</h2>
@@ -101,7 +121,7 @@ const CheckoutPageRenderer = () => {
               setEmailSaved={setEmailSaved}
               setEmail={setEmail}
             />
-            {emailSaved && (
+            {emailSaved  && verifyAvailableOrder() && (
               <>
                 <div className="hidden-email-element">
                   <LinkAuthenticationElement

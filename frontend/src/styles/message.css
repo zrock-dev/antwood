@@ -11,3 +11,11 @@
     border-radius: 5px;
     font-size: 20px;
 }
+
+.bad-request{
+    background-color: rgb(255, 188, 188);
+}
+
+.ok-request{
+    background-color: rgb(220, 255, 220);
+}
