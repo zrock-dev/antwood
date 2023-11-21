@@ -9,3 +9,8 @@ export const getAllProductsByPagination = async (page) => {
 	const response = await axios.get(`/sneakers?page=${page}`);
 	return response.data;
 };
+
+export const getSneakerQuantityInformation = async (sneakerId) => {
+	const response = await axios.get(`/sneaker/quantity/${sneakerId}`);
+	return response.data;
+};

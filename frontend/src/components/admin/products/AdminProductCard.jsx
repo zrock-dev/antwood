@@ -2,24 +2,28 @@
 import Modal from '@/components/Modal';
 import Link from 'next/link';
 import { useState } from 'react';
-import DeleteSneakerConfirmation from '../deletion_confirmation/DeleteSneakerConfirmation';
+import DeleteSneakerConfirmation from '../confirmations/DeleteSneakerConfirmation';
+import AvgQuantityProduct from './AvgQuantityProduct';
 
 const AdminProductCard = ({ product }) => {
 	const [isOpen, setOpen] = useState(false);
 
 	return (
-		<div className="product-card-container space">
+		<div className="product-card-container space admin">
 			<div className="product-card-image">
 				{product.colors.length > 0 ? (
-					<img src={product.types[0].images[0].url} alt="" />
+					<div className="position-relative">
+						<img src={product.types[0].images[0].url} alt="" />
+						<AvgQuantityProduct sneakerId={product._id} />
+					</div>
 				) : (
-					<b>
+					<div className="product-card-no-colors">
 						<b>Without</b>
 						<b>colors</b>
-					</b>
+					</div>
 				)}
 			</div>
-			<span className="product-card-name margin-top-15">{product.name}</span>
+			<span className="product-card-name">{product.name}</span>
 			<div className="product-card-buttons margin-top-15">
 				<Link
 					href={`/admin/product/${product._id}`}
