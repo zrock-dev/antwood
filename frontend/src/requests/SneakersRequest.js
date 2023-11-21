@@ -6,7 +6,7 @@ export const getSneakerById = async (id) => {
 };
 
 export const getAllProductsByPagination = async (page) => {
-	const response = await axios.get(`/sneakers?page=${page}`);
+	const response = await axios.get(`/sneakers?page=${page}&pageSize=4`);
 	return response.data;
 };
 
