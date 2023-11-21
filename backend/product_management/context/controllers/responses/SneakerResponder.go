@@ -177,7 +177,14 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
 	}
 
-	return c.JSON(relatedProducts)
+    var sneakersWithColor []models.SneakerWithColors
+    var sneakerWithColor models.SneakerWithColors
+    for _, relatedProduct := range relatedProducts  {
+   		sneakerWithColor = getSeakerRelatedWithColor(relatedProduct.ID, relatedProduct.Colors[0].ID)
+   		sneakersWithColor = append(sneakersData, sneakerWithColor)
+   	}
+
+	return c.JSON(sneakersWithColor)
 }
 
 func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
