@@ -1,11 +1,11 @@
-import Layout from '@/components/Layout';
 import AdminGallery from '@/components/admin/AdminGallery';
+import AdminLayout from '@/components/layouts/AdminLayout';
 
 const AdminMainPage = () => {
 	return (
-		<Layout>
+		<AdminLayout>
 			<AdminGallery />
-		</Layout>
+		</AdminLayout>
 	);
 };
 
