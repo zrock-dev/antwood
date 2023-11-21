@@ -1,4 +1,4 @@
-import AdminNavbar from '../navbar/AdminNavbar';
+import AdminNavbar from '../admin/navbar/AdminNavbar';
 import Layout from './Layout';
 
 const AdminLayout = ({ children }) => {

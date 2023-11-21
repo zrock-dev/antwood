@@ -1,4 +1,4 @@
-import AdminGallery from '@/components/admin/AdminGallery';
+import AdminGallery from '@/components/admin/products/AdminGallery';
 import AdminLayout from '@/components/layouts/AdminLayout';
 
 const AdminMainPage = () => {
