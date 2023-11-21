@@ -124,46 +124,6 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 	return sendSneakersUsingPipeline(pipeline, c)
 }
 
-func SendSneakersForAdminByPagination(c *fiber.Ctx) error {
-	page := c.Query("page", "1")
-	pageSize := c.Query("pageSize", "9")
-	pageInt, _ := strconv.Atoi(page)
-	pageSizeInt, _ := strconv.Atoi(pageSize)
-
-	skip := (pageInt - 1) * pageSizeInt
-	limit := pageSizeInt
-
-	pipeline := mongo.Pipeline{
-		bson.D{
-			{Key: "$lookup", Value: bson.D{
-				{Key: "from", Value: "sneakerColors"},
-				{Key: "localField", Value: "colors._id"},
-				{Key: "foreignField", Value: "_id"},
-				{Key: "as", Value: "types"},
-			}},
-		},
-		bson.D{
-			{Key: "$skip", Value: skip},
-		},
-		bson.D{
-			{Key: "$limit", Value: limit},
-		},
-		bson.D{
-			{Key: "$project", Value: bson.D{
-				{Key: "tags", Value: 0},
-				{Key: "qualification", Value: 0},
-				{Key: "description", Value: 0},
-				{Key: "reviews", Value: 0},
-				{Key: "brand", Value: 0},
-				{Key: "types.sizes", Value: 0},
-				{Key: "types.quantity", Value: 0},
-			}},
-		},
-	}
-
-	return sendSneakersUsingPipeline(pipeline, c)
-}
-
 func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
 	sneakerObjectID, err := primitive.ObjectIDFromHex(sneakerId)
 	if err != nil {
