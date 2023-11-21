@@ -62,7 +62,10 @@ func DeleteUnpaidOrderById(id string) error {
 		return err
 	}
 
-	dleteResult , err:=database.UnpaidOrdersCollection.DeleteOne(context.TODO(), bson.M{"_id": ojId})
+	dleteResult , err:= database.UnpaidOrdersCollection.DeleteOne(context.TODO(), bson.M{"_id": ojId})
+	if err != nil {
+		return err
+	}
 
 	if dleteResult.DeletedCount == 0 {
 		return err

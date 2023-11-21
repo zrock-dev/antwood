@@ -74,7 +74,7 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 			"status" : fiber.StatusInternalServerError,
 		})
 	}
-	
+
 	metadata := paymentintentRes.Metadata
 	orderId:= metadata["orderId"]
 
@@ -89,7 +89,7 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 	order, err:= repository.FindOUnpaidrderById(orderObjId)
-	
+
 	if err != nil {
 		
 		return c.JSON(fiber.Map{
@@ -99,14 +99,22 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 	if order.Paid == "paid" && status == "succeeded" {
-		_ =repository.DeleteUnpaidOrderById(orderId)
-		return c.JSON(fiber.Map{
-			"message" : "success",
-			"status" : fiber.StatusOK,
-		})
+		err  = repository.DeleteUnpaidOrderById(orderId)
+	
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"message" : err.Error(),
+				"status" : fiber.StatusForbidden,
+			})
+		}
+			return c.JSON(fiber.Map{
+				"message" : "Payment success",
+				"status" : fiber.StatusOK,
+			})
+		
 	}else{
 		return c.JSON(fiber.Map{
-			"message" : err.Error(),
+			"message" :"Error with payment status",
 			"status" : fiber.StatusBadRequest,
 		})
 	}
