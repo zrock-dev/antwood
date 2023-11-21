@@ -19,3 +19,18 @@ export const getSneakerQuantities = async (sneakers) => {
   });
   return response.data;
 };
+
+
+export const confirmAvailableSizes = async (body) => {
+	const response = await axios.put(
+    "/sneakers/confirm/quantities",
+    body,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
+	return response.data;
+}

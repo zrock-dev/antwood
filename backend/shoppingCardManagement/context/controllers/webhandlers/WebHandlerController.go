@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/webhook"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const MaxBodyBytes = int(65536)
@@ -65,7 +66,13 @@ func HandleOnIntentSuccess(event *stripe.Event) error {
 	}
 	metadata := paymentintent.Metadata
 	orderID := metadata["orderId"]
-	order, err := repository.UpdateUnpaidOrderPaidById(orderID, "paid")
+	orderObjectId , err := primitive.ObjectIDFromHex(orderID)
+
+	if err!= nil {
+		return err 
+	}
+
+	order, err := repository.FindOUnpaidrderById(orderObjectId)
 
 	if err != nil {
 		return err
@@ -91,16 +98,26 @@ func HandleOnIntentSuccess(event *stripe.Event) error {
 		log.Println("Error when sending request:", err)
 		return err
 	}
-	defer resp.Body.Close()
 
+	defer resp.Body.Close()
+	
 	if resp.StatusCode != http.StatusOK {
 		log.Println("Error when sending request:", err)
-		return err
+		return &fiber.Error{
+			Code:    http.StatusNotAcceptable,
+			Message: "Error updating quantities",
+		}
 	}
 
 	if err != nil {
 		log.Println("Error parsing webhook JSON:", err)
 		return err
+	}
+
+	_ , err = repository.UpdateUnpaidOrderPaidById(orderID, "paid")
+
+	if err != nil{
+		return err 
 	}
 
 	return nil

@@ -14,9 +14,10 @@ import CheckoutItems from "./CheckoutItems";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { getPaymentIntent } from "@/requests/OrderRequest";
-const stripePromise = loadStripe(
-  "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
-);
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+
 const CheckoutPageRenderer = () => {
   const [clientSecret, setClientSecret] = useState(undefined);
     const { products } = useContext(CartContext);
@@ -43,7 +44,6 @@ const CheckoutPageRenderer = () => {
       let cart  = {...cartState}
       cart.shipping = address;
       getPaymentIntent(email, JSON.stringify(cart))
-        .then((res) => res.json())
         .then((data) => {
           let cs = data.clientSecret;
           if (cartState?.id === null) {
@@ -56,6 +56,7 @@ const CheckoutPageRenderer = () => {
         });
     }
   }, [addresConfirmed]);
+
 
   const verifyAvailableOrder = () => {
     let isAvailable = products.length > 0;

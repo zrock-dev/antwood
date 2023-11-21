@@ -39,11 +39,10 @@ const PaymentMessage = ({resetCartState}) => {
              setModalOpen(true);
         }else if (data.status === 400) {
           setBadRequest(true);
-             setModalOpen(true);
+           setModalOpen(true);
         }
           const newUrl = window.location.origin + window.location.pathname;
           window.history.replaceState({}, document.title, newUrl);
-          
       })();
     }
   });

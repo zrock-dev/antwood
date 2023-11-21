@@ -171,6 +171,7 @@ func UpdateSneakerQuantities(c *fiber.Ctx) error {
 
 	for _, sneaker := range sneakers {
 		size:= responses.GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+
 		if size < sneaker.Amount {
 			return c.Status(400).SendString("Insufficient sneaker quantity")
 		}
@@ -217,6 +218,8 @@ func UpdateSneakerQuantities(c *fiber.Ctx) error {
 	return c.JSON(sneakers)
 }
 
+
+
 func IncrementSalesQuantity(sneakerID primitive.ObjectID) error {
 	filter := bson.M{"_id": sneakerID}
 	update := bson.M{"$inc": bson.M{"salesQuantity": 1}}
@@ -228,4 +231,35 @@ func IncrementSalesQuantity(sneakerID primitive.ObjectID) error {
 	}
 
 	return nil
+}
+
+
+func ConfirmAvailableSneakersQuantities(c *fiber.Ctx) error {
+	type SneakersQuantities struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+		Size           float32    `json:"size,omitempty"`
+		Amount       int    `json:"amount,omitempty"`
+	}
+
+	var sneakers []SneakersQuantities
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for _, sneaker := range sneakers {
+		size:= responses.GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+
+		if size < sneaker.Amount {
+			return c.Status(200).JSON(fiber.Map{
+				"message": "Insufficient sneaker quantity",
+				"areAvailable": false,
+			})
+		}
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "Available",
+		"areAvailable": true,
+	})
 }

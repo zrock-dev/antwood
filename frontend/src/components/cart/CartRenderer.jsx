@@ -31,6 +31,7 @@ const CartRenderer = () => {
     let availableProducts = [];
     for (let i = 0; i < products.length; i++) {
         if (dataResult[i].quantity>0){
+            products[i].quantity = dataResult[i].quantity
             availableProducts.push(products[i]);
     }  };
 	let subtotal = 	calculateSubTotal(availableProducts)

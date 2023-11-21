@@ -8,6 +8,7 @@ import Button from "../Button";
 import { toast } from "sonner";
 import { CartContext } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { confirmAvailableSizes } from "@/requests/SneakersRequest";
 export default function CheckoutForm({ clientSecret }) {
   const { products } = useContext(CartContext);
   const stripe = useStripe();
@@ -17,13 +18,12 @@ export default function CheckoutForm({ clientSecret }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     if (products.length < 1) {
       toast.error("Cart is empty");
       return;
     }
-    e.preventDefault();
-
-    if (!stripe || !elements) {
+      if (!stripe || !elements) {
       return;
     }
 
@@ -32,6 +32,13 @@ export default function CheckoutForm({ clientSecret }) {
     if (result.error) {
       return;
     }
+
+    const res = await confirmAvailableSizes(products);
+    if (!res.areAvailable) {
+      toast.error(res.message);
+      return;
+    }
+
 
     setIsLoading(true);
 
