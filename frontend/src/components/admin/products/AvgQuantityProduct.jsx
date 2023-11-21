@@ -1,5 +1,5 @@
 'use client';
-
+import { getSneakerQuantityInformation } from '@/requests/SneakersRequest';
 import { useRef, useState } from 'react';
 
 const AvgQuantityProduct = ({ sneakerId }) => {
@@ -12,8 +12,13 @@ const AvgQuantityProduct = ({ sneakerId }) => {
 			cardQuantity.current.style.display !== 'none' &&
 			!quantityInfo
 		) {
-			console.log(`loading sneaker ${sneakerId}`);
-			setQuantityInfo(['some data for now']);
+			getSneakerQuantityInformation(sneakerId)
+				.then((data) => {
+					setQuantityInfo(data);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		}
 	};
 
@@ -21,10 +26,28 @@ const AvgQuantityProduct = ({ sneakerId }) => {
 		<div
 			ref={cardQuantity}
 			onMouseOver={loadData}
-			className="product-card-quantity-info"
+			className="product-card-quantity-main-container"
 		>
 			{quantityInfo ? (
-				<div></div>
+				<div className="product-card-quantity-info-container">
+					<div className="products-card-quantity-info">
+						<b>
+							<b>Color</b>
+							<b>Name</b>
+						</b>
+						<b>
+							<b>Average</b>
+							<b>Quantity</b>
+						</b>
+					</div>
+					<span className="horizontal-separator"></span>
+					{quantityInfo.map((quantity, index) => (
+						<div className="products-card-quantity-info" key={index}>
+							<span>{quantity.color}</span>
+							<span>{parseInt(quantity.avgQuantity)}</span>
+						</div>
+					))}
+				</div>
 			) : (
 				<div className="loader-container">
 					<div className="loader white"></div>
