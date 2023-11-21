@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"log"
 	"shopping-card-management/app/models"
 	"shopping-card-management/app/repository"
@@ -98,7 +97,6 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 			"status" : fiber.StatusForbidden,
 		})
 	}
-	fmt.Println(order.Paid)
 
 	if order.Paid == "paid" && status == "succeeded" {
 		_ =repository.DeleteUnpaidOrderById(orderId)

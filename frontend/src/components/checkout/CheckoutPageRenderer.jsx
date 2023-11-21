@@ -18,7 +18,7 @@ const stripePromise = loadStripe(
 );
 
 const CheckoutPageRenderer = () => {
-  const [clientSecret, setClientSecret] = useState();
+  const [clientSecret, setClientSecret] = useState(undefined);
   const { user, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [emailSaved, setEmailSaved] = useState(false);
@@ -31,6 +31,7 @@ const CheckoutPageRenderer = () => {
     if (addresConfirmed) {
       let cart  = {...cartState}
       cart.shipping = address;
+      console.log(address)
       fetch(
         `http://localhost:5000/api/payment/create-payment-intent/${email}`,
         {

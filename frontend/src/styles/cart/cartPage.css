@@ -25,9 +25,9 @@
 }
 
 .cart-page-product-container {
+	position: relative;
 	display: flex;
 	gap: 20px;
-
 	width: 100%;
 	padding-right: 20px;
 
@@ -104,3 +104,5 @@
 		object-fit: contain;
 	}
 }
+
+

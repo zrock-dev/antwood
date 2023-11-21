@@ -72,23 +72,24 @@ func DeleteUnpaidOrderById(id string) error {
 }
 
 
-func UpdateUnpaidOrderPaidById(id string, paidState string) error {
+func UpdateUnpaidOrderPaidById(id string, paidState string) ( *models.Order ,error){
+
 	ojId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return err
+		return models.NewOrder(), err
 	}
 
 	res , err:= database.UnpaidOrdersCollection.UpdateOne(context.TODO(), bson.M{"_id": ojId}, bson.M{"$set": bson.M{"paid": paidState}})
 
 	if res.MatchedCount == 0 {
-		return err
+		return models.NewOrder(),err
 	}else{
 		orderPaid,err := FindOUnpaidrderById(ojId)
 		if err != nil {
-			return err
+			return orderPaid,err
 		}
 		orderPaid.ID= primitive.NewObjectID()
 		database.OrdersCollection.InsertOne(context.TODO(), orderPaid)
-		return nil
+		return orderPaid,nil
 	}
 }

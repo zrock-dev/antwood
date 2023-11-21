@@ -20,6 +20,7 @@ const CartProvider = ({ children }) => {
 	const updateProducts = (products) => {
 		const subTotal = calculateSubTotal(products);
 		const totalItems  = calculateTotalItems(products);
+
 		setCartState({
 			...cartState,
 			products,
@@ -112,6 +113,7 @@ const CartProvider = ({ children }) => {
 		});
 	};
 
+
 	useEffect(() => {
 		if (cartState) {
 			saveItem(
@@ -121,6 +123,7 @@ const CartProvider = ({ children }) => {
 				})
 			);
 		}
+
 	}, [cartState]);
 
 	useEffect(() => {
@@ -137,23 +140,25 @@ const CartProvider = ({ children }) => {
 	}
 
 	return (
-		<CartContext.Provider
-			value={{
-				cartState: cartState,
-				products: cartState?.products,
-				subTotal: cartState?.subTotal,
-				addSneaker,
-				removeProduct,
-				updateProduct,
-				findProduct,
-				equalsProduct,
-				setCartState,
-				resetCartState
-			}}
-		>
-			{children}
-		</CartContext.Provider>
-	);
+    <CartContext.Provider
+      value={{
+        cartState: cartState,
+        products: cartState?.products,
+        subTotal: cartState?.subTotal,
+        addSneaker,
+        removeProduct,
+        updateProduct,
+        findProduct,
+        equalsProduct,
+        setCartState,
+        resetCartState,
+		calculateSubTotal,
+		calculateTotalItems
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export default CartProvider;

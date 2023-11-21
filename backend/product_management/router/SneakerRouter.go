@@ -12,11 +12,13 @@ func RouteSneakers(server *fiber.App) {
 	server.Get("/sneaker/:id", responses.SendSneakerByID)
 	server.Get("/sneakers/colors/:sneakerId/:sneakerColorId", responses.SendColorRelatedProduct)
 	server.Post("/sneakers/colors/all", responses.SendColorRelatedProducts)
+	server.Post("/sneakers/quantities", responses.SendSneakerQuantities)
 
 	server.Post("/sneaker", requests.InsertSneaker)
 
 	server.Put("/sneaker/:id", requests.UpdateSneakerById)
-
+	server.Put("/sneakers/quantities", requests.UpdateSneakerQuantities)
+	
 	server.Delete("/sneaker/:id", requests.DeleteSneakerById)
 	server.Delete("/sneaker/color/:id/:idcolor", requests.RemoveSneakerColor)
 }
