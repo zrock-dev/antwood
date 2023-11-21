@@ -3,6 +3,7 @@ package responses
 import (
 	"context"
 	"strconv"
+	"fmt"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -126,14 +127,14 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 
 
 func SendRelatedProductsByTags(c *fiber.Ctx) error {
-    const relatedProductsLimit = 10
+    const RELATED_PRODUCTS_LIMIT = 10
 	productID := c.Params("id")
 
 	var currentProduct models.Sneaker
 	objectID, err := primitive.ObjectIDFromHex(productID)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid product ID"})
-	}
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fmt.Sprintf("Invalid product ID: %s is not a valid ObjectID", productID)})
+    }
 
 	filter := bson.D{{Key: "_id", Value: objectID}}
 	err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&currentProduct)
@@ -153,7 +154,7 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
     	{"_id", bson.D{{"$ne", currentProduct.ID}}},
     }
 
-    options := options.Find().SetLimit(relatedProductsLimit)
+    options := options.Find().SetLimit(RELATED_PRODUCTS_LIMIT)
 
 	cursor, err := database.SneakerCollection.Find(context.TODO(), filter, options)
 	if err != nil {
@@ -162,20 +163,24 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 	defer cursor.Close(context.TODO())
 
 	if !cursor.TryNext(context.TODO()) {
-    	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
+        errorMessage := "No related products found or error retrieving data."
+        if cursor.Err() != nil {
+            errorMessage = cursor.Err().Error()
+        }
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": errorMessage})
     }
 
-	for cursor.Next(context.TODO()) {
-		var product models.Sneaker
-		if err := cursor.Decode(&product); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		relatedProducts = append(relatedProducts, product)
-	}
+    for cursor.Next(context.TODO()) {
+        var product models.Sneaker
+        if err := cursor.Decode(&product); err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error decoding product data: " + err.Error()})
+        }
+        relatedProducts = append(relatedProducts, product)
+    }
 
-	if len(relatedProducts) == 0 {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
-	}
+    if len(relatedProducts) == 0 {
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
+    }
 
     var sneakersWithColor []models.SneakerWithColors
     var sneakerWithColor models.SneakerWithColors

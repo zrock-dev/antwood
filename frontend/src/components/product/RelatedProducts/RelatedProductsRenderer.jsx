@@ -8,17 +8,17 @@ import { useRouter } from 'next/navigation';
 
 const RelatedProductsRenderer = ({ id }) => {
 	const router = useRouter();
-    const [products, setProducts] = useState(null);
+    const [products, setProducts] = useState();
 
 	useEffect(() => {
-		getRelatedSneakersById(id)
-			.then((response) => {
-				setProducts(response);
-			})
-			.catch((e) => {
-				console.error("Error fetching related sneakers:", e)
-			});
-	}, [id, router]);
+        getRelatedSneakersById(id)
+            .then((response) => {
+                setProducts(response);
+            })
+            .catch((e) => {
+                console.error("Error fetching related sneakers:", e);
+            });
+    }, [id]);
 
 	return products ? (
 		<RelatedProductsSection relatedProducts={products} />
