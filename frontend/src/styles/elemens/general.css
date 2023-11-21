@@ -57,7 +57,7 @@
 
 .general-button {
 	width: 100%;
-	padding: 15px 15px;
+	padding: 15px;
 	font-size: 14px;
 	font-weight: 700;
 
@@ -83,6 +83,11 @@
 		background-color: var(--secondary-color);
 		color: var(--primary-color);
 	}
+}
+
+.general-button.auto {
+	width: auto;
+	padding: 15px 30px;
 }
 
 .general-button.white {
