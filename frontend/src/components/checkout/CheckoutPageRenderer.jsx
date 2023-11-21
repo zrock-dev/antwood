@@ -4,7 +4,6 @@ import "@/styles/checkout/checkout.css";
 import { CartContext } from "@/context/CartContext";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-  AddressElement,
   LinkAuthenticationElement,
 } from "@stripe/react-stripe-js";
 import ContactForm from "./ContactForm";
@@ -14,10 +13,10 @@ import AddressForm from "./AddressForm";
 import CheckoutItems from "./CheckoutItems";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { getPaymentIntent } from "@/requests/OrderRequest";
 const stripePromise = loadStripe(
   "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
 );
-
 const CheckoutPageRenderer = () => {
   const [clientSecret, setClientSecret] = useState(undefined);
     const { products } = useContext(CartContext);
@@ -43,14 +42,7 @@ const CheckoutPageRenderer = () => {
     if (addresConfirmed) {
       let cart  = {...cartState}
       cart.shipping = address;
-      fetch(
-        `http://localhost:5000/api/payment/create-payment-intent/${email}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(cart),
-        }
-      )
+      getPaymentIntent(email, JSON.stringify(cart))
         .then((res) => res.json())
         .then((data) => {
           let cs = data.clientSecret;
