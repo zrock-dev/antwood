@@ -180,9 +180,9 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
     var sneakersWithColor []models.SneakerWithColors
     var sneakerWithColor models.SneakerWithColors
     for _, relatedProduct := range relatedProducts  {
-        id := int64(relatedProduct.ID.Timestamp())
-        colorID := int64(relatedProduct.Colors[0].ID)
-   		sneakerWithColor = getSeakerRelatedWithColor(strconv.Itoa(id), strconv.Itoa(colorID))
+        id := relatedProduct.ID.Hex()
+        colorID := relatedProduct.Colors[0].ID.Hex()
+   		sneakerWithColor = getSeakerRelatedWithColor(id, colorID)
    		sneakersWithColor = append(sneakersWithColor, sneakerWithColor)
    	}
 
