@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"log"
+	"os"
 	"shopping-card-management/app/models"
 	"shopping-card-management/app/repository"
 
@@ -59,7 +60,7 @@ func CreatePaymentIntent(c *fiber.Ctx) error {
 
 
 func HandlePaymentStatus(c *fiber.Ctx) error {
-	stripe.Key = "sk_test_51OCWLLAx0MjRmRXcKRpa1l8BHpfWWOgABHD3618tkI2hQYTAasIbXwMsrZ0p5uYcbJaAVEy7qbfkSr5HfMZvqLVD00OkKmfBWA"
+	stripe.Key = os.Getenv("PAYMENT_SECRET_KEY")
 	
 	paymentintentId := c.Params("paymentintentid")
 	status := c.Params("status")

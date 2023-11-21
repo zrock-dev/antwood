@@ -14,7 +14,6 @@ import (
 func main (){
 	uploadEnv()
 	database.Connect()
-	//database.Connect()
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "http://localhost",

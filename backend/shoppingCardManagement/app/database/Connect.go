@@ -20,7 +20,6 @@ func Connect() {
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongodb_uri))
 	if err != nil {
 		fmt.Println("Error connecting to MongoDB")
-		//panic(err)
 	} else {
 		log.Println("Connected to MongoDB")
 	}

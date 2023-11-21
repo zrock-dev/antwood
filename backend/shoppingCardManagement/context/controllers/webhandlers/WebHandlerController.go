@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"shopping-card-management/app/repository"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,7 +22,7 @@ func HandleWebhook(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusRequestEntityTooLarge)
 	}
 
-	endpointSecret := "whsec_76f8aecca259c670e70605a683c7d5ce81de35b95858e72552a02bc09faf1bea"
+	endpointSecret := os.Getenv("STRIPE_WEBHOOK_SECRET")
 
 	event, err := webhook.ConstructEventWithOptions(payload, c.Get("Stripe-Signature"), endpointSecret, webhook.ConstructEventOptions{
 		IgnoreAPIVersionMismatch: true,
