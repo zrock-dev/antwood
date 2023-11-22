@@ -1,10 +1,10 @@
-import Layout from "@/components/Layout";
+import NormalLayout from "@/components/layouts/NormalLayout";
 import ProfileRenderer from "@/components/profile/ProfileRenderer";
 const ProfileLayout = ({ children }) => {
   return (
-    <Layout>
-    <ProfileRenderer>{children}</ProfileRenderer>
-    </Layout>
+    <NormalLayout>
+      <ProfileRenderer>{children}</ProfileRenderer>
+    </NormalLayout>
   );
 };
 export default ProfileLayout;
