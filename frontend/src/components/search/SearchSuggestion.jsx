@@ -1,6 +1,11 @@
 import SearchIcon from '@/icons/SearchIcon';
 
-const SearchSuggestion = ({ suggestion, input, selectSuggestion }) => {
+const SearchSuggestion = ({
+	suggestion,
+	input,
+	selectSuggestion,
+	removeSuggestionsOver
+}) => {
 	const highlightMatch = (suggestion, input) => {
 		const regex = new RegExp(`(${input})`, 'gi');
 		return suggestion
@@ -14,6 +19,7 @@ const SearchSuggestion = ({ suggestion, input, selectSuggestion }) => {
 		<button
 			className="search-suggestion"
 			onClick={() => selectSuggestion(suggestion)}
+			onMouseOver={removeSuggestionsOver}
 		>
 			<SearchIcon />
 			{highlightMatch(suggestion, input)}

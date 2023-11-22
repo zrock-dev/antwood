@@ -13,13 +13,22 @@ const Searcher = ({
 	searchRoute = '/products/search'
 }) => {
 	const router = useRouter();
-	const [input, setInput] = useState('');
+	const suggestionsElements = useRef(null);
 	const [suggestions, setSuggestions] = useState([]);
-	const [isOpen, setOpen] = useState({
+	const [searchState, setSearchState] = useState({
+		input: '',
 		isTyping: true,
-		noSuggested: true
+		noSuggested: true,
+		notMoving: true,
+		indexSuggesion: -1
 	});
 	const suggestionContainer = useRef();
+
+	const handleKeyAcctions = (event) => {
+		event.key === 'Enter' && search(searchState.input);
+		event.key === 'ArrowDown' && moveToBottomSuggestion();
+		event.key === 'ArrowUp' && moveToTopSuggestion();
+	};
 
 	const search = (inputToSearch) => {
 		if (inputToSearch.trim() !== '') {
@@ -28,29 +37,87 @@ const Searcher = ({
 	};
 
 	const selectSuggestion = (suggestion) => {
-		setInput(suggestion);
-		setOpen({
+		setSearchState({
+			input: suggestion,
 			isTyping: false,
 			noSuggested: false
 		});
 		search(suggestion);
 	};
 
+	const moveToTopSuggestion = () => {
+		const newIndex =
+			searchState.indexSuggesion <= 0
+				? suggestions.length - 1
+				: searchState.indexSuggesion - 1;
+
+		setSearchState({
+			...searchState,
+			input: suggestions[newIndex],
+			indexSuggesion: newIndex,
+			notMoving: false
+		});
+	};
+
+	const moveToBottomSuggestion = () => {
+		const newIndex =
+			searchState.indexSuggesion === suggestions.length - 1
+				? 0
+				: searchState.indexSuggesion + 1;
+
+		setSearchState({
+			...searchState,
+			input: suggestions[newIndex],
+			indexSuggesion: newIndex,
+			notMoving: false
+		});
+	};
+
+	const removeSuggestionsOver = () => {
+		if (suggestionsElements && suggestionsElements.current) {
+			let childNode;
+			for (let i = 0; i < suggestionsElements.current.childNodes.length; i++) {
+				childNode = suggestionsElements.current.childNodes[i];
+				if (childNode.nodeType === Node.ELEMENT_NODE) {
+					childNode.classList.remove('over');
+				}
+			}
+		}
+	};
+
 	useEffect(() => {
-		if (isOpen.noSuggested && isOpen.isTyping) {
-			setOpen({
-				...isOpen,
+		if (
+			searchState.input &&
+			searchState.noSuggested &&
+			searchState.isTyping &&
+			searchState.notMoving
+		) {
+			setSearchState({
+				...searchState,
 				isTyping: true
 			});
-			if (input.trim() !== '') {
-				fecthSuggestions(input)
+			if (searchState.input.trim() !== '') {
+				fecthSuggestions(searchState.input)
 					.then((data) => setSuggestions(data.names))
 					.catch((e) => console.log(e));
 			} else {
 				setSuggestions([]);
 			}
 		}
-	}, [input]);
+	}, [searchState.input]);
+
+	useEffect(() => {
+		if (
+			suggestionsElements &&
+			suggestionsElements.current &&
+			searchState?.indexSuggesion > -1
+		) {
+			removeSuggestionsOver();
+			suggestionsElements.current.childNodes[
+				searchState.indexSuggesion
+			].classList.add('over');
+		}
+	}, [searchState.indexSuggesion]);
 
 	useEffect(() => {
 		let onClickHandler = (e) => {
@@ -58,7 +125,10 @@ const Searcher = ({
 				suggestionContainer.current &&
 				!suggestionContainer.current.contains(e.target)
 			) {
-				setOpen(false);
+				setSearchState({
+					...searchState,
+					isTyping: false
+				});
 			}
 		};
 
@@ -74,35 +144,41 @@ const Searcher = ({
 				<input
 					type="text"
 					placeholder="Search"
-					value={input}
+					value={searchState.input}
+					onKeyDown={handleKeyAcctions}
 					onChange={(e) => {
-						setInput(e.target.value);
-						setOpen({
+						setSearchState({
+							...searchState,
+							input: e.target.value,
 							isTyping: true,
-							noSuggested: true
+							noSuggested: true,
+							notMoving: true
 						});
 					}}
 					autoComplete="false"
-					onKeyDown={(e) => {
-						e.key === 'Enter' && search(input);
-					}}
 				/>
-				<button title="search" onClick={() => search(input)}>
+				<button title="search" onClick={() => search(searchState.input)}>
 					<SearchIcon />
 				</button>
 			</div>
-			{isOpen.noSuggested && isOpen.isTyping && suggestions?.length > 0 && (
-				<div className="search-suggestions-container">
-					{suggestions.map((suggestion, index) => (
-						<SearchSuggestion
-							key={index}
-							suggestion={suggestion}
-							input={input}
-							selectSuggestion={selectSuggestion}
-						/>
-					))}
-				</div>
-			)}
+			{searchState.noSuggested &&
+				suggestions?.length > 0 &&
+				searchState.isTyping && (
+					<div
+						className="search-suggestions-container"
+						ref={suggestionsElements}
+					>
+						{suggestions.map((suggestion, index) => (
+							<SearchSuggestion
+								key={index}
+								suggestion={suggestion}
+								input={searchState.input}
+								selectSuggestion={selectSuggestion}
+								removeSuggestionsOver={removeSuggestionsOver}
+							/>
+						))}
+					</div>
+				)}
 		</div>
 	);
 };

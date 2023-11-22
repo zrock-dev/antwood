@@ -71,3 +71,7 @@
 		font-weight: 900;
 	}
 }
+
+.search-suggestion.over {
+	background-color: var(--secondary-color);
+}
