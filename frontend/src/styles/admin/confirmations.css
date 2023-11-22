@@ -1,0 +1,40 @@
+.modal-confirmation-container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	width: 50%;
+	padding: 35px;
+
+	background-color: var(--primary-color);
+}
+
+.modal-confirmation-title {
+	text-transform: uppercase;
+}
+
+.modal-confirmation-sub-container {
+	display: flex;
+	gap: 15px;
+}
+
+.modal-confirmation-sub-container.right {
+	justify-content: end;
+}
+
+.modal-confirmation-sub-container.space {
+	justify-content: space-between;
+}
+
+.modal-confirmation-sub-container.top {
+	align-items: start;
+
+    & button {
+        border: none;
+        background-color: transparent;
+    }
+}

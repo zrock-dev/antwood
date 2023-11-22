@@ -47,7 +47,7 @@ const QuantityRenderer = ({
 	}, []);
 
 	return (
-		<button
+		<div
 			name="quantity-button"
 			className={style}
 			onClick={() => setOpen(!isOpen)}
@@ -67,7 +67,7 @@ const QuantityRenderer = ({
 				</div>
 			)}
 			{text} {amount} <ChevronDown />
-		</button>
+		</div>
 	);
 };
 
