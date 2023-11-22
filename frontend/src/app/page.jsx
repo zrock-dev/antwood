@@ -4,6 +4,7 @@ import ProductSuggestions from '@/components/products/product_renderers/ProductS
 import '../styles/landing_page/page.css';
 
 export default function LandingPage() {
+
 	return (
 		<Layout>
 			<main className="landing-page-main-container">
