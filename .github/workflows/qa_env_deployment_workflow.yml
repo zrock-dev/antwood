@@ -1,11 +1,13 @@
 name: 'Testing env deployment'
 run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
 
-on: []
+on: 
+  push:
+    branches:
+      - "testing_env"
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Send update signal to server
