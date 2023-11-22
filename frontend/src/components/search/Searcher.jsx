@@ -8,7 +8,10 @@ import SearchIcon from '@/icons/SearchIcon';
 import SearchSuggestion from './SearchSuggestion';
 import { useRouter } from 'next/navigation';
 
-const Searcher = () => {
+const Searcher = ({
+	fecthSuggestions = getSearchSuggestions,
+	searchRoute = '/products/search'
+}) => {
 	const router = useRouter();
 	const [input, setInput] = useState('');
 	const [suggestions, setSuggestions] = useState([]);
@@ -20,7 +23,7 @@ const Searcher = () => {
 
 	const search = (inputToSearch) => {
 		if (inputToSearch.trim() !== '') {
-			router.push(`/products/search/${inputToSearch}`);
+			router.push(`${searchRoute}/${inputToSearch}`);
 		}
 	};
 
@@ -40,7 +43,7 @@ const Searcher = () => {
 				isTyping: true
 			});
 			if (input.trim() !== '') {
-				getSearchSuggestions(input)
+				fecthSuggestions(input)
 					.then((data) => setSuggestions(data.names))
 					.catch((e) => console.log(e));
 			} else {
