@@ -4,11 +4,9 @@ import { useEffect, useState } from 'react';
 import { getRelatedSneakersById } from '@/requests/SneakersRequest';
 import RelatedProductsSection from './RelatedProductsSection';
 import '../../../styles/product/related_products.css';
-import { useRouter } from 'next/navigation';
 
 const RelatedProductsRenderer = ({ id }) => {
-	const router = useRouter();
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
 
 	useEffect(() => {
         getRelatedSneakersById(id)
@@ -29,4 +27,4 @@ const RelatedProductsRenderer = ({ id }) => {
 	);
 };
 
-export default SingleProductRenderer;
+export default RelatedProductsRenderer;

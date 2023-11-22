@@ -163,23 +163,19 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 	defer cursor.Close(context.TODO())
 
 	if !cursor.TryNext(context.TODO()) {
-        errorMessage := "No related products found or error retrieving data."
+        defaultErrorMessage := "No related products found or error retrieving data."
         if cursor.Err() != nil {
-            errorMessage = cursor.Err().Error()
+            defaultErrorMessage = cursor.Err().Error()
         }
-        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": errorMessage})
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": defaultErrorMessage})
     }
 
     for cursor.Next(context.TODO()) {
         var product models.Sneaker
         if err := cursor.Decode(&product); err != nil {
-            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error decoding product data: " + err.Error()})
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": fmt.Sprintf("Error decoding product data: "), err.Error()})
         }
         relatedProducts = append(relatedProducts, product)
-    }
-
-    if len(relatedProducts) == 0 {
-        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "No related products were found."})
     }
 
     var sneakersWithColor []models.SneakerWithColors

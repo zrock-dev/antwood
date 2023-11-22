@@ -17,4 +17,4 @@ const RelatedProductsSection = ({ relatedProducts }) => {
   );
 };
 
-export default RelatedProducts;
+export default RelatedProductsSection;
