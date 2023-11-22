@@ -57,20 +57,39 @@
 
 .general-button {
 	width: 100%;
-	padding: 15px 15px;
+	padding: 15px;
 	font-size: 14px;
 	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
 
-	border: none;
+	border: 1px solid black;
 	background-color: var(--secondary-color);
 	color: var(--primary-color);
+
+	& svg {
+		fill: white;
+	}
 
 	&:hover {
 		border: 1px solid var(--secondary-color);
 
 		background-color: var(--primary-color);
 		color: var(--secondary-color);
+
+		& svg {
+			fill: black;
+		}
 	}
+}
+
+.general-button.narrow {
+	font-weight: 500 !important;
+	font-size: 18px !important;
+	padding: 5px 15px !important;
+	text-align: center;
 }
 
 .general-button.disabled {
@@ -83,6 +102,11 @@
 		background-color: var(--secondary-color);
 		color: var(--primary-color);
 	}
+}
+
+.general-button.auto {
+	width: auto;
+	padding: 15px 30px;
 }
 
 .general-button.white {
@@ -109,6 +133,25 @@
 	}
 }
 
+.general-button.gray {
+	background-color: var(--medium-gray);
+	color: white;
+	border: none;
+
+	&:hover {
+		background-color: var(--dark-black);
+	}
+}
+
+.general-button.gray.disabled {
+	opacity: 0.3;
+
+	&:hover {
+		background-color: var(--medium-gray);
+		color: white;
+	}
+}
+
 #overlay {
 	display: none;
 	position: fixed;
@@ -121,4 +164,28 @@
 	z-index: 500;
 }
 
+.logo {
+	position: relative;
 
+	font-weight: 900;
+	font-size: 20px;
+
+	color: white;
+
+	& svg {
+		position: absolute;
+		top: 0;
+		right: -30px;
+		transform: rotate(90deg);
+
+		height: 0.6em;
+	}
+}
+
+.logo.hover:hover {
+	color: var(--light-gray);
+
+	& svg {
+		fill: var(--light-gray);
+	}
+}

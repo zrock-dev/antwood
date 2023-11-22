@@ -1,15 +1,7 @@
 name: 'Testing env deployment'
 run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
 
-on:
-  workflow_run:
-    workflows:
-      - 'Backend Account Management Workflow'
-      - 'Backend Product Management Workflow'
-      - 'Frontend Workflow'
-    types:
-      - completed
-  workflow_dispatch:
+on: []
 
 jobs:
   deploy:
@@ -23,3 +15,4 @@ jobs:
           username: ${{ secrets.QA_USERNAME }}
           key: ${{ secrets.QA_KEY }}
           script: ./tools/run_images_upgrade
+
