@@ -163,7 +163,7 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       <div className="tags-ctn">
         {tags.map((tag) => (
           <div className="tag" key={tag}>
-            {tag}{" "}
+            {tag}
             <i
               className="fa-solid fa-x"
               onClick={() => handleRemoveTag(tag)}

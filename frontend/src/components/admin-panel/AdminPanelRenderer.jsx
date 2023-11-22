@@ -1,6 +1,7 @@
 "use client"
 import "@/styles/admin_panel/admin_panel.css"
 import AdminPanelForm from "./AdmnPanelForm"
+import AdminPanelColorsForm from "./AdminPanelColorsForm";
 import { useState } from "react";
 import { toast } from "sonner";
 const SNEAKER_DATA = {
@@ -26,17 +27,17 @@ const AdminPanelRenderer = () => {
 
 
     return (
-        <div className="admin-panel-ctn">
-                <AdminPanelForm 
-                form={form} 
-                setForm={setForm} 
-                resetForm={resetForm} 
-                saveSneaker={saveSneaker}/>
-            <div className="admin-panel-colors-ctn">
-                    <h1>colors</h1>
-            </div>
-        </div>
-)
+      <div className="admin-panel-ctn">
+        <AdminPanelForm
+          form={form}
+          setForm={setForm}
+          resetForm={resetForm}
+          saveSneaker={saveSneaker}
+        />
+        <AdminPanelColorsForm  setForm={setForm}/>
+       
+      </div>
+    );
 }
 
 export default AdminPanelRenderer
