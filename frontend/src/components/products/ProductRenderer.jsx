@@ -5,7 +5,7 @@ import '../../styles/products/products.css';
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
 
-const ProductRenderer = ({ fetchMethod }) => {
+const ProductRenderer = ({ fetchMethod, ProductCardView = ProductCard }) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
@@ -44,7 +44,7 @@ const ProductRenderer = ({ fetchMethod }) => {
 		<>
 			<div className="products-main-container">
 				{products.map((product) => (
-					<ProductCard key={product._id} product={product} />
+					<ProductCardView key={product._id} product={product} />
 				))}
 			</div>
 			{hasMore && (

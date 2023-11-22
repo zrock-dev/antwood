@@ -57,6 +57,33 @@ func SendSneakerByID(c *fiber.Ctx) error {
 	return c.JSON(sneakerWithColors)
 }
 
+func sendSneakersUsingPipeline(pipeline mongo.Pipeline, c *fiber.Ctx) error {
+	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer cursor.Close(context.TODO())
+
+	var sneakersWithColors []models.SneakerWithColors
+	for cursor.Next(context.TODO()) {
+		var sneakerWithColors models.SneakerWithColors
+		if err := cursor.Decode(&sneakerWithColors); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
+	}
+
+	if len(sneakersWithColors) == 0 {
+		sneakersWithColors = []models.SneakerWithColors{}
+	}
+
+	return c.JSON(struct {
+		Sneakers []models.SneakerWithColors `json:"sneakers"`
+	}{
+		Sneakers: sneakersWithColors,
+	})
+}
+
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	page := c.Query("page", "1")
 	pageSize := c.Query("pageSize", "9")
@@ -94,32 +121,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		},
 	}
 
-	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
-	}
-	defer cursor.Close(context.TODO())
-
-	var sneakersWithColors []models.SneakerWithColors
-	for cursor.Next(context.TODO()) {
-		var sneakerWithColors models.SneakerWithColors
-		if err := cursor.Decode(&sneakerWithColors); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
-	}
-
-	if len(sneakersWithColors) == 0 {
-		sneakersWithColors = []models.SneakerWithColors{}
-	}
-
-	return c.JSON(struct {
-		Sneakers []models.SneakerWithColors `json:"sneakers"`
-		Page     int                        `json:"page"`
-	}{
-		Sneakers: sneakersWithColors,
-		Page:     pageInt,
-	})
+	return sendSneakersUsingPipeline(pipeline, c)
 }
 
 func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
