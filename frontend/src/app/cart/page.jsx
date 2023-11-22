@@ -1,11 +1,11 @@
-import Layout from '@/components/Layout';
 import CartRenderer from '@/components/cart/CartRenderer';
+import NormalLayout from '@/components/layouts/NormalLayout';
 
 const CartPage = () => {
 	return (
-		<Layout>
+		<NormalLayout>
 			<CartRenderer />
-		</Layout>
+		</NormalLayout>
 	);
 };
 

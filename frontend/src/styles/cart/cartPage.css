@@ -89,6 +89,8 @@
 
 .cart-page-amount.amount-button {
 	display: flex;
+
+	border: none !important;
 }
 
 .cart-empty {

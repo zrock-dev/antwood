@@ -11,6 +11,7 @@ func RouteSneakers(server *fiber.App) {
 	server.Get("/sneakers", responses.SendSneakersByPagination)
 	server.Get("/sneaker/:id", responses.SendSneakerByID)
 	server.Get("/sneakers/colors/:sneakerId/:sneakerColorId", responses.SendColorRelatedProduct)
+	server.Get("/sneaker/quantity/:id", responses.SendSneakerAvgQuantity)
 
 	server.Post("/sneakers/colors/all", responses.SendColorRelatedProducts)
 	server.Post("/sneaker", requests.InsertSneaker)

@@ -1,11 +1,11 @@
-import Layout from '@/components/Layout';
+import NormalLayout from '@/components/layouts/NormalLayout';
 import ProductSearch from '@/components/products/product_renderers/ProductSearch';
 
 const SearchPage = ({ params }) => {
 	return (
-		<Layout>
+		<NormalLayout>
 			<ProductSearch input={params.input} />
-		</Layout>
+		</NormalLayout>
 	);
 };
 

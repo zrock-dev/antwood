@@ -12,6 +12,7 @@ import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
 import { toast } from "sonner";
+
 function AuthFormWrapper({ isModalOpen }) {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
