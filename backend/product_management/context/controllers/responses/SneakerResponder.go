@@ -2,8 +2,8 @@ package responses
 
 import (
 	"context"
-	"strconv"
 	"fmt"
+	"strconv"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -124,17 +124,15 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 	})
 }
 
-
-
 func SendRelatedProductsByTags(c *fiber.Ctx) error {
-    const RELATED_PRODUCTS_LIMIT = 10
+	const RELATED_PRODUCTS_LIMIT = 10
 	productID := c.Params("id")
 
 	var currentProduct models.Sneaker
 	objectID, err := primitive.ObjectIDFromHex(productID)
 	if err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fmt.Sprintf("Invalid product ID: %s is not a valid ObjectID", productID)})
-    }
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fmt.Sprintf("Invalid product ID: %s is not a valid ObjectID", productID)})
+	}
 
 	filter := bson.D{{Key: "_id", Value: objectID}}
 	err = database.SneakerCollection.FindOne(context.TODO(), filter).Decode(&currentProduct)
@@ -145,16 +143,16 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 	var relatedProducts []models.Sneaker
 
 	var tagsFilter []bson.E
-    for _, tag := range currentProduct.Tags {
-    	tagsFilter = append(tagsFilter, bson.E{"tags", bson.D{{"$in", tag}}})
-    }
+	for _, tag := range currentProduct.Tags {
+		tagsFilter = append(tagsFilter, bson.E{"tags", bson.D{{"$in", tag}}})
+	}
 
-    filter = bson.D{
-    	{"$or", tagsFilter},
-    	{"_id", bson.D{{"$ne", currentProduct.ID}}},
-    }
+	filter = bson.D{
+		{"$or", tagsFilter},
+		{"_id", bson.D{{"$ne", currentProduct.ID}}},
+	}
 
-    options := options.Find().SetLimit(RELATED_PRODUCTS_LIMIT)
+	options := options.Find().SetLimit(RELATED_PRODUCTS_LIMIT)
 
 	cursor, err := database.SneakerCollection.Find(context.TODO(), filter, options)
 	if err != nil {
@@ -163,29 +161,29 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 	defer cursor.Close(context.TODO())
 
 	if !cursor.TryNext(context.TODO()) {
-        defaultErrorMessage := "No related products found or error retrieving data."
-        if cursor.Err() != nil {
-            defaultErrorMessage = cursor.Err().Error()
-        }
-        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": defaultErrorMessage})
-    }
+		defaultErrorMessage := "No related products found or error retrieving data."
+		if cursor.Err() != nil {
+			defaultErrorMessage = cursor.Err().Error()
+		}
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": defaultErrorMessage})
+	}
 
-    for cursor.Next(context.TODO()) {
-        var product models.Sneaker
-        if err := cursor.Decode(&product); err != nil {
-            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": fmt.Sprintf("Error decoding product data: "), err.Error()})
-        }
-        relatedProducts = append(relatedProducts, product)
-    }
+	for cursor.Next(context.TODO()) {
+		var product models.Sneaker
+		if err := cursor.Decode(&product); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": fmt.Sprintf("Error %s decoding product data: ", err.Error())})
+		}
+		relatedProducts = append(relatedProducts, product)
+	}
 
-    var sneakersWithColor []models.SneakerWithColors
-    var sneakerWithColor models.SneakerWithColors
-    for _, relatedProduct := range relatedProducts  {
-        id := relatedProduct.ID.Hex()
-        colorID := relatedProduct.Colors[0].ID.Hex()
-   		sneakerWithColor = getSeakerRelatedWithColor(id, colorID)
-   		sneakersWithColor = append(sneakersWithColor, sneakerWithColor)
-   	}
+	var sneakersWithColor []models.SneakerWithColors
+	var sneakerWithColor models.SneakerWithColors
+	for _, relatedProduct := range relatedProducts {
+		id := relatedProduct.ID.Hex()
+		colorID := relatedProduct.Colors[0].ID.Hex()
+		sneakerWithColor = getSeakerRelatedWithColor(id, colorID)
+		sneakersWithColor = append(sneakersWithColor, sneakerWithColor)
+	}
 
 	return c.JSON(sneakersWithColor)
 }
@@ -279,4 +277,3 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 
 	return c.JSON(sneakersData)
 }
-
