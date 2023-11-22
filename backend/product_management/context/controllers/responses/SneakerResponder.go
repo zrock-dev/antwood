@@ -185,7 +185,11 @@ func SendRelatedProductsByTags(c *fiber.Ctx) error {
 		sneakersWithColor = append(sneakersWithColor, sneakerWithColor)
 	}
 
-	return c.JSON(sneakersWithColor)
+	return c.JSON(struct {
+		Sneakers []models.SneakerWithColors `json:"sneakers"`
+	}{
+		Sneakers: sneakersWithColor,
+	})
 }
 
 func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {

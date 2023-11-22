@@ -8,22 +8,37 @@ import '../../../styles/product/related_products.css';
 const RelatedProductsRenderer = ({ id }) => {
     const [products, setProducts] = useState([]);
 
-	useEffect(() => {
-        getRelatedSneakersById(id)
-            .then((response) => {
-                setProducts(response);
-            })
-            .catch((e) => {
-                console.error("Error fetching related sneakers:", e);
-            });
-    }, [id]);
+    const getRelateds = async () => {
+        try {
+          const data = await getRelatedSneakersById(id);
+          if (data.sneakers.length === 0) {
+            setProducts([]);
+          } else {
+            setProducts((prev) => [...prev, ...data.sneakers]);
+          }
+        } catch (error) {
+          console.error("Error fetching related sneakers:", error);
+        }
+      };
+    
+      useEffect(() => {
+        getRelateds(); 
+      }, []); 
 
-	return products ? (
-		<RelatedProductsSection relatedProducts={products} />
+	return products.length > 0 ? (
+        <div> 
+            <h2>Related Products</h2>
+            <RelatedProductsSection relatedProducts={products} />
+        </div>
 	) : (
-		<div className="loader-container">
-			<span className="loader"></span>
-		</div>
+
+        <div>
+            <h2>Related Products</h2>
+		    <div className="Not found">
+			    <h4>No related products was found</h4>
+		    </div>
+        </div>
+        
 	);
 };
 
