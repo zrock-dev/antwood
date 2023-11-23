@@ -16,6 +16,7 @@
 .navbar-sub-container {
 	display: flex;
 	align-items: center;
+	gap: 15px;
 }
 
 .navbar-sub-container.left {

@@ -8,6 +8,7 @@ const AdminGallery = () => {
 		<ProductRenderer
 			fetchMethod={getAllProductsByPagination}
 			ProductCardView={AdminProductCard}
+			redirection="/admin"
 		/>
 	);
 };

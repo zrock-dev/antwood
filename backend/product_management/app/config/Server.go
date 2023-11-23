@@ -12,13 +12,13 @@ var Server = fiber.New()
 var serverPort = ":4000"
 
 func RunServer() {
-
 	utils.LoadGodotenv()
 	database.ConnectToTheDatabase()
 
 	routes.RouteHome(Server)
 	routes.RouteSneakers(Server)
 	routes.RouteSneakerColors(Server)
+	routes.RouteSearch(Server)
 	routes.RouteCloudinary(Server)
 	routes.RouteReview(Server)
 
