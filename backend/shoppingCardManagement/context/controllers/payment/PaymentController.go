@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"log"
+	"net/http"
 	"os"
 	"shopping-card-management/app/models"
 	"shopping-card-management/app/repository"
@@ -90,7 +93,7 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 
-	_ , err = repository.UpdateUnpaidOrderPaidById(orderObjId.Hex(), "paid")
+	err = HandleOnIntentSuccess(orderId)
 
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -98,7 +101,6 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 			"status" : fiber.StatusForbidden,
 		})
 	}
-
 
 
 	order, err:= repository.FindOUnpaidrderById(orderObjId)
@@ -132,4 +134,64 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 			"status" : fiber.StatusBadRequest,
 		})
 	}
+}
+
+
+func HandleOnIntentSuccess(orderId string) error {
+
+	orderObjectId , err := primitive.ObjectIDFromHex(orderId)
+
+	if err!= nil {
+		return err
+	}
+
+	order, err := repository.FindOUnpaidrderById(orderObjectId)
+
+	if err != nil {
+		return err
+	}
+
+	orderJSON, err := json.Marshal(order.Products)
+	if err != nil {
+		log.Println("Error parsing sneakers JSON:", err)
+		return err
+	}
+
+	req, err := http.NewRequest("PUT", "http://localhost/sneakers/quantities", bytes.NewBuffer(orderJSON))
+	if err != nil {
+		log.Println("Error when creating request:", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error when sending request:", err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusOK {
+		log.Println("Error when sending request:", err)
+		return &fiber.Error{
+			Code:    http.StatusNotAcceptable,
+			Message: "Error updating quantities",
+		}
+	}
+
+	if err != nil {
+		log.Println("Error obtaining the order JSON:", err)
+		return err
+	}
+
+	_ , err = repository.UpdateUnpaidOrderPaidById(orderId, "paid")
+
+	if err != nil{
+		return err 
+	}
+
+	return nil
 }
