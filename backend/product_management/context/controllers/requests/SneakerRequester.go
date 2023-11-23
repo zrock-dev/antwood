@@ -12,6 +12,8 @@ import (
 	"product_management/app/models"
 )
 
+
+
 func InsertSneaker(c *fiber.Ctx) error {
 	var newSneaker = models.DefaultSneaker()
 

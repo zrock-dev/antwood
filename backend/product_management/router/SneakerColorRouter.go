@@ -7,7 +7,7 @@ import (
 )
 
 func RouteSneakerColors(server *fiber.App) {
-	server.Post("/sneakercolor", requests.InsertSneakerColor)
+	server.Post("/sneakercolor", requests.InsertSneakerNewColor)
 	server.Post("/sneakercolors", requests.InsertManySneakerColors)
 
 	server.Put("/sneakercolor/:id", requests.UpdateSneakerColorById)

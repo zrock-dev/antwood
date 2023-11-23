@@ -50,10 +50,18 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
     }
 
 
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    if ( name == "price") {
+      setForm({
+        ...form,
+        [name]: Number(value),
+      });
+    }else{
+          setForm({
+            ...form,
+            [name]: value,
+          });
+    }
+
   };
 
   const addTag = (tag) => {

@@ -2,10 +2,12 @@ package requests
 
 import (
 	"context"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"product_management/app/database"
 	"product_management/app/models"
@@ -42,6 +44,42 @@ func InsertSneakerColor(c *fiber.Ctx) error {
 		ID      primitive.ObjectID `json:"id"`
 	}{Message: "Successfully created sneaker color", ID: insertedID})
 }
+func InsertOneSneakerColor(sneakerColor models.SneakerColor) (*mongo.InsertOneResult, error) {
+	insertResult, err := database.SneakerColorsCollection.
+		InsertOne(context.TODO(), sneakerColor)
+	return insertResult, err
+}
+
+func InsertSneakerNewColor(c *fiber.Ctx) error {
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Error when parsing the form")
+	}
+	sneakerID := c.Query("sneakerid")
+	newSneakerColor, _, _ := ParseValidSneakerColor(form)
+
+	insertResult, err := InsertOneSneakerColor(newSneakerColor)
+	if err != nil {
+		return c.Status(500).SendString("Error inserting the sneaker color")
+	}
+
+	insertedID, ok := insertResult.InsertedID.(primitive.ObjectID)
+
+	if !ok {
+		return c.Status(500).SendString("Error getting the sneaker id")
+	}
+
+	isRelated, _ := AddNewColorsToSneaker(sneakerID, []models.ColorObject{{ID: insertedID, Color: form.Value["color"][0]}})
+	if !isRelated {
+		return c.Status(500).SendString("Error relating the sneaker colors to the main sneaker")
+	}
+
+	return c.JSON(struct {
+		Message string             `json:"message"`
+		ID      primitive.ObjectID `json:"id"`
+	}{Message: "Successfully created sneaker color", ID: insertedID})
+}
+
 
 func InsertManySneakerColors(c *fiber.Ctx) error {
 	var sneakerColors []models.SneakerColor
@@ -99,6 +137,39 @@ func UpdateSneakerColorById(c *fiber.Ctx) error {
 
 	return c.SendString(message)
 }
+
+
+func AddNewColorsToSneaker(sneakerID string, insertedColors []models.ColorObject) (bool, string) {
+	return UpdateNewSneakerById(
+		sneakerID,
+		bson.M{"$push": bson.M{"colors": bson.M{"$each": insertedColors}},
+			"$set": bson.M{"lastDate": primitive.NewDateTimeFromTime(time.Now())}})
+}
+
+func UpdateNewSneakerById(sneakerID string, toUpdate bson.M) (bool, string) {
+	if sneakerID != "" {
+		id, err := primitive.ObjectIDFromHex(sneakerID)
+		if err != nil {
+			return false, "Error getting the sneaker id"
+		}
+		_, err = database.SneakerCollection.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": id},
+			toUpdate,
+		)
+
+		if err != nil {
+			return false, "Error updating the sneaker data"
+		}
+
+		return true, "Sneaker updated successfully"
+	}
+
+	return false, "Invalid sneaker id"
+}
+
+
+
 
 func AddNewImageToSneakerColor(c *fiber.Ctx) error {
 	sneakerColorID := c.Params("id")

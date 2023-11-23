@@ -35,7 +35,10 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
     if (!isValidColor(color)) return;
 
     if (!colors.includes(color)) {
-        
+        onSelectColor({
+          name: color,
+          id: "",
+        });
     }
     togglePopup();
   };
@@ -49,14 +52,14 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
   return (
     <div className={`${colorPickerStyle.color_picker}  ${className}`}>
       <div className={colorPickerStyle.popup_btn}>
-        <div ref={popupBtnRef}>
-          <Button btnStyle="third_btn" onClick={togglePopup}>
-            New Color <i className="fa-solid fa-plus"></i>
-          </Button>
-        </div>
         <div className={colorPickerStyle.color_picker_ctn}>
+          <div ref={popupBtnRef}>
+            <Button btnStyle="third_btn" onClick={togglePopup}>
+              New Color <i className="fa-solid fa-plus"></i>
+            </Button>
+          </div>
           {colors.map((c) => (
-            <Color name={c.color} key={c.id} onClick={() => onSelectColor(c)} />
+            <Color name={c.name} key={c.id} onClick={() => onSelectColor(c)} />
           ))}
         </div>
       </div>
