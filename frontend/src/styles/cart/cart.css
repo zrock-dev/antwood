@@ -57,3 +57,13 @@
 	background-color: var(--primary-color);
 	border: 1px solid var(--medium-gray);
 }
+
+
+
+.out-of-stock-card {
+	color: white;
+	position: absolute;
+	background-color: red;
+	padding: 4px;
+	border-radius: 2px;
+}

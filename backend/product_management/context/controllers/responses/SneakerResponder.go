@@ -213,3 +213,41 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 
 	return c.JSON(sneakersData)
 }
+
+
+
+
+func SendSneakerQuantities(c *fiber.Ctx) error {
+	type SneakersTypes struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+		Size 		   float32 `json:"size,omitempty"`
+		Quantity 	   int     `json:"quantity"`
+	}
+	var sneakers []SneakersTypes
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for index, sneaker := range sneakers {
+		size := GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+		sneakers[index].Quantity = size
+	}
+
+	return c.JSON(sneakers)
+}
+
+
+
+func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int {
+	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+		for _, sneakerType := range sneakerWithColor.Types {
+			for _, sneakerSize := range sneakerType.Sizes {
+				if sneakerSize.Value == size {
+					return sneakerSize.Quantity
+				}
+			}
+	}
+	return 0
+}
+

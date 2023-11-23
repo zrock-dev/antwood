@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import { getUser } from "@/requests/AuthRequest";
+import { useRouter } from "next/router";
 export const AuthContext = createContext(null);
 
 export function useAuth() {
@@ -55,6 +56,12 @@ export const AuthProvider = ({ children }) => {
 
 
 
+  useEffect(() => {
+    
+    if(!isAuthenticated){
+
+    }
+  },[isAuthenticated])
 
   return (
     <AuthContext.Provider

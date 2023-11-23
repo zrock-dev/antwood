@@ -15,6 +15,25 @@ export const getSneakerQuantityInformation = async (sneakerId) => {
 	return response.data;
 };
 
+export const getSneakerQuantities = async (sneakers) => {
+	const response = await axios.post(`/sneakers/quantities`, sneakers, {
+		headers: {
+			'Content-Type': 'application/json',
+			Accept: 'application/json'
+		}
+	});
+	return response.data;
+};
+
+export const confirmAvailableSizes = async (body) => {
+	const response = await axios.put('/sneakers/confirm/quantities', body, {
+		headers: {
+			'Content-Type': 'application/json',
+			Accept: 'application/json'
+		}
+	});
+	return response.data;
+};
 export const getSearchSuggestions = async (input = '') => {
 	const response = await axios.get(
 		`/sneakers/search/suggestions?input=${input}`
