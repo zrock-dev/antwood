@@ -24,7 +24,8 @@ const Searcher = ({
 		notMoving: true,
 		indexSuggesion: -1
 	});
-	const suggestionContainer = useRef();
+
+	const searchContainer = useRef();
 
 	const handleKeyAcctions = (event) => {
 		event.key === 'Enter' && search(searchState.input);
@@ -40,6 +41,7 @@ const Searcher = ({
 
 	const selectSuggestion = (suggestion) => {
 		setSearchState({
+			...searchState,
 			input: suggestion,
 			isTyping: false,
 			noSuggested: false
@@ -89,7 +91,9 @@ const Searcher = ({
 
 	const setSearchInput = () => {
 		if (pathname.includes('search')) {
-			const { input } = params;
+			let { input } = params;
+			input = input.replaceAll('%20', ' ');
+			input = input.replaceAll('%C3%A7', 'ç');
 			setSearchState({
 				...searchState,
 				input,
@@ -97,6 +101,26 @@ const Searcher = ({
 			});
 		}
 	};
+
+	useEffect(() => {
+		setSearchInput();
+		let onClickHandler = (e) => {
+			if (
+				searchContainer.current &&
+				!searchContainer.current.contains(e.target)
+			) {
+				setSearchState((prev) => ({
+					...prev,
+					isTyping: false
+				}));
+			}
+		};
+
+		document.addEventListener('mousedown', onClickHandler);
+		return () => {
+			document.removeEventListener('mousedown', onClickHandler);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (
@@ -132,43 +156,23 @@ const Searcher = ({
 		}
 	}, [searchState.indexSuggesion]);
 
-	useEffect(() => {
-		setSearchInput();
-		let onClickHandler = (e) => {
-			if (
-				suggestionContainer.current &&
-				!suggestionContainer.current.contains(e.target)
-			) {
-				setSearchState({
-					...searchState,
-					isTyping: false
-				});
-			}
-		};
-
-		document.addEventListener('mousedown', onClickHandler);
-		return () => {
-			document.removeEventListener('mousedown', onClickHandler);
-		};
-	}, []);
-
 	return (
-		<div ref={suggestionContainer} className="search-main-container">
+		<div ref={searchContainer} className="search-main-container">
 			<div className="search-searcher-container">
 				<input
 					type="text"
 					placeholder="Search"
 					value={searchState.input}
 					onKeyDown={handleKeyAcctions}
-					onChange={(e) => {
+					onChange={(e) =>
 						setSearchState({
 							input: e.target.value === '' ? new String() : e.target.value,
 							isTyping: true,
 							noSuggested: true,
 							notMoving: true,
 							indexSuggesion: -1
-						});
-					}}
+						})
+					}
 					autoComplete="false"
 				/>
 				<button title="search" onClick={() => search(searchState.input)}>
