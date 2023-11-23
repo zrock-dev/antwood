@@ -18,9 +18,13 @@ const Navbar = () => {
 			</div>
 			<div className="navbar-sub-container right">
 				{!isAuthenticated ? (
-					<Button onClick={() => setShowModalAuth(true)}>log in</Button>
+					<Button className="rm-padding" onClick={() => setShowModalAuth(true)}>
+						log in
+					</Button>
 				) : (
-					<Button onClick={signoutUser}>log out</Button>
+					<Button className="rm-padding" onClick={signoutUser}>
+						log out
+					</Button>
 				)}
 				<CartModalRenderer />
 				<Searcher />

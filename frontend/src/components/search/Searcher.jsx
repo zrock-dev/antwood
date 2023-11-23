@@ -6,13 +6,15 @@ import { useEffect, useState, useRef } from 'react';
 import '../../styles/search/search.css';
 import SearchIcon from '@/icons/SearchIcon';
 import SearchSuggestion from './SearchSuggestion';
-import { useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 const Searcher = ({
 	fecthSuggestions = getSearchSuggestions,
 	searchRoute = '/products/search'
 }) => {
 	const router = useRouter();
+	const pathname = usePathname();
+	const params = useParams();
 	const suggestionsElements = useRef(null);
 	const [suggestions, setSuggestions] = useState([]);
 	const [searchState, setSearchState] = useState({
@@ -85,6 +87,17 @@ const Searcher = ({
 		}
 	};
 
+	const setSearchInput = () => {
+		if (pathname.includes('search')) {
+			const { input } = params;
+			setSearchState({
+				...searchState,
+				input,
+				isTyping: false
+			});
+		}
+	};
+
 	useEffect(() => {
 		if (
 			searchState.input &&
@@ -120,6 +133,7 @@ const Searcher = ({
 	}, [searchState.indexSuggesion]);
 
 	useEffect(() => {
+		setSearchInput();
 		let onClickHandler = (e) => {
 			if (
 				suggestionContainer.current &&
@@ -148,11 +162,11 @@ const Searcher = ({
 					onKeyDown={handleKeyAcctions}
 					onChange={(e) => {
 						setSearchState({
-							...searchState,
-							input: e.target.value,
+							input: e.target.value === '' ? new String() : e.target.value,
 							isTyping: true,
 							noSuggested: true,
-							notMoving: true
+							notMoving: true,
+							indexSuggesion: -1
 						});
 					}}
 					autoComplete="false"
