@@ -89,6 +89,18 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 		})
 	}
 
+
+	_ , err = repository.UpdateUnpaidOrderPaidById(orderObjId.Hex(), "paid")
+
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"message" : err.Error(),
+			"status" : fiber.StatusForbidden,
+		})
+	}
+
+
+
 	order, err:= repository.FindOUnpaidrderById(orderObjId)
 
 	if err != nil {
@@ -100,15 +112,6 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 
-	_ , err = repository.UpdateUnpaidOrderPaidById(orderObjId.Hex(), "paid")
-
-	if err != nil {
-		return c.JSON(fiber.Map{
-			"message" : err.Error(),
-			"status" : fiber.StatusForbidden,
-		})
-	}
-	
 	if order.Paid == "paid" && status == "succeeded" {
 		err  = repository.DeleteUnpaidOrderById(orderId)
 	
