@@ -1,6 +1,7 @@
 package requests
 
 import (
+	"context"
 	"product_management/app/database"
 	"product_management/app/models"
 
@@ -27,7 +28,7 @@ func InsertReview(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Invalid review data")
 	}
 
-	rate  := review.Rate
+	rate := review.Rate
 
 	err = validateReviewData(rate, review.Description)
 
@@ -35,9 +36,9 @@ func InsertReview(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	_, err= database.ReviewCollection.InsertOne(c.Context(), review)
+	_, err = database.ReviewCollection.InsertOne(c.Context(), review)
 
-	if err != nil{
+	if err != nil {
 		return c.Status(500).SendString("Error inserting review")
 	}
 
@@ -46,7 +47,6 @@ func InsertReview(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error finding sneaker")
 	}
 
-
 	if err != nil {
 		return c.Status(500).SendString("Error inserting review")
 	}
@@ -54,7 +54,7 @@ func InsertReview(c *fiber.Ctx) error {
 	updateRatingSummary(&sneaker.Reviews.RatingSummary, rate)
 	sneaker.Reviews.Total += 1
 
-	updateResult, err:=database.SneakerCollection.UpdateOne(
+	updateResult, err := database.SneakerCollection.UpdateOne(
 		c.Context(),
 		bson.M{"_id": sneakerObjId},
 		bson.M{"$set": bson.M{"reviews": sneaker.Reviews}},
@@ -65,28 +65,22 @@ func InsertReview(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"message": "Review inserted successfully",
-		"review":      review,
+		"message":       "Review inserted successfully",
+		"review":        review,
 		"sneakerReview": sneaker.Reviews,
 	})
 }
 
-
-
 func validateReviewData(rate int, description string) error {
-	if rate <1 || rate > 5 {
+	if rate < 1 || rate > 5 {
 		return fiber.NewError(400, "Invalid rate")
 	}
-	
+
 	if description == "" {
 		return fiber.NewError(400, "Invalid description")
 	}
 	return nil
 }
-
-
-
-
 
 func updateRatingSummary(ratingSummary *models.RatingSummary, rate int) {
 	switch rate {
@@ -101,4 +95,18 @@ func updateRatingSummary(ratingSummary *models.RatingSummary, rate int) {
 	case 5:
 		ratingSummary.Star5++
 	}
+}
+
+func deleteReviewsBySneakerID(sneakerID string) error {
+	id, err := primitive.ObjectIDFromHex(sneakerID)
+	if err != nil {
+		return err
+	}
+
+	_, err = database.ReviewCollection.DeleteMany(context.TODO(), bson.M{"sneakerId": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
