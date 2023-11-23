@@ -47,7 +47,7 @@ export default function CheckoutForm({ clientSecret }) {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://localhost${
+        return_url: `/${
           isAuthenticated ? "/profile/order" : ""
         }`,
       },
