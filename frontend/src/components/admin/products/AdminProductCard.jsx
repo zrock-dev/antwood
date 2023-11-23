@@ -11,7 +11,10 @@ const AdminProductCard = ({ product }) => {
 	return (
 		<div className="product-card-container space admin">
 			<div className="product-card-image">
-				{product.colors.length > 0 ? (
+				{product.colors.length > 0 &&
+				product.types &&
+				product.types[0].images &&
+				product.types[0].images.length > 0 ? (
 					<div className="position-relative">
 						<img src={product.types[0].images[0].url} alt="" />
 						<AvgQuantityProduct sneakerId={product._id} />

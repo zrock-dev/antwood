@@ -1,6 +1,8 @@
 'use client';
 import NavLogo from '@/components/navbar/NavLogo';
+import Searcher from '@/components/search/Searcher';
 import Database from '@/icons/Database';
+import { getSearchSuggestionsForAdmin } from '@/requests/SneakersRequest';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -21,6 +23,10 @@ const AdminNavbar = () => {
 				>
 					<Database /> Admin Panel
 				</Link>
+				<Searcher
+					fecthSuggestions={getSearchSuggestionsForAdmin}
+					searchRoute="/admin/search"
+				/>
 			</div>
 		</div>
 	);
