@@ -1,0 +1,31 @@
+.checkout-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    gap: 1rem;
+}
+.checkout-item-image{
+    width: 150px;
+    height: 150px;
+}
+
+.checkout-item-details{
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-item-details h5{
+    font-size: 18px;
+}
+.checkout-item-details p{
+    font-size: 15px;
+}
+
+
+.checkout-pay-btn-ctn{
+   text-align: center;
+}
+.checkout-pay-btn{
+    width: 150px;
+}

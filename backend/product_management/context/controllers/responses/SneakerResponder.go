@@ -59,6 +59,33 @@ func SendSneakerByID(c *fiber.Ctx) error {
 	return c.JSON(sneakerWithColors)
 }
 
+func sendSneakersUsingPipeline(pipeline mongo.Pipeline, c *fiber.Ctx) error {
+	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer cursor.Close(context.TODO())
+
+	var sneakersWithColors []models.SneakerWithColors
+	for cursor.Next(context.TODO()) {
+		var sneakerWithColors models.SneakerWithColors
+		if err := cursor.Decode(&sneakerWithColors); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
+	}
+
+	if len(sneakersWithColors) == 0 {
+		sneakersWithColors = []models.SneakerWithColors{}
+	}
+
+	return c.JSON(struct {
+		Sneakers []models.SneakerWithColors `json:"sneakers"`
+	}{
+		Sneakers: sneakersWithColors,
+	})
+}
+
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	page := c.Query("page", "1")
 	pageSize := c.Query("pageSize", "9")
@@ -96,32 +123,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		},
 	}
 
-	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
-	}
-	defer cursor.Close(context.TODO())
-
-	var sneakersWithColors []models.SneakerWithColors
-	for cursor.Next(context.TODO()) {
-		var sneakerWithColors models.SneakerWithColors
-		if err := cursor.Decode(&sneakerWithColors); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
-	}
-
-	if len(sneakersWithColors) == 0 {
-		sneakersWithColors = []models.SneakerWithColors{}
-	}
-
-	return c.JSON(struct {
-		Sneakers []models.SneakerWithColors `json:"sneakers"`
-		Page     int                        `json:"page"`
-	}{
-		Sneakers: sneakersWithColors,
-		Page:     pageInt,
-	})
+	return sendSneakersUsingPipeline(pipeline, c)
 }
 
 func SendRelatedProductsByTags(c *fiber.Ctx) error {
@@ -281,3 +283,41 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 
 	return c.JSON(sneakersData)
 }
+
+
+
+
+func SendSneakerQuantities(c *fiber.Ctx) error {
+	type SneakersTypes struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+		Size 		   float32 `json:"size,omitempty"`
+		Quantity 	   int     `json:"quantity"`
+	}
+	var sneakers []SneakersTypes
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for index, sneaker := range sneakers {
+		size := GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+		sneakers[index].Quantity = size
+	}
+
+	return c.JSON(sneakers)
+}
+
+
+
+func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int {
+	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+		for _, sneakerType := range sneakerWithColor.Types {
+			for _, sneakerSize := range sneakerType.Sizes {
+				if sneakerSize.Value == size {
+					return sneakerSize.Quantity
+				}
+			}
+	}
+	return 0
+}
+

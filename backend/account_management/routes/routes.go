@@ -2,14 +2,13 @@ package routes
 
 import (
 	"account_management/context/controllers"
-	"github.com/gofiber/fiber/v2")
 
+	"github.com/gofiber/fiber/v2"
+)
 
 func AuthRoutes(app *fiber.App) {
 	app.Post("/auth/register", controllers.Register)
 	app.Post("/auth/login", controllers.Login)
-
-
 
 	app.Get("/auth/logout", controllers.Logout)
 	app.Get("/auth/user", controllers.GetUserByToken)
@@ -17,4 +16,7 @@ func AuthRoutes(app *fiber.App) {
 	app.Get("/auth/verify-account/:email", controllers.VerifyAccount)
 	app.Get("/auth/user/id/:id", controllers.GetUserById)
 	app.Get("/auth/verify-code", controllers.VerifyCode)
+
+	app.Get("/auth/rol/admin", controllers.ChangeUserRoleToAdmin)
+	app.Get("/auth/rol/user", controllers.ChangeUserRoleToUser)
 }

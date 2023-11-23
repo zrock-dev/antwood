@@ -6,7 +6,9 @@ import { createContext, useEffect, useState } from 'react';
 export const CartContext = createContext();
 
 export const EMPTY_CART = {
+	id: null,
 	products: [],
+	totalItems: 0,
 	subTotal: 0,
 	extra: 100,
 	total: 100
@@ -17,9 +19,12 @@ const CartProvider = ({ children }) => {
 
 	const updateProducts = (products) => {
 		const subTotal = calculateSubTotal(products);
+		const totalItems  = calculateTotalItems(products);
+
 		setCartState({
 			...cartState,
 			products,
+			totalItems: totalItems,
 			subTotal,
 			total: subTotal + cartState.extra
 		});
@@ -51,12 +56,21 @@ const CartProvider = ({ children }) => {
 		updateProducts(cartState.products);
 	};
 
+	const calculateTotalItems = (products) => {
+		let totalItems = 0;
+		if (products && products.length > 0) {
+			products.map((product) => {
+				totalItems += product.amount;
+			});
+		}
+		return totalItems;
+	}
+
 	const removeProduct = (product) => {
 		const products = cartState.products.filter(
 			(productCart) => !equalsProduct(productCart, product)
 		);
 
-		console.log(products);
 		updateProducts(products);
 	};
 
@@ -99,6 +113,7 @@ const CartProvider = ({ children }) => {
 		});
 	};
 
+
 	useEffect(() => {
 		if (cartState) {
 			saveItem(
@@ -108,6 +123,7 @@ const CartProvider = ({ children }) => {
 				})
 			);
 		}
+
 	}, [cartState]);
 
 	useEffect(() => {
@@ -119,22 +135,30 @@ const CartProvider = ({ children }) => {
 		}
 	}, []);
 
+	const resetCartState = () => {
+		setCartState(EMPTY_CART);
+	}
+
 	return (
-		<CartContext.Provider
-			value={{
-				cartState: cartState,
-				products: cartState?.products,
-				subTotal: cartState?.subTotal,
-				addSneaker,
-				removeProduct,
-				updateProduct,
-				findProduct,
-				equalsProduct
-			}}
-		>
-			{children}
-		</CartContext.Provider>
-	);
+    <CartContext.Provider
+      value={{
+        cartState: cartState,
+        products: cartState?.products,
+        subTotal: cartState?.subTotal,
+        addSneaker,
+        removeProduct,
+        updateProduct,
+        findProduct,
+        equalsProduct,
+        setCartState,
+        resetCartState,
+		calculateSubTotal,
+		calculateTotalItems
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export default CartProvider;
