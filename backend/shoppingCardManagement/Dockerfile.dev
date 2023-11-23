@@ -1,0 +1,24 @@
+FROM golang:1.21.4-alpine3.18 AS base
+
+
+FROM base AS deps
+WORKDIR /service
+COPY go.* .
+RUN go mod download
+
+
+FROM base as builder
+COPY --from=deps $GOPATH $GOPATH 
+WORKDIR /service
+COPY . . 
+RUN CGO_ENABLED=0 GOOS=linux go build -o shopping_cart_management
+
+
+FROM base AS runner 
+WORKDIR /service
+COPY --from=builder /service/shopping_cart_management .
+COPY .env .
+LABEL org.opencontainers.image.description="Shopping Cart Management Service"
+
+ENTRYPOINT ["./shopping_cart_management"]
+
