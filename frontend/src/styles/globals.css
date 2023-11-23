@@ -6,11 +6,12 @@
 	--secondary-color: #000000;
 	--gradient-tone: #f8f8f8;
 
-	--light-gray: #dddddd;
+	--light-white: #eeeeee;
+	--light-gray: #c7c7c7;
 	--medium-gray: #999999;
 	--transparent-gray: rgba(196, 196, 196, 0.295);
 	--dark-black: #4e4e4e;
-	--medium-black: #222222;
+	--medium-black: #383838;
 	--light-black: #111111;
 
 	--warning-color: #f7002d;

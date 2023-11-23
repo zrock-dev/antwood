@@ -1,0 +1,18 @@
+export const availableColors = [
+  "white",
+  "black",
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "gray",
+  "orange",
+  "pink",
+  "purple",
+  "brown",
+  "cyan",
+  "silver",
+  "gold",
+  "lightblue",
+  "lightgreen",
+];
