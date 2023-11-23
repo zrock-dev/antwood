@@ -11,7 +11,10 @@ const ProductCard = ({ product }) => {
 	};
 
 	return (
-		product.colors.length > 0 && (
+		product.colors.length > 0 &&
+		product.types &&
+		product.types[0].images &&
+		product.types[0].images.length > 0 && (
 			<Link
 				href={`/products/${product._id}`}
 				className="product-card-container"

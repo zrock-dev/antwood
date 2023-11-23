@@ -4,8 +4,13 @@ import '../../styles/products/product_card.css';
 import '../../styles/products/products.css';
 import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
+import NoProductsFound from './NoProductsFound';
 
-const ProductRenderer = ({ fetchMethod, ProductCardView = ProductCard }) => {
+const ProductRenderer = ({
+	fetchMethod,
+	ProductCardView = ProductCard,
+	redirection = '/products'
+}) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
@@ -47,6 +52,9 @@ const ProductRenderer = ({ fetchMethod, ProductCardView = ProductCard }) => {
 					<ProductCardView key={product._id} product={product} />
 				))}
 			</div>
+			{products.length < 1 && !hasMore && (
+				<NoProductsFound redirection={redirection} />
+			)}
 			{hasMore && (
 				<div ref={lastProduct} className="loader-container">
 					<span className="loader"></span>
