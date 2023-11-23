@@ -7,6 +7,7 @@ import '../../styles/search/search.css';
 import SearchIcon from '@/icons/SearchIcon';
 import SearchSuggestion from './SearchSuggestion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const Searcher = ({
 	fecthSuggestions = getSearchSuggestions,
@@ -27,6 +28,10 @@ const Searcher = ({
 
 	const searchContainer = useRef();
 
+	const isValidInput = (inputToValid) => {
+		const regex = /^[a-zA-Z0-9çÇ ]*$/;
+		return regex.test(inputToValid);
+	};
 	const handleKeyAcctions = (event) => {
 		event.key === 'Enter' && search(searchState.input);
 		event.key === 'ArrowDown' && moveToBottomSuggestion();
@@ -42,7 +47,7 @@ const Searcher = ({
 	const selectSuggestion = (suggestion) => {
 		setSearchState({
 			...searchState,
-			input: suggestion,
+			input: isValidInput(suggestion) ? suggestion : searchState.input,
 			isTyping: false,
 			noSuggested: false
 		});
@@ -57,7 +62,9 @@ const Searcher = ({
 
 		setSearchState({
 			...searchState,
-			input: suggestions[newIndex],
+			input: isValidInput(suggestions[newIndex])
+				? suggestions[newIndex]
+				: searchState.input,
 			indexSuggesion: newIndex,
 			notMoving: false
 		});
@@ -71,7 +78,9 @@ const Searcher = ({
 
 		setSearchState({
 			...searchState,
-			input: suggestions[newIndex],
+			input: isValidInput(suggestions[newIndex])
+				? suggestions[newIndex]
+				: searchState.input,
 			indexSuggesion: newIndex,
 			notMoving: false
 		});
@@ -92,13 +101,24 @@ const Searcher = ({
 	const setSearchInput = () => {
 		if (pathname.includes('search')) {
 			let { input } = params;
-			input = input.replaceAll('%20', ' ');
-			input = input.replaceAll('%C3%A7', 'ç');
-			setSearchState({
-				...searchState,
-				input,
-				isTyping: false
-			});
+			if (!input) {
+				router.push('/');
+				toast.warning('Invalid search input');
+			} else {
+				input = input.replaceAll('%20', ' ');
+				input = input.replaceAll('%C3%A7', 'ç');
+
+				if (isValidInput(input)) {
+					setSearchState({
+						...searchState,
+						input: input,
+						isTyping: false
+					});
+				} else {
+					router.push('/');
+					toast.warning('Invalid search input');
+				}
+			}
 		}
 	};
 
@@ -166,7 +186,12 @@ const Searcher = ({
 					onKeyDown={handleKeyAcctions}
 					onChange={(e) =>
 						setSearchState({
-							input: e.target.value === '' ? new String() : e.target.value,
+							input:
+								e.target.value === ''
+									? new String()
+									: isValidInput(e.target.value)
+									? e.target.value
+									: searchState.input,
 							isTyping: true,
 							noSuggested: true,
 							notMoving: true,
