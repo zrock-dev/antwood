@@ -139,7 +139,9 @@ const ProductDetails = ({ product }) => {
 				</div>
 				<div className="product-details-color-image-container">
 					<button
-						className="product-details-color-directions"
+						className={`product-details-color-directions ${
+							colorData.images.length <= 1 && 'hidden'
+						}`}
 						onClick={backImage}
 					>
 						<ArrowLeft />
@@ -148,7 +150,9 @@ const ProductDetails = ({ product }) => {
 						<img src={colorData.images[color.imageIndex].url} alt="" />
 					</div>
 					<button
-						className="product-details-color-directions"
+						className={`product-details-color-directions  ${
+							colorData.images.length <= 1 && 'hidden'
+						}`}
 						onClick={nextImage}
 					>
 						<ArrowRight />

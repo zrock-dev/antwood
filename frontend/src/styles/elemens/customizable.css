@@ -21,3 +21,8 @@
 .rm-padding {
 	padding: 0 !important;
 }
+
+.hidden {
+	visibility: hidden !important;
+	cursor: default;
+}
