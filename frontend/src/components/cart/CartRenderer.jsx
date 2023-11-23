@@ -3,6 +3,9 @@
 import { CartContext } from '@/context/CartContext';
 import { useContext, useEffect, useState } from 'react';
 import TrashCan from '@/icons/TrashCan';
+import Modal from '@/path-to-your-modal-component';
+import { removeProduct } from '@/context/CartContext';
+import { checkSneakerExistence } from '@/requests/SneakersRequest';
 
 import '../../styles/cart/cart.css';
 import '../../styles/cart/cartPage.css';
@@ -13,6 +16,7 @@ const CartRenderer = () => {
 	const { cartState, products, updateProduct, removeProduct } =
 		useContext(CartContext);
 	const [hasProducts, setHasProducts] = useState(false);
+	const [isModalOpen, setModalOpen] = useState(false);
 
 	useEffect(() => {
 		if (cartState) {
@@ -24,55 +28,79 @@ const CartRenderer = () => {
 		<div className="cart-page-main-container">
 			{hasProducts ? (
 				<div>
-					<h2 className="cart-page-title">YOUR CART</h2>
-					<div className="cart-page-products-container margin-top-15">
-						{products.map((product, index) => (
-							<div className="cart-page-product-container" key={index}>
-								<img src={product.image} alt="" />
-								<div className="cart-page-product-info-container">
-									<div className="column-container">
+				<h2 className="cart-page-title">YOUR CART</h2>
+				<div className="cart-page-products-container margin-top-15">
+					{products.map(async (product, index) => {
+						const sneakerExist = await checkSneakerExistence(product.sneakerId);
+
+						if (sneakerExist) {
+							return (
+								<div className="cart-page-product-container" key={index}>
+									<img src={product.image} alt="" />
+									<div className="cart-page-product-info-container">
+										<div className="column-container">
+											<div className="cart-page-product-details">
+												<h4>{product.name}</h4>
+												<button
+													onClick={() => {
+														removeProduct({
+															sneakerId: product.sneakerId,
+															sneakerColorId: product.sneakerColorId,
+															size: product.size,
+															subTotal: product.subTotal
+														});
+													}}
+												>
+													<TrashCan />
+												</button>
+											</div>
+											<span>Price: {product.price} $</span>
+											<span>Subtotal: {product.subTotal} $</span>
+										</div>
 										<div className="cart-page-product-details">
-											<h4>{product.name}</h4>
-											<button
-												onClick={() => {
-													removeProduct({
+											<h3 className="cart-page-amount">Size {product.size}</h3>
+											<QuantityRenderer
+												text="Quantity"
+												amount={product.amount}
+												quantityAvailable={product.quantity}
+												onChange={(amount) => {
+													updateProduct({
 														sneakerId: product.sneakerId,
 														sneakerColorId: product.sneakerColorId,
 														size: product.size,
-														subTotal: product.subTotal
+														amount: amount,
+														price: product.price,
+														quantity: product.quantity
 													});
 												}}
-											>
-												<TrashCan />
-											</button>
+												style="cart-sneaker-amount cart-page-amount amount-button small"
+											/>
 										</div>
-										<span>Price: {product.price} $</span>
-										<span>Subtotal: {product.subTotal} $</span>
-									</div>
-									<div className="cart-page-product-details">
-										<h3 className="cart-page-amount">Size {product.size}</h3>
-										<QuantityRenderer
-											text="Quantity"
-											amount={product.amount}
-											quantityAvailable={product.quantity}
-											onChange={(amount) => {
-												updateProduct({
-													sneakerId: product.sneakerId,
-													sneakerColorId: product.sneakerColorId,
-													size: product.size,
-													amount: amount,
-													price: product.price,
-													quantity: product.quantity
-												});
-											}}
-											style="cart-sneaker-amount cart-page-amount amount-button small"
-										/>
 									</div>
 								</div>
-							</div>
-						))}
-					</div>
+							);
+						} else {
+							
+							removeProduct({
+								sneakerId: product.sneakerId,
+								sneakerColorId: product.sneakerColorId,
+								size: product.size,
+								subTotal: product.subTotal
+							});
+
+							return (
+								<div key={index}>
+									<Modal isModalOpen={isModalOpen} setModalOpen={setModalOpen}>
+										<p>The product <strong>{product.name}</strong> with ID{' '}
+										<strong>{product.sneakerId}</strong> is not available in out of stock.</p>
+										<button onClick={() => setModalOpen(false)}>Close</button>
+									</Modal>
+								</div>
+							);
+						}
+					})}
 				</div>
+			</div>
 			) : (
 				<div className="cart-empty">
 					<span className="cart-page-title">

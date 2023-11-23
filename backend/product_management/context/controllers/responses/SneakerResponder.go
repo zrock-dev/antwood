@@ -211,3 +211,21 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 
 	return c.JSON(sneakersData)
 }
+
+func CheckSneakerExistence(c *fiber.Ctx) error {
+	requiredSneakerID := c.Params("id")
+
+	objectID, err := primitive.ObjectIDFromHex(requiredSneakerID)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid Sneaker ID"})
+	}
+
+	filter := bson.D{{Key: "_id", Value: objectID}}
+
+	err = database.SneakerCollection.FindOne(context.TODO(), filter).Err()
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"exists": false})
+	}
+
+	return c.JSON(fiber.Map{"exists": true})
+}
