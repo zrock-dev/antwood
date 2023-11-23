@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/payment";
+const API = "/api/payment";
 const axiosConfig = {
   headers: {
     "Content-Type": "application/json",
