@@ -268,7 +268,7 @@ func ConfirmAvailableSneakersQuantities(c *fiber.Ctx) error {
 	for _, sneaker := range sneakers {
 		size := responses.GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
 
-		if size <= sneaker.Amount {
+		if size < sneaker.Amount {
 			return c.Status(200).JSON(fiber.Map{
 				"message":      "Insufficient sneaker quantity",
 				"areAvailable": false,
