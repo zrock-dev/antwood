@@ -103,10 +103,9 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 
-	order, err:= repository.FindOUnpaidrderById(orderObjId)
+	order, err := repository.FindOUnpaidrderById(orderObjId)
 
 	if err != nil {
-		
 		return c.JSON(fiber.Map{
 			"message" : err.Error(),
 			"status" : fiber.StatusForbidden,
@@ -115,6 +114,12 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 
 
 	if order.Paid == "paid" && status == "succeeded" {
+		log.Println("**************************************************************************************************************")
+		log.Println("**************************************************************************************************************")
+		log.Println("Payment success")
+		log.Println(orderId)
+		log.Println("**************************************************************************************************************")
+		log.Println("**************************************************************************************************************")
 		err  = repository.DeleteUnpaidOrderById(orderId)
 	
 		if err != nil {
@@ -151,13 +156,25 @@ func HandleOnIntentSuccess(orderId string) error {
 		return err
 	}
 
+	if order.Paid == "paid" {
+		return &fiber.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Order already paid",
+		}
+	}
+
 	orderJSON, err := json.Marshal(order.Products)
 	if err != nil {
 		log.Println("Error parsing sneakers JSON:", err)
 		return err
 	}
 
-	req, err := http.NewRequest("PUT", "http://localhost/sneakers/quantities", bytes.NewBuffer(orderJSON))
+
+	log.Println("orderJSON:", orderJSON)
+
+
+
+	req, err := http.NewRequest("PUT", "http://172.25.0.12:4000/sneakers/quantities", bytes.NewBuffer(orderJSON))
 	if err != nil {
 		log.Println("Error when creating request:", err)
 		return err
@@ -172,15 +189,15 @@ func HandleOnIntentSuccess(orderId string) error {
 		return err
 	}
 
-	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
-		log.Println("Error when sending request:", err)
 		return &fiber.Error{
-			Code:    http.StatusNotAcceptable,
+			Code:    resp.StatusCode,
 			Message: "Error updating quantities",
 		}
 	}
+
+	defer resp.Body.Close()
 
 	if err != nil {
 		log.Println("Error obtaining the order JSON:", err)

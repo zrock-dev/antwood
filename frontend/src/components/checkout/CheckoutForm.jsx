@@ -20,7 +20,6 @@ export default function CheckoutForm({ clientSecret }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (products.length < 1) {
-      toast.error("Cart is empty");
       return;
     }
       if (!stripe || !elements) {
@@ -34,6 +33,7 @@ export default function CheckoutForm({ clientSecret }) {
     }
 
     const res = await confirmAvailableSizes(products);
+
     if (!res.areAvailable) {
       toast.error("Sneakers in Stock");
       window.history.back();
