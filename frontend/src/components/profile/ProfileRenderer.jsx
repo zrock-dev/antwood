@@ -1,17 +1,12 @@
 "use client";
 import "@/styles/profile/profile.css";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 const ProfileRenderer = ({children}) => {
-    const { user , isAuthenticated} = useAuth();
-    const router = useRouter();
+    const { user} = useAuth();
 
-    if (!isAuthenticated) {
-        router.replace("/");
-      return null
-      }
+
 
     return (
       <div className="profile-container">
