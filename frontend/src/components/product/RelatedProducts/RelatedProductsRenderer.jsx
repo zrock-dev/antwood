@@ -26,13 +26,13 @@ const RelatedProductsRenderer = ({ id }) => {
       }, []); 
 
 	return products.length > 0 ? (
-        <div> 
+        <div className='Related-products-main-container'> 
             <h2>Related Products</h2>
             <RelatedProductsSection relatedProducts={products} />
         </div>
 	) : (
 
-        <div>
+        <div className='Related-products-main-container'>
             <h2>Related Products</h2>
 		    <div className="Not found">
 			    <h4>No related products was found</h4>
