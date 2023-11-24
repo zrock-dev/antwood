@@ -6,6 +6,8 @@ import {
   getUserByEmail,
   logoutUser,
 } from "@/requests/AuthRequest";
+
+
 const useAuthHandler = ()=>{
 
     const {setShowModalAuth,updateUser,setIsAuthenticated} = useAuth();
@@ -21,7 +23,15 @@ const useAuthHandler = ()=>{
             updateUser(data);
             setIsAuthenticated(true)
             setShowModalAuth(false);
-            toast.success("success signin ");
+            if (data.role === 'admin') {
+              window.location = '/admin'
+              toast.success("success signin as admin");
+            } else {
+              window.location = '/'
+              toast.success("success signin");
+            }
+            
+            
           })
           .catch((err) => {
             toast.error("bad credentials");
