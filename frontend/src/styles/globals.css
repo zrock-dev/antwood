@@ -54,6 +54,7 @@ button {
 a {
 	color: var(--dark-black);
 	text-decoration: none;
+	cursor: pointer;
 }
 
 html,

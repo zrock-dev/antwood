@@ -1,14 +1,14 @@
-package requests
+package repository
 
 import (
 	"context"
 	"log"
 	"mime/multipart"
+
 	"os"
 
 	"github.com/cloudinary/cloudinary-go"
 	"github.com/cloudinary/cloudinary-go/api/uploader"
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -23,25 +23,17 @@ func LoadCloudinary() {
 	Cld = *cld
 }
 
-func DeleteImage(c *fiber.Ctx) error {
-	wasDeleted := DeleteImageById(c.Params("id"))
-	if !wasDeleted {
-		return c.Status(500).SendString("Couldn't delete image")
-	}
-	return c.SendString("Image deleted successfully")
-}
-
-func DeleteImageById(imageId string) bool {
+func DeleteImageByPublicId(imageId string) bool {
+	LoadCloudinary() 
 	_, err := Cld.Upload.Destroy(context.TODO(), uploader.DestroyParams{
 		PublicID: imageId,
 	})
 	if err != nil {
+		log.Fatal(err)
 		return false
 	}
-
 	return true
 }
-
 
 func UploadImage(file *multipart.FileHeader, brand string) (*uploader.UploadResult, error) {
 	LoadCloudinary() 
@@ -69,17 +61,4 @@ func UploadToCloudinary(file *multipart.FileHeader, path string) (*uploader.Uplo
 	}
 
 	return uploadResult, nil
-}
-
-
-func DeleteImageByPublicId(imageId string) bool {
-	LoadCloudinary() 
-	_, err := Cld.Upload.Destroy(context.TODO(), uploader.DestroyParams{
-		PublicID: imageId,
-	})
-	if err != nil {
-		log.Fatal(err)
-		return false
-	}
-	return true
 }

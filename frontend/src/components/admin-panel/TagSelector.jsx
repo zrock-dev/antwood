@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Button from "../Button";
 import "@/styles/admin_panel/tag_selector.css";
 
+
 let TAGS = [
   "adidas",
   "animal print",
@@ -67,11 +68,10 @@ let TAGS = [
   "zippers",
 ];
 
-const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
+const TagSelector = ({ tags = [], addTags, removeTags, reset = false,  tagError ,addTagError}) => {
   const [tag, setTag] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const suggestionsRef = useRef(null);
-  const [tagError, setTagError] = useState("");
 
   useEffect(() => {
     let handler = (e) => {
@@ -95,16 +95,10 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       }
   },[reset])
 
-  const addTagError = (message) => {
-    setTagError(message);
-    setTimeout(() => {
-      setTagError("");
-    }, 3000);
-  };
 
   const handleChange = (e) => {
-    let value = e.target.value.trim();
-    if (value.length > 18) {
+    let value = e.target.value;
+    if (value.trim().length > 25) {
       return;
     }
     let currentSuggestions = TAGS.filter((t) => t.startsWith(value));
@@ -127,8 +121,8 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       return;
     }
 
-    if (tags.length >= 20) {
-      addTagError("* Can't add more than 20 tags");
+    if (tags.length >= 30) {
+      addTagError("* Can't add more than 30 tags");
       return;
     }
 
@@ -138,7 +132,7 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       return;
     }
 
-    addTags(tag);
+    addTags(tag.trim());
     setTag("");
   };
 
@@ -160,7 +154,7 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
           <i className="fa-solid fa-plus"></i>
         </Button>
       </div>
-      <div className="tags-ctn">
+      <div className="tags-ctn" >
         {tags.map((tag) => (
           <div className="tag" key={tag}>
             {tag}

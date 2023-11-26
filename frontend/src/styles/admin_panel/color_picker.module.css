@@ -7,7 +7,7 @@
 }
 .color {
   width: 51px;
-  height: 25px;
+  height: 40px;
   border-radius: 4px;
   cursor: pointer;
   border: solid 1px var(--medium-gray);

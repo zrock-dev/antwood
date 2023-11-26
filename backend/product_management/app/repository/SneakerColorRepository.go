@@ -12,10 +12,7 @@ import (
 
 func DeleteSneakerColorById(sneakerColorId primitive.ObjectID) bool {
 	_, err := database.SneakerColorsCollection.DeleteOne(context.TODO(), bson.M{"_id": sneakerColorId})
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 
@@ -36,7 +33,7 @@ func DeleteShoeColorWithCloudDeps(sneakerColorId primitive.ObjectID) (bool, stri
 	}
 	var wasDeleted bool
 	for _, imageData := range sneakerColor.Images {
-		wasDeleted = requests.DeleteImageByPublicId(imageData.ID)
+		wasDeleted = DeleteImageByPublicId(imageData.ID)
 		if !wasDeleted {
 			return false, "Error deleting image from Cloudinary"
 		}
@@ -63,7 +60,7 @@ func UpdateSneakerColor(sneakerColorId string, toUpdate bson.M) (bool, string) {
 		)
 
 		if err != nil {
-			return false, "Error updating the sneaker color"
+			return false, err.Error()
 		}
 
 		return true, "Sneaker updated successfully"
@@ -78,7 +75,8 @@ func InsertOneSneakerColor(sneakerColor models.SneakerColor) (*mongo.InsertOneRe
 	return insertResult, err
 }
 
-func UpdateSneakerData(colorId string, newSneakerColorData models.SneakerColor, deletedImages []string, brand string) (models.SneakerColor, bool, string) {
+
+func UpdateSneakerColorData(colorId string, newSneakerColorData models.SneakerColor, deletedImages []string) (models.SneakerColor, bool, string) {
 
 	var updatedSneakerColor models.SneakerColor
 	var statusUpdate bool
@@ -110,17 +108,35 @@ func UpdateSneakerData(colorId string, newSneakerColorData models.SneakerColor, 
 	updatedSneakerColor.Images = filteredImages
 
 	for _, deletedId := range deletedImages {
-		wasDeleted := requests.DeleteImageByPublicId(deletedId)
+		wasDeleted := DeleteImageByPublicId(deletedId)
 		if !wasDeleted {
 			return updatedSneakerColor, false, "Error deleting image from Cloudinary"
 		}
 	}
 
-	for _, image := range newSneakerColorData.Images {
-		updatedSneakerColor.Images = append(updatedSneakerColor.Images, image)
-	}
+	updatedSneakerColor.Images = append(updatedSneakerColor.Images, newSneakerColorData.Images...)
 
 	updatedSneakerColor.Sizes = newSneakerColorData.Sizes
-	updatedSneakerColor.Quantity = newSneakerColorData.Quantity
+
+
+	toUpdate := validateUpdateData(updatedSneakerColor)
+	wasUpdated, message := UpdateSneakerColor(colorId,  bson.M{"$set": toUpdate})
+
+	if !wasUpdated {
+		return updatedSneakerColor, false, message
+	}
+
 	return updatedSneakerColor, true, "Sneaker updated successfully"
+}
+
+
+func validateUpdateData(updatedSneakerColor models.SneakerColor) bson.M {
+	toUpdate := bson.M{}
+	if len(updatedSneakerColor.Images) > 0 {
+		toUpdate["images"] = updatedSneakerColor.Images
+	}
+	if len(updatedSneakerColor.Sizes) > 0 {
+		toUpdate["sizes"] = updatedSneakerColor.Sizes
+	}
+	return toUpdate
 }

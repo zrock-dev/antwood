@@ -1,10 +1,10 @@
-import Layout from '@/components/Layout';
+import NormalLayout from '@/components/layouts/NormalLayout';
 import SingleProductRenderer from '@/components/product/SingleProductRenderer';
 const SingleProductPage = ({ params }) => {
 	return (
-		<Layout>
+		<NormalLayout>
 			<SingleProductRenderer id={params.id} />
-		</Layout>
+		</NormalLayout>
 	);
 };
 

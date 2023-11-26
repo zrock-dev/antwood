@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import colorPickerStyle from "@/styles/admin_panel/color_picker.module.css";
 
 import { availableColors } from "@/utils/color-picker";
-
+import { toast } from "sonner";
 function ColorPicker({ className, colors = [], onSelectColor }) {
   const [openPopup, setOpenPopup] = useState(false);
   const popupRef = useRef();
@@ -36,9 +36,11 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
 
     if (!colors.includes(color)) {
         onSelectColor({
-          name: color,
-          id: "",
+          color: color,
+          _id: "",
         });
+    }else{
+        toast.error("Color Already Selected");
     }
     togglePopup();
   };
@@ -59,7 +61,7 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
             </Button>
           </div>
           {colors.map((c) => (
-            <Color name={c.name} key={c.id} onClick={() => onSelectColor(c)} />
+            <Color name={c.color} key={c._id} onClick={() => onSelectColor(c)} />
           ))}
         </div>
       </div>

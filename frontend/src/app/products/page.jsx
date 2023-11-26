@@ -1,11 +1,11 @@
-import Layout from '@/components/Layout';
+import NormalLayout from '@/components/layouts/NormalLayout';
 import DefaultProducts from '@/components/products/product_renderers/DefaultProducts';
 
 const ProductsPage = () => {
 	return (
-		<Layout>
+		<NormalLayout>
 			<DefaultProducts />
-		</Layout>
+		</NormalLayout>
 	);
 };
 

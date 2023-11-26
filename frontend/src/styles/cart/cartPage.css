@@ -25,9 +25,9 @@
 }
 
 .cart-page-product-container {
+	position: relative;
 	display: flex;
 	gap: 20px;
-
 	width: 100%;
 	padding-right: 20px;
 
@@ -89,6 +89,8 @@
 
 .cart-page-amount.amount-button {
 	display: flex;
+
+	border: none !important;
 }
 
 .cart-empty {
@@ -104,3 +106,5 @@
 		object-fit: contain;
 	}
 }
+
+

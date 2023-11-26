@@ -2,7 +2,7 @@ export const defaultFormError = {
   name: "",
   description: "",
   price: "",
-  haslo: "",
+  tags: "",
 };
 
 export const validateName = (name) => {
@@ -11,7 +11,7 @@ export const validateName = (name) => {
 };
 
 export const validateDescription = (description) => {
-  const descriptionRegex = /^[a-zA-Z0-9\s.*\-/¿?_:]+$/;
+  const descriptionRegex = /^[a-zA-Z0-9\s.\-]+$/;
   return  descriptionRegex.test(description);
 };
 
@@ -22,7 +22,7 @@ export const validatePrice = (price) => {
 
 export const validateSneakerForm = (form, setError) => {
   const errors = { ...defaultFormError };
-  let { name, description, price } = form;
+  let { name, description, price , tags} = form;
   let isFormValid = true;
 
   if (!validateName(name) || name.length < 6 ) {
@@ -44,6 +44,11 @@ export const validateSneakerForm = (form, setError) => {
   if (!validatePrice(price)) {
     errors.price =
       "* Price should be a valid number greater than 0";
+    isFormValid = false;
+  }
+
+  if (tags.length === 0) {
+    errors.tags = "* At least one tag is required";
     isFormValid = false;
   }
 

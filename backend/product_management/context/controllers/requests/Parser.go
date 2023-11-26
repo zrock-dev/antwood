@@ -3,6 +3,7 @@ package requests
 import (
 	"mime/multipart"
 	"product_management/app/models"
+	"product_management/app/repository"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,7 +30,7 @@ func ParseValidSneakerColor(form *multipart.Form) (models.SneakerColor, string, 
 func parseImages(files []*multipart.FileHeader, brand string) []models.ImageData {
 	var images []models.ImageData
 	for _, file := range files {
-		result, _ := UploadImage(file, brand)
+		result, _ := repository.UploadImage(file, brand)
 		if result == nil {
 			return []models.ImageData{}
 		}
