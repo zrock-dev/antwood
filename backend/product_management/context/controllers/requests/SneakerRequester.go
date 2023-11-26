@@ -116,13 +116,57 @@ func updateSneakerById(sneakerID string, toUpdate bson.M) (bool, string) {
 }
 
 func DeleteSneakerById(c *fiber.Ctx) error {
-	var id, _ = primitive.ObjectIDFromHex(c.Params("id"))
-	_, err := database.SneakerCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	sneakerID := c.Params("id")
+	id, err := primitive.ObjectIDFromHex(sneakerID)
 	if err != nil {
-		return c.Status(500).SendString("Error during sneaker deleting")
+		return c.Status(400).SendString("Invalid sneaker ID")
+	}
+
+	var sneaker models.Sneaker
+	err = database.SneakerCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&sneaker)
+	if err != nil {
+		return c.Status(500).SendString("Error finding sneaker")
+	}
+
+	if sneaker.SalesQuantity == 0 {
+		var colorTypes []models.SneakerColor
+		for _, color := range sneaker.Colors {
+			var colorS models.SneakerColor
+			filter := bson.D{{Key: "_id", Value: color.ID}}
+			err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&colorS)
+			if err != nil {
+				return err
+			}
+			colorTypes = append(colorTypes, colorS)
+		}
+
+		//delete sneakersColors
+		for _, colorType := range colorTypes {
+			err := DeleteSneakerColorByIdHelper(colorType.ID.Hex())
+			if err != nil {
+				return c.Status(500).SendString("Error deleting sneaker color and associated sneakers")
+			}
+		}
+	}
+	//delete Reviews
+	err = deleteReviewsBySneakerID(sneakerID)
+	if err != nil {
+		return c.Status(500).SendString("Error deleting reviews associated with sneaker")
+	}
+
+	//delete sneaker from dataBase
+	_, err = database.SneakerCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	if err != nil {
+		return c.Status(500).SendString("Error deleting sneaker from database")
 	}
 
 	return c.SendString("Sneaker successfully deleted")
+}
+
+func DeleteSneakerColorByIdHelper(idColor string) error {
+	ctx := &fiber.Ctx{}
+	ctx.Params("id", idColor)
+	return DeleteSneakerColorById(ctx)
 }
 
 func RemoveSneakerColor(c *fiber.Ctx) error {
