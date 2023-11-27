@@ -19,6 +19,7 @@ func RunServer() {
 	routes.RouteSneakers(Server)
 	routes.RouteSneakerColors(Server)
 	routes.RouteSearch(Server)
+	routes.RouteFilter(Server)
 	routes.RouteCloudinary(Server)
 	routes.RouteReview(Server)
 
