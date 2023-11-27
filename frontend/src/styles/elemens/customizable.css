@@ -11,3 +11,13 @@
 .hidden-container {
 	overflow: hidden !important;
 }
+
+.position-relative {
+	position: relative;
+
+	width: 100%;
+}
+
+.rm-padding {
+	padding: 0 !important;
+}

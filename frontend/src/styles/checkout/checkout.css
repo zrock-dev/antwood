@@ -1,0 +1,103 @@
+
+.checkout-page {
+  height: 93vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.checkout-page-header h2 {
+    font-weight: bold;
+        font-size: 30px;
+}
+
+.checkout-ctn {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr;
+  grid-template-rows: 1fr;
+  margin:0 160px;
+  column-gap: 30px;
+}
+
+.checkout-summary-ctn{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 50px;
+
+}
+
+.checkout-summary{
+    width: 100%;
+
+}
+
+.checkout-summary-order li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.checkout-summary-order li:last-child span{
+  font-weight: bold;
+}
+
+
+.checkout-summary-items{
+    height: 100%;
+    width: 100%;
+}
+
+.checkout-form{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 50px;
+}
+
+
+.checkout-form-section{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.checkout-email-input{
+    width: 100%;
+    border: 1px solid rgba(216, 216, 216, 0.726);
+    font-size: 16px;
+    font-family: var(--primary-font);
+    padding: 15px;
+    outline: none;
+    border-radius: 4px;
+    
+}
+.checkout-email-input:focus{
+box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;}
+
+.hidden-email-element{
+    visibility: hidden;
+    position: absolute;
+}
+
+.checkout-form-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.checkout-email-error{
+    color: red;
+}
+
+
+.checkout-disabled-addresss{
+     pointer-events: none;
+}

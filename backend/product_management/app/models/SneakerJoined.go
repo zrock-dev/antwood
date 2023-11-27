@@ -9,7 +9,7 @@ type SneakerWithColors struct {
 	ID            primitive.ObjectID   `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name          string               `json:"name"`
 	Description   string               `json:"description,omitempty"`
-	Price         int                  `json:"price"`
+	Price         float32              `json:"price"`
 	Colors        []ColorObject        `json:"colors" form:"colors" bson:"colors"`
 	Types         []SneakerColor       `json:"types"`
 	Tags          []string             `json:"tags,omitempty"`

@@ -7,7 +7,7 @@
 }
 .color {
   width: 51px;
-  height: 25px;
+  height: 40px;
   border-radius: 4px;
   cursor: pointer;
   border: solid 1px var(--medium-gray);
@@ -96,6 +96,11 @@
 
 .tag:hover {
   background-color: rgb(255, 129, 129);
+}
+
+.error{
+  font-size: 12px;
+  color: rgb(255, 23, 23);
 }
 
 .popup_btn {

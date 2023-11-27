@@ -21,6 +21,11 @@
     color: rgb(255, 19, 19);
     top :-15px;
 }
+.admin-panel-form-item-disabled{
+    user-select: none;
+    pointer-events: none;
+    background-color: red!important;
+}
 
 
 .admin-panel-form-item input,
@@ -64,5 +69,19 @@
 }
 
 
+.admin-panel-form-price-concurrency{
+    position: absolute;
+    right:28px;
+    top: 13px;
+}
 
 
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

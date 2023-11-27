@@ -7,9 +7,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"product_management/app/database"
 	"product_management/app/models"
+	"product_management/app/repository"
+	"product_management/context/controllers/responses"
 )
 
 func InsertSneaker(c *fiber.Ctx) error {
@@ -128,33 +131,18 @@ func DeleteSneakerById(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error finding sneaker")
 	}
 
-	if sneaker.SalesQuantity == 0 {
-		var colorTypes []models.SneakerColor
-		for _, color := range sneaker.Colors {
-			var colorS models.SneakerColor
-			filter := bson.D{{Key: "_id", Value: color.ID}}
-			err = database.SneakerColorsCollection.FindOne(context.TODO(), filter).Decode(&colorS)
-			if err != nil {
-				return err
-			}
-			colorTypes = append(colorTypes, colorS)
-		}
-
-		//delete sneakersColors
-		for _, colorType := range colorTypes {
-			err := DeleteSneakerColorByIdHelper(colorType.ID.Hex())
-			if err != nil {
-				return c.Status(500).SendString("Error deleting sneaker color and associated sneakers")
-			}
+	for _, color := range sneaker.Colors {
+		wasDeleted , message := repository.DeleteShoeColorWithCloudDeps(color.ID)
+		if !wasDeleted{
+			return c.Status(500).SendString(message)
 		}
 	}
-	//delete Reviews
-	err = deleteReviewsBySneakerID(sneakerID)
+
+	err = repository.DeleteReviewsBySneakerID(id)
 	if err != nil {
 		return c.Status(500).SendString("Error deleting reviews associated with sneaker")
 	}
 
-	//delete sneaker from dataBase
 	_, err = database.SneakerCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
 	if err != nil {
 		return c.Status(500).SendString("Error deleting sneaker from database")
@@ -163,11 +151,6 @@ func DeleteSneakerById(c *fiber.Ctx) error {
 	return c.SendString("Sneaker successfully deleted")
 }
 
-func DeleteSneakerColorByIdHelper(idColor string) error {
-	ctx := &fiber.Ctx{}
-	ctx.Params("id", idColor)
-	return DeleteSneakerColorById(ctx)
-}
 
 func RemoveSneakerColor(c *fiber.Ctx) error {
 	sneakerID := c.Params("id")
@@ -187,12 +170,114 @@ func RemoveSneakerColor(c *fiber.Ctx) error {
 }
 
 func removeColorFromSneaker(sneakerID string, idColor primitive.ObjectID) (bool, string) {
-	wasRemoved, _ := updateSneakerById(sneakerID, bson.M{
-		"$pull": bson.M{"colors": idColor},
+	wasRemoved, _ := updateSneakerById(sneakerID,bson.M{
+		"$pull": bson.M{
+			"colors": bson.M{"_id": idColor},
+		},
 	})
 	if !wasRemoved {
 		return false, "Error removing color from Sneaker"
 	}
 	return true, "Color removed from Sneaker successfully"
+}
 
+func UpdateSneakerQuantities(c *fiber.Ctx) error {
+	type SneakersQuantities struct {
+		SneakerId      string  `json:"sneakerId,omitempty"`
+		SneakerColorId string  `json:"sneakerColorId,omitempty"`
+		Size           float32 `json:"size,omitempty"`
+		Amount         int     `json:"amount,omitempty"`
+	}
+
+	var sneakers []SneakersQuantities
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for _, sneaker := range sneakers {
+		size := responses.GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+
+		if size < sneaker.Amount {
+			return c.Status(400).SendString("Insufficient sneaker quantity")
+		}
+
+		sneakerObjId, err := primitive.ObjectIDFromHex(sneaker.SneakerId)
+
+		if err != nil {
+			return c.Status(500).SendString("Error getting the sneaker id")
+		}
+
+		sneakerColorIdObjId, err := primitive.ObjectIDFromHex(sneaker.SneakerColorId)
+
+		if err != nil {
+			return c.Status(500).SendString("Error getting the sneaker color id")
+		}
+
+		filter := bson.M{
+			"_id":         sneakerColorIdObjId,
+			"sizes.value": sneaker.Size,
+		}
+		update := bson.M{
+			"$inc": bson.M{"sizes.$.quantity": -sneaker.Amount},
+		}
+		result, err := database.SneakerColorsCollection.UpdateOne(context.TODO(), filter, update)
+
+		if err != nil {
+			return c.Status(500).SendString("Error updating sneaker quantity")
+		}
+		if result.ModifiedCount != 1 {
+			return c.Status(500).SendString("Error updating sneaker quantity")
+		}
+
+		err = IncrementSalesQuantity(sneakerObjId)
+
+		if err != nil {
+			return c.Status(500).SendString("Error updating sneaker quantity")
+		}
+	}
+
+	return c.JSON(sneakers)
+}
+
+func IncrementSalesQuantity(sneakerID primitive.ObjectID) error {
+	filter := bson.M{"_id": sneakerID}
+	update := bson.M{"$inc": bson.M{"salesQuantity": 1}}
+
+	opts := options.Update().SetUpsert(false)
+	_, err := database.SneakerCollection.UpdateOne(context.TODO(), filter, update, opts)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ConfirmAvailableSneakersQuantities(c *fiber.Ctx) error {
+	type SneakersQuantities struct {
+		SneakerId      string  `json:"sneakerId,omitempty"`
+		SneakerColorId string  `json:"sneakerColorId,omitempty"`
+		Size           float32 `json:"size,omitempty"`
+		Amount         int     `json:"amount,omitempty"`
+	}
+
+	var sneakers []SneakersQuantities
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for _, sneaker := range sneakers {
+		size := responses.GetQuantityBySize(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+
+		if size < sneaker.Amount {
+			return c.Status(200).JSON(fiber.Map{
+				"message":      "Insufficient sneaker quantity",
+				"areAvailable": false,
+			})
+		}
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message":      "Available",
+		"areAvailable": true,
+	})
 }

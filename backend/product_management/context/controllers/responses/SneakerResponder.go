@@ -41,6 +41,7 @@ func SendSneakerByID(c *fiber.Ctx) error {
 	sneakerWithColors.PromotionCode = sneaker.PromotionCode
 	sneakerWithColors.Tags = sneaker.Tags
 	sneakerWithColors.Reviews = sneaker.Reviews
+	sneakerWithColors.Colors = sneaker.Colors
 
 	var colorTypes []models.SneakerColor
 	for _, color := range sneaker.Colors {
@@ -55,6 +56,33 @@ func SendSneakerByID(c *fiber.Ctx) error {
 
 	sneakerWithColors.Types = colorTypes
 	return c.JSON(sneakerWithColors)
+}
+
+func sendSneakersUsingPipeline(pipeline mongo.Pipeline, c *fiber.Ctx) error {
+	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer cursor.Close(context.TODO())
+
+	var sneakersWithColors []models.SneakerWithColors
+	for cursor.Next(context.TODO()) {
+		var sneakerWithColors models.SneakerWithColors
+		if err := cursor.Decode(&sneakerWithColors); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
+	}
+
+	if len(sneakersWithColors) == 0 {
+		sneakersWithColors = []models.SneakerWithColors{}
+	}
+
+	return c.JSON(struct {
+		Sneakers []models.SneakerWithColors `json:"sneakers"`
+	}{
+		Sneakers: sneakersWithColors,
+	})
 }
 
 func SendSneakersByPagination(c *fiber.Ctx) error {
@@ -94,32 +122,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 		},
 	}
 
-	cursor, err := database.SneakerCollection.Aggregate(context.TODO(), pipeline)
-	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
-	}
-	defer cursor.Close(context.TODO())
-
-	var sneakersWithColors []models.SneakerWithColors
-	for cursor.Next(context.TODO()) {
-		var sneakerWithColors models.SneakerWithColors
-		if err := cursor.Decode(&sneakerWithColors); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		sneakersWithColors = append(sneakersWithColors, sneakerWithColors)
-	}
-
-	if len(sneakersWithColors) == 0 {
-		sneakersWithColors = []models.SneakerWithColors{}
-	}
-
-	return c.JSON(struct {
-		Sneakers []models.SneakerWithColors `json:"sneakers"`
-		Page     int                        `json:"page"`
-	}{
-		Sneakers: sneakersWithColors,
-		Page:     pageInt,
-	})
+	return sendSneakersUsingPipeline(pipeline, c)
 }
 
 func getSeakerRelatedWithColor(sneakerId string, sneakerColorId string) models.SneakerWithColors {
@@ -212,6 +215,7 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 	return c.JSON(sneakersData)
 }
 
+
 func CheckSneakerExistence(c *fiber.Ctx) error {
 	requiredSneakerID := c.Params("id")
 
@@ -228,4 +232,61 @@ func CheckSneakerExistence(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"exists": true})
+}
+
+
+
+func SendSneakerQuantities(c *fiber.Ctx) error {
+	type SneakersTypes struct {
+		SneakerId      string `json:"sneakerId,omitempty"`
+		SneakerColorId string `json:"sneakerColorId,omitempty"`
+		Size 		   float32 `json:"size,omitempty"`
+		Quantity 	   int     `json:"quantity"`
+		Image          string `json:"image,omitempty"`
+		Name           string `json:"name,omitempty"`
+		Price          float32 `json:"price,omitempty"`
+	}
+	var sneakers []SneakersTypes
+	if err := c.BodyParser(&sneakers); err != nil {
+		return c.Status(400).SendString("Invalid sneaker data")
+	}
+
+	for index, sneaker := range sneakers {
+		size, name , price, image := GetUpdatedQuantity(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+		sneakers[index].Quantity = size
+		sneakers[index].Name = name
+		sneakers[index].Price = price
+		sneakers[index].Image = image
+	}
+
+	return c.JSON(sneakers)
+}
+
+
+
+func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float32) (int , string , float32, string){
+	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+		for _, sneakerType := range sneakerWithColor.Types {
+			for _, sneakerSize := range sneakerType.Sizes {
+				if sneakerSize.Value == size {
+					return sneakerSize.Quantity, sneakerWithColor.Name, sneakerWithColor.Price , sneakerWithColor.Types[0].Images[0].URL
+				}
+			}
+	}
+
+	return 0, "Sneaker not found", 0, ""
+}
+
+
+func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int{
+	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
+		for _, sneakerType := range sneakerWithColor.Types {
+			for _, sneakerSize := range sneakerType.Sizes {
+				if sneakerSize.Value == size {
+					return sneakerSize.Quantity
+				}
+			}
+	}
+
+	return 0
 }

@@ -1,44 +1,42 @@
+"use client";
 import "@/styles/admin_panel/admin_panel_colors_form.css";
 import ColorPicker from "./ColorPicker";
 import Button from "../Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { focusedImageStyle } from "@/utils/ImageFormUtils";
-import uuid4 from "uuid4";
-const SIZE = {
-  value: 0,
-  quantity: 0,
-};
-
-const IMAGE = {
-  url: "",
-  id: "",
-}
-
-
+import {
+  insertSneakerColor,
+  getSneakerColorById,
+  updateSneakerColorById,
+} from "@/requests/SneakersRequest";
+import Modal from "../Modal";
+import SizeSelector from "./SizeSelectorForm";
+import ImageSelector from "./ImageSelector";
+import DeleteSneakerColorConfirmation from "@/components/admin/confirmations/DeleteSneakerColorConfirmation";
 const SNEAKER_COLOR = {
-  name: "",
-  images: [
-    {
-      url: "https://res.cloudinary.com/dex16gvvy/image/upload/v1698842196/solestyle/product_images/Converse/rywp5fkxnzazalbe7gun.webp",
-      id: "solestyle/product_images/Converse/rywp5fkxnzazalbe7gun",
-    },
-  ],
-  sizes: [
-    {
-      value: 12,
-      quantity: 12,
-    },
-  ],
+  id: "",
+  images: [],
+  sizes: [],
 };
 
-const AdminPanelColorsForm = () => {
+const COLOR = {
+  color: "",
+  _id: "",
+};
+
+const AdminPanelColorsForm = ({
+  editable,
+  sneaker,
+  sneakerColors,
+  setSneakerColors,
+}) => {
   const [openSizeDropdown, setOpenSizeDropdown] = useState(false);
   const [openImageDropdown, setOpenImageDropdown] = useState(false);
-  const [currSize, setCurrSize] = useState(SIZE);
   const [form, setForm] = useState(SNEAKER_COLOR);
   const [deletedImages, setDeletedImages] = useState([]);
   const [imageAdded, setImageAdded] = useState([]);
+  const [colorSelected, setColorSelected] = useState(COLOR);
+  const [deleteModal, setDeleteModal] = useState(false)
 
   const toggleSizeDropdown = () => {
     setOpenSizeDropdown(!openSizeDropdown);
@@ -48,200 +46,223 @@ const AdminPanelColorsForm = () => {
     setOpenImageDropdown(!openImageDropdown);
   };
 
-  const onHandleSizeChange = (e) => {
-    const { name, value } = e.target;
-
-
-
-    if (name == "value" && (value > 15 || value < 0)) {
-      return;
-    }
-
-    if (name == "quantity" && (value > 15 || value < 0)) {
-      return;
-    }
-
-    setCurrSize({
-      ...currSize,
-      [name]: value,
-    });
-  }
-
-  const onAddSize = () => {
-    if (!currSize.value || !currSize.quantity) return;
-    setForm({
-       ...form,
-      sizes: [...form.sizes, currSize]
-    });
-    setCurrSize(SIZE);
+  const onHandleColorChange = async () => {
+    const res = await getSneakerColorById(colorSelected._id);
+    setForm(res);
   };
 
-  const onRemoveSize = (value) => {
-    setForm({
-      ...form,
-      sizes: form.sizes.filter((s) => s.value != value),
-    })
-  }
+  useEffect(() => {
+    if (colorSelected._id !== "") {
+      onHandleColorChange();
+    } else {
+      setForm(SNEAKER_COLOR);
+      setOpenImageDropdown(false);
+      setOpenSizeDropdown(false);
+    }
+     setImageAdded([]);
+     setDeletedImages([]);
+  }, [colorSelected]);
 
-  const onDeleteImage = (imageIdToDelete)=>{
+  useEffect(() => {
+    if (sneaker._id === "") {
+      setOpenImageDropdown(false);
+      setOpenSizeDropdown(false);
+      setForm(SNEAKER_COLOR);
+      setColorSelected(COLOR);
+    }
+  }, [sneaker]);
+
+  const onDeleteImage = (imageIdToDelete) => {
     setForm({
       ...form,
       images: form.images.filter((i) => i.id != imageIdToDelete),
-    })
-    setDeletedImages([...deletedImages, imageIdToDelete])
+    });
+    setDeletedImages([...deletedImages, imageIdToDelete]);
+  };
 
+  const addImage = (e) => {
+    const files = e.target.files;
+
+
+    for (const file of files) {
+      if (file.size > 1000000) {
+        toast.error("File must be less than 1MB");
+        return;
+      }
+      if (form.images.length + imageAdded.length + files.length >= 10) {
+        toast.error("Cannot add more than 10 images");
+        return;
+      }
+
+      const reader = new FileReader();
+      const image = {
+        file: file,
+        url: "",
+      };
+      reader.onload = function (e) {
+        image.url = e.target.result;
+        setImageAdded((prevImages) => [...prevImages, image]);
+      };
+      reader.readAsDataURL(file);
+    }
+    e.target.value = "";
+  };
+
+  const updateSneakerColor = async() => {
+    if (!validateSneakerColor()) {
+      return;
+    }
+    const data =  onSubmitSneakerColor();
+    toast.promise(updateSneakerColorById(data, colorSelected._id), {
+      loading: "Updating Color",
+      success: (result) => {
+        setDeletedImages([]);
+        setImageAdded([]);
+        onSelectColor(colorSelected)
+           return "Color updated successfully";
+      },
+      error: "Error when updating color."
+      
+    });
+  }
+  const onDeleteUploadedImage = (i) => {
+    setImageAdded(imageAdded.filter((q, index) => index !== i));
+
+  };
+
+  const onSelectColor = (color) => {
+      if (colorSelected._id !== "" && (color._id === colorSelected._id)) {
+        onHandleColorChange();
+      }else{
+        setColorSelected(color);
+      }
+  };
+
+const validateSneakerColor = () => {
+  if (form.sizes.length == 0 || (form.images.length == 0 && imageAdded.length == 0)) {
+    toast.error("At least one Image and sizes are required.");
+    return false;
+  }
+  return true;
+}
+
+  const onSubmitSneakerColor =  () => {
+    const data = new FormData();
+    data.append("color", colorSelected.color);
+
+    form.sizes.forEach((s) => {
+      data.append("sizes[]", s.value);
+      data.append("values[]", s.quantity);
+    });
+
+    deletedImages.forEach((d) => {
+      data.append("deleted_images[]", d);
+    });
+    imageAdded.forEach((newImage) => {
+      data.append("images[]", newImage.file);
+    });
+    data.append("brand", sneaker.brand);
+
+    return data;
+  };
+
+  const uploadSneakerColor = async () => {
+    if (!validateSneakerColor()) {
+      return;
+    }
+    const data =  onSubmitSneakerColor();
+    toast.promise(insertSneakerColor(data, sneaker._id), {
+      loading: "Adding Color",
+      success: (result) => {
+        setDeletedImages([]);
+        setImageAdded([]);
+        colorSelected._id = result.id
+        onSelectColor(colorSelected)
+        setSneakerColors([...sneakerColors, colorSelected]);
+        return "Color added successfully";
+      },
+      error: (w) => {
+        return "Error when adding color.";
+      },
+    });
+  };
+
+  const deleteSneakerColor =  () => {
+    setDeleteModal(true)
   }
 
-    const addImage = (e) => {
-      const files = e.target.files;
-
-      for (const file of files) {
-        if (file.size > 1000000) {
-          toast.error("File must be less than 1MB");
-          return;
-        }
-        if (form.images.length + imageAdded.length + files.length >= 15) {
-          toast.error("Cannot add more than 15 images");
-          return;
-        }
-
-        const reader = new FileReader();
-        const image = {
-          file: file,
-          url: "",
-        };
-        reader.onload = function (e) {
-          image.url = e.target.result;
-          setImageAdded((prevImages) => [...prevImages, image]);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    const onDeleteUploadedImage = (i)=>{
-       setImageAdded(imageAdded.filter((q, index) => index !== i));
-    }
-
-
+  const closeDeleteModal = () => {
+    setDeleteModal(false)
+  }
 
 
   return (
-    <div className="admin-panel-colors-ctn">
-      <h3 className="admin-panel-form-title">SNEAKER COLORS</h3>
+    <div
+      className={`admin-panel-colors-ctn ${
+        !editable ? "admin-panel-disabled" : ""
+      }`}
+    >
+      <div className="admin-panel-color-form-title-ctn">
+        <h3 className="admin-panel-form-title">SNEAKER COLORS</h3>
+        <div
+          className="selected-color"
+          style={{
+            backgroundColor: colorSelected.color,
+            visibility: colorSelected?.color === "" ? "hidden" : "visible",
+          }}
+        ></div>
+      </div>
       <div className="admin-panel-colors-form">
         <div className="admin-panel-colors-form-item">
-          <ColorPicker />
+          <ColorPicker colors={sneakerColors} onSelectColor={onSelectColor} />
         </div>
-        <div className="admin-panel-colors-form-droopdown-ctn">
-          <div className="admin-panel-colors-form-droopdown">
-            {!openSizeDropdown ? (
-              <span>Sizes</span>
-            ) : (
-              <div className="admin-panel-colors-form-droopdown-inputs">
-                <input
-                  type="number"
-                  value={currSize.value}
-                  name="value"
-                  onChange={onHandleSizeChange}
-                />
-                <input
-                  type="number"
-                  value={currSize.quantity}
-                  name="quantity"
-                  onChange={onHandleSizeChange}
-                />
-                <i className="fa-solid fa-plus" onClick={onAddSize}></i>
-              </div>
-            )}
-            <i
-              onClick={toggleSizeDropdown}
-              className={`fa-solid fa-chevron-down ${
-                openSizeDropdown ? "fa-rotate-180" : ""
-              }`}
-            ></i>
-          </div>
-          {openSizeDropdown && (
-            <ul className="admin-panel-colors-droopdown-list">
-              {form.sizes.map((size) => (
-                <li
-                  key={size.value}
-                  className="admin-panel-colors-droopdown-size-item"
-                >
-                  <span>{size.value}</span>
-                  <span>{size.quantity}</span>
-                  <i
-                    className="fa-solid fa-x"
-                    onClick={() => onRemoveSize(size.value)}
-                  ></i>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <SizeSelector
+          form={form}
+          setForm={setForm}
+          editable={editable}
+          openSizeDropdown={openSizeDropdown}
+          toggleSizeDropdown={toggleSizeDropdown}
+          colorSelected={colorSelected}
+        />
+        <ImageSelector
+          form={form}
+          editable={editable}
+          openImageDropdown={openImageDropdown}
+          toggleImageDropdown={toggleImageDropdown}
+          colorSelected={colorSelected}
+          addImage={addImage}
+          onDeleteUploadedImage={onDeleteUploadedImage}
+          onDeleteImage={onDeleteImage}
+          imageAdded={imageAdded}
+        />
 
-        <div className="admin-panel-colors-form-droopdown-ctn">
-          <div className="admin-panel-colors-form-droopdown">
-            {!openImageDropdown ? (
-              <span>Images</span>
-            ) : (
-              <div className="admin-panel-colors-form-uploaded-button">
-                <label htmlFor="file-upload">
-                  <i className="fa-solid fa-upload"></i>
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="image"
-                  id="file-upload"
-                  onChange={addImage}
-                  multiple
-                />
-              </div>
-            )}
-            <i
-              onClick={toggleImageDropdown}
-              className={`fa-solid fa-chevron-down ${
-                openImageDropdown ? "fa-rotate-180" : ""
-              }`}
-            ></i>
-          </div>
-          {openImageDropdown && (
-            <ul className="admin-panel-colors-droopdown-list">
-              {form.images.map((image) => {
-                return (
-                  <li
-                    key={image.id}
-                    className="admin-panel-colors-droopdown-image-item"
-                    style={focusedImageStyle(image.url)}
-                  >
-                    <i
-                      className="fa-solid fa-x"
-                      onClick={() => onDeleteImage(image.id)}
-                    ></i>
-                  </li>
-                );
-              })}
-              {imageAdded.map((image, i) => {
-                return (
-                  <li
-                    key={uuid4()}
-                    className="admin-panel-colors-droopdown-image-item"
-                    style={focusedImageStyle(image.url)}
-                  >
-                    <i
-                      className="fa-solid fa-x"
-                      onClick={() => onDeleteUploadedImage(i)}
-                    ></i>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
         <div className="admin-panel-colors-form-btns">
-          <Button>ADD COLOR</Button>
+          {colorSelected._id ? (
+            <>
+              <Button btnStyle="third_btn" onClick={updateSneakerColor}>
+                UPDATE
+              </Button>
+              <Button onClick={deleteSneakerColor}>DELETE</Button>
+            </>
+          ) : (
+            <Button
+              className={`${
+                !colorSelected.color ? "admin-panel-droopdown-disabled" : ""
+              }`}
+              onClick={uploadSneakerColor}
+            >
+              ADD COLOR
+            </Button>
+          )}
         </div>
       </div>
+      <Modal isModalOpen={deleteModal} setModalOpen={setDeleteModal}>
+        <DeleteSneakerColorConfirmation
+          id={colorSelected._id}
+          sneakerColorName={colorSelected.color}
+          closeConfirmation={closeDeleteModal}
+        />
+      </Modal>
     </div>
   );
 };

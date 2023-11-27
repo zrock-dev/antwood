@@ -1,7 +1,6 @@
 package requests
 
 import (
-	"context"
 	"product_management/app/database"
 	"product_management/app/models"
 
@@ -97,16 +96,3 @@ func updateRatingSummary(ratingSummary *models.RatingSummary, rate int) {
 	}
 }
 
-func deleteReviewsBySneakerID(sneakerID string) error {
-	id, err := primitive.ObjectIDFromHex(sneakerID)
-	if err != nil {
-		return err
-	}
-
-	_, err = database.ReviewCollection.DeleteMany(context.TODO(), bson.M{"sneakerId": id})
-	if err != nil {
-		return err
-	}
-
-	return nil
-}

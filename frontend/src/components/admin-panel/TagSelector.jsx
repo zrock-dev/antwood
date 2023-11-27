@@ -1,77 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import Button from "../Button";
 import "@/styles/admin_panel/tag_selector.css";
-
-let TAGS = [
-  "adidas",
-  "animal print",
-  "basketball",
-  "black",
-  "blue",
-  "breathable",
-  "buckles",
-  "buttons",
-  "canvas",
-  "classic",
-  "comfortable",
-  "converse",
-  "cushioned",
-  "durable",
-  "extra large",
-  "floral",
-  "flyknit",
-  "gray",
-  "green",
-  "grippy",
-  "grommets",
-  "high-top",
-  "jordan",
-  "laces",
-  "large",
-  "leather",
-  "lifestyle",
-  "lightweight",
-  "low-top",
-  "medium",
-  "men",
-  "mid-top",
-  "new balance",
-  "nike",
-  "nubuck",
-  "orange",
-  "pink",
-  "plaid",
-  "pockets",
-  "puma",
-  "purple",
-  "red",
-  "reebok",
-  "retro",
-  "rivets",
-  "running",
-  "saucony",
-  "small",
-  "solid",
-  "straps",
-  "striped",
-  "studs",
-  "suede",
-  "supportive",
-  "under armour",
-  "unisex",
-  "vans",
-  "waterproof",
-  "white",
-  "women",
-  "yellow",
-  "zippers",
-];
-
-const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
+import { TAGS } from "@/utils/Suggestions";
+const TagSelector = ({ tags = [], addTags, removeTags, reset = false,  tagError ,addTagError}) => {
   const [tag, setTag] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const suggestionsRef = useRef(null);
-  const [tagError, setTagError] = useState("");
 
   useEffect(() => {
     let handler = (e) => {
@@ -95,30 +29,36 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       }
   },[reset])
 
-  const addTagError = (message) => {
-    setTagError(message);
-    setTimeout(() => {
-      setTagError("");
-    }, 3000);
-  };
 
   const handleChange = (e) => {
-    let value = e.target.value.trim();
-    if (value.length > 18) {
+    let value = e.target.value;
+    if (value.trim().length > 15) {
       return;
     }
-    let currentSuggestions = TAGS.filter((t) => t.startsWith(value));
-    setTag(value.toLowerCase());
-    if (value == "") {
+
+    if (value.length == 0) {
+      setTag("");
       setSuggestions([]);
       return;
     }
-    setSuggestions(currentSuggestions);
+
+    if (!/^[a-zA-Z0-9\s]+$/.test(value)){
+      return;
+    }
+    
+
+    let currentSuggestions = TAGS.filter((t) => t.startsWith(value) && tags.indexOf(t)==-1);
+    setSuggestions(currentSuggestions); 
+    setTag(value.toLowerCase());
   };
 
   const onClickSuggestion = (suggestion) => {
     setTag(suggestion);
     setSuggestions([]);
+  };
+
+  const isValidTag = (tag) => {
+    return /[a-zA-Z]/.test(tag);
   };
 
   const handleAddTag = () => {
@@ -127,8 +67,12 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       return;
     }
 
-    if (tags.length >= 20) {
-      addTagError("* Can't add more than 20 tags");
+    if (tags.length >= 30) {
+      addTagError("* Can't add more than 30 tags");
+      return;
+    }
+    if (!isValidTag(tag)) {
+      addTagError("* Tag must contain at least one non-numeric character");
       return;
     }
 
@@ -137,14 +81,45 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
       addTagError("* Tag already exists");
       return;
     }
-
-    addTags(tag);
+   setSuggestions([]);
+    addTags(tag.trim());
     setTag("");
   };
 
   const handleRemoveTag = (tag) => {
     removeTags(tag);
   };
+const handleOnKeyDown = (e) => {
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    if (suggestions.length === 0) {
+      return;
+    }
+
+    const currentIndex = suggestions.indexOf(tag);
+    let newIndex;
+
+    if (e.key === "ArrowDown") {
+      newIndex = (currentIndex + 1) % suggestions.length;
+    } else {
+      newIndex = (currentIndex - 1 + suggestions.length) % suggestions.length;
+    }
+
+    const listItems = suggestionsRef.current.childNodes;
+    const previousIndex = currentIndex >= 0 ? currentIndex : 0;
+    listItems[previousIndex].classList.remove("hovered");
+    listItems[newIndex].classList.add("hovered");
+
+     listItems[newIndex].scrollIntoView({
+       behavior: "smooth",
+       block: "nearest",
+       inline: "start",
+     });
+    setTag(suggestions[newIndex]);
+  } else if (e.key === "Enter") {
+    handleAddTag();
+  }
+};
 
   return (
     <div className="tag-form-ctn admin-panel-form-item">
@@ -155,6 +130,8 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false }) => {
           value={tag}
           placeholder="Tags"
           onChange={handleChange}
+          onKeyDown={handleOnKeyDown}
+          autoComplete="off"
         />
         <Button onClick={handleAddTag}>
           <i className="fa-solid fa-plus"></i>

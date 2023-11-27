@@ -9,6 +9,7 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
   const [openPopup, setOpenPopup] = useState(false);
   const popupRef = useRef();
   const popupBtnRef = useRef();
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     let handler = (e) => {
@@ -28,17 +29,52 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
   }, []);
 
   const togglePopup = () => {
-    setOpenPopup(!openPopup);
+    if (openPopup) {
+      setErrorMessage("");
+      setOpenPopup(false);
+    }else{
+      setOpenPopup(true);
+    }
   };
 
   const addNewColor = (color) => {
-    if (!isValidColor(color)) return;
-
-    if (!colors.includes(color)) {
-        
+    if (color === "") {
+      onSetMessage("* Color is required");
+      return;
     }
+    if (!isValidColor(color)) {
+      onSetMessage("* Invalid color");
+      return;
+    }
+
+    if (colors.length >= 9) {
+      onSetMessage("* Maximum 10 colors allowed");
+      return;
+    }
+
+
+    const index = colors.findIndex((c) => c.color === color)
+        
+        if (index !== -1) {
+          onSetMessage("* Color already exists");
+          return;
+        }
+    
+        onSelectColor({
+          color: color,
+          _id: "",
+        });
+    
     togglePopup();
   };
+
+
+  const onSetMessage = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage("");
+    },3000)
+  }
 
   function isValidColor(color) {
     const s = new Option().style;
@@ -49,14 +85,14 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
   return (
     <div className={`${colorPickerStyle.color_picker}  ${className}`}>
       <div className={colorPickerStyle.popup_btn}>
-        <div ref={popupBtnRef}>
-          <Button btnStyle="third_btn" onClick={togglePopup}>
-            New Color <i className="fa-solid fa-plus"></i>
-          </Button>
-        </div>
         <div className={colorPickerStyle.color_picker_ctn}>
+          <div ref={popupBtnRef}>
+            <Button btnStyle="third_btn" onClick={togglePopup}>
+              New Color <i className="fa-solid fa-plus"></i>
+            </Button>
+          </div>
           {colors.map((c) => (
-            <Color name={c.color} key={c.id} onClick={() => onSelectColor(c)} />
+            <Color name={c.color} key={c._id} onClick={() => onSelectColor(c)} />
           ))}
         </div>
       </div>
@@ -66,18 +102,19 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
         }
         addColor={addNewColor}
         popupRef={popupRef}
+        errorMessage={errorMessage}
       />
     </div>
   );
 }
 
-function ColorPickerPopup({ className, addColor, popupRef }) {
+function ColorPickerPopup({ className, addColor, popupRef , errorMessage}) {
   const [customeColor, setCustomeColor] = useState("");
 
+
   const addCustomeColor = (color) => {
-    
-  const regex = /^[a-zA-Z ]+$/;
-    if (regex.test(color)) {
+  const regex = /^[a-zA-Z]+$/;
+    if (regex.test(color) || color == "") {
       addColor(color);
     }
   };
@@ -89,6 +126,13 @@ const hadleOnChange = (e) => {
     setCustomeColor(value.toLowerCase());
   }
 };
+
+
+const handelOnKeyDown = (e) => {
+  if (e.key === "Enter") {
+    addCustomeColor(customeColor);
+  }
+}
   return (
     <div
       className={`${colorPickerStyle.color_picker_popup} ${className} `}
@@ -109,9 +153,11 @@ const hadleOnChange = (e) => {
         </div>
       </div>
       <div className={colorPickerStyle.color_custome_ctn}>
-        <label>Custom Color</label>
         <div>
-          <input type="text" value={customeColor} onChange={hadleOnChange} />
+          <label>Custom Color</label> <span className={colorPickerStyle.error}>{errorMessage}</span>
+        </div>
+        <div>
+          <input type="text" value={customeColor} onChange={hadleOnChange} onKeyDown={handelOnKeyDown}/>
           <Button
             onClick={() => {
               addCustomeColor(customeColor);
