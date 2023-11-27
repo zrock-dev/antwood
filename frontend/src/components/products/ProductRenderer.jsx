@@ -46,8 +46,8 @@ const ProductRenderer = ({
 		};
 	}, [products]);
 	return (
-		<>
-			<div className="products-main-container">
+		<div className="products-main-container">
+			<div className="products-container">
 				{products.map((product) => (
 					<ProductCardView key={product._id} product={product} />
 				))}
@@ -60,7 +60,7 @@ const ProductRenderer = ({
 					<span className="loader"></span>
 				</div>
 			)}
-		</>
+		</div>
 	);
 };
 

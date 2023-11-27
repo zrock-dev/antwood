@@ -26,3 +26,7 @@
 	visibility: hidden !important;
 	cursor: default;
 }
+
+.sub-main-container {
+	width: 100%;
+}

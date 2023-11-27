@@ -1,0 +1,7 @@
+.filter-main-container {
+	position: sticky;
+	top: 7vh;
+	left: 0;
+
+	height: 93vh;
+}
