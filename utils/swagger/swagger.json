@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "SoleStyle API - OpenAPI 3.0",
+    "description": "This is the access to SoleStyle's API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "solestyle28@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.17"
+  },
+  "servers": [
+    {
+      "url": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Store products management"
+    }
+  ],
+  "paths": {
+    "/sneaker/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get product by ID",
+        "description": "Get a product by its ID",
+        "operationId": "getSneakerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sneaker"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID value"
+          }
+        }
+      }
+    },
+    "/sneakers": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "List Available products",
+        "description": "The list has a size of 4 items",
+        "operationId": "getSneakerList",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Describes the number of the page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sneaker"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID value"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Sneaker": {
+        "required": ["name", "photoUrls"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "doggie"
+          },
+          "photoUrls": {
+            "type": "array",
+            "xml": {
+              "wrapped": true
+            },
+            "items": {
+              "type": "string",
+              "xml": {
+                "name": "photoUrl"
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "xml": {
+              "wrapped": true
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "pet status in the store",
+            "enum": ["available", "pending", "sold"]
+          }
+        }
+      }
+    }
+  }
+}
