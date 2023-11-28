@@ -3,11 +3,16 @@ import Minus from '@/icons/Minus';
 import Plus from '@/icons/Plus';
 import { useState } from 'react';
 
-const Section = ({ title, children, isOpen = false }) => {
+const Section = ({
+	title,
+	children,
+	isOpen = false,
+	style = 'secction-container'
+}) => {
 	const [isDisplaying, setDisplaying] = useState(isOpen);
 
 	return (
-		<div className="secction-container">
+		<div className={style}>
 			<button
 				className="secction-title"
 				onClick={() => setDisplaying(!isDisplaying)}

@@ -61,3 +61,8 @@ export const getSearchByPaginationForAdmin = async (input, page) => {
 	);
 	return response.data;
 };
+
+export const getFilterOptions = async () => {
+	const response = await axios.get('/sneakers/filters/options');
+	return response.data;
+};
