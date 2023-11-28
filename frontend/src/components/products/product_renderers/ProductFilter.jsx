@@ -6,12 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { getAllProductsByPagination } from '@/requests/SneakersRequest';
 
 const ProductFilter = () => {
-	const params = useSearchParams();
-
-	useEffect(() => {
-		console.log(params.get('brand'));
-		console.log(params.get('tags'));
-	}, []);
+	useEffect(() => {}, []);
 
 	return (
 		<div className="layout-filter">

@@ -23,7 +23,7 @@
 }
 
 .horizontal-separator.margin-20px {
-	margin: 20px 0;
+	margin: 23px 0;
 }
 
 .secction-item-row {
@@ -227,5 +227,5 @@
 	grid-template-columns: 22% 78%;
 	column-gap: 25px;
 
-	padding: 0 50px;
+	padding-right: 80px;
 }

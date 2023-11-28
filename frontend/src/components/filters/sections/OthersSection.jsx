@@ -3,7 +3,7 @@ import Section from '@/components/Section';
 
 const OthersSection = ({ tags }) => {
 	return (
-		<Section title={'Others'}>
+		<Section style="secction-container space-left-30" title={'Others'}>
 			<div className="filter-text-container">
 				{tags.map((tag, index) => (
 					<button className="filter-text" key={index}>

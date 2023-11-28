@@ -16,18 +16,18 @@ const FilterRenderer = () => {
 
 	return (
 		<div className="filters-main-container">
-			<h3>FILTERS</h3>
+			<h3 className="space-left-30">FILTERS</h3>
 			{filters ? (
 				<div className="filters-container">
-					<span className="horizontal-separator margin-20px "></span>
+					<span className="horizontal-separator margin-20px"></span>
 					<BrandSection brands={filters.brands} setBrand={setBrand} />
-					<span className="horizontal-separator margin-20px "></span>
+					<span className="horizontal-separator margin-20px"></span>
 					<OthersSection tags={filters.tags} />
-					<span className="horizontal-separator margin-20px "></span>
+					<span className="horizontal-separator margin-20px"></span>
 					<SizeSection sizes={filters.sizes} />
-					<span className="horizontal-separator margin-20px "></span>
+					<span className="horizontal-separator margin-20px"></span>
 					<ColorSection colors={filters.colors} />
-					<span className="horizontal-separator margin-20px "></span>
+					<span className="horizontal-separator margin-20px"></span>
 					<PriceSection
 						minPrice={filters.minPrice}
 						maxPrice={filters.maxPrice}

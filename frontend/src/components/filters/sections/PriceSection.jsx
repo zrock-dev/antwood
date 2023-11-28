@@ -3,7 +3,7 @@ import Section from '@/components/Section';
 
 const PriceSection = ({ minPrice, maxPrice }) => {
 	return (
-		<Section title={'Prices'}>
+		<Section style="secction-container space-left-30" title={'Prices'}>
 			<div>
 				<button>{minPrice}</button>
 				<button>{maxPrice}</button>

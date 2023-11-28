@@ -26,7 +26,7 @@ const ProductResultsProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (pathname.includes('products') && !filters) {
+		if (pathname.includes('/products') && !filters) {
 			getFilterOptions()
 				.then((data) => setFilters(data))
 				.catch(() => setFilters(emptyFilters));
@@ -35,9 +35,11 @@ const ProductResultsProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (filters) {
-			router.push('/products/filter?brand=converse&tags=men', {
-				brand: filters.brand
-			});
+			// router.push('/products/filter?brand=converse&tags=men', {
+			// 	query: {
+			// 		brand: filters.brand
+			// 	}
+			// });
 		}
 	}, [filters]);
 

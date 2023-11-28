@@ -6,7 +6,7 @@ const SizeSection = ({ sizes }) => {
 	const [sizeIndex, setSizeIndex] = useState(0);
 
 	return (
-		<Section title={'Sizes'}>
+		<Section style="secction-container space-left-30" title={'Sizes'}>
 			<div className="sneaker-size-container">
 				{sizes.map((size, index) => (
 					<button

@@ -4,7 +4,7 @@ import '../../../styles/filters/filterColor.css';
 
 const ColorSection = ({ colors }) => {
 	return (
-		<Section title={'Colors'}>
+		<Section style="secction-container space-left-30" title={'Colors'}>
 			<div className="filter-color-container">
 				{colors.map((color, index) => (
 					<button
