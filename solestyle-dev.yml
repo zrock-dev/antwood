@@ -5,11 +5,17 @@ services:
   web:
     image: nginx:1.25-alpine3.18
     volumes:
-      - ./utils/nginx/solestyle.conf:/etc/nginx/conf.d/default.conf
+      - ./utils/nginx/:/etc/nginx/conf.d/
     ports:
       - "80:80"
-    expose:
-      - 3000
+      - "5555:5555"
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: "/config/swagger.json"
+    volumes:
+      - ./utils/swagger/swagger.json:/config/swagger.json
 
   frontend:
     build:
@@ -29,7 +35,7 @@ services:
     expose:
       - "4000:4000"
     environment:
-      DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY_CI}
+      DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY}
 
   account_management:
     build:
@@ -39,7 +45,7 @@ services:
     expose:
       - "4500:4500"
     environment:
-      DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY_CI}
+      DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY}
 
   shopping_cart_management:
     build:
@@ -48,3 +54,4 @@ services:
     image: solestyle_dev/shopping_cart_management
     expose:
       - "5000:5000"
+
