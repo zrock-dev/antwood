@@ -93,16 +93,10 @@ func SendSearchSuggestions(c *fiber.Ctx) error {
 
 func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 	searchInput := c.Params("input", "")
-	page := c.Query("page", "1")
-	pageSize := c.Query("pageSize", "9")
 	isForAdmin := c.Query("foradmin", "false")
 
 	if strings.ReplaceAll(searchInput, " ", "") != "" {
-		pageInt, _ := strconv.Atoi(page)
-		pageSizeInt, _ := strconv.Atoi(pageSize)
-
-		skip := (pageInt - 1) * pageSizeInt
-		limit := pageSizeInt
+		skip, limit := getPaginationValues(c)
 
 		searchInput = strings.TrimSpace(searchInput)
 		searchInput, err := url.QueryUnescape(searchInput)

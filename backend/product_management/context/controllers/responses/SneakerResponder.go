@@ -84,7 +84,7 @@ func sendSneakersUsingPipeline(pipeline mongo.Pipeline, c *fiber.Ctx) error {
 	})
 }
 
-func SendSneakersByPagination(c *fiber.Ctx) error {
+func getPaginationValues(c *fiber.Ctx) (int, int) {
 	page := c.Query("page", "1")
 	pageSize := c.Query("pageSize", "9")
 	pageInt, _ := strconv.Atoi(page)
@@ -92,6 +92,11 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 
 	skip := (pageInt - 1) * pageSizeInt
 	limit := pageSizeInt
+	return skip, limit
+}
+
+func SendSneakersByPagination(c *fiber.Ctx) error {
+	skip, limit := getPaginationValues(c)
 
 	pipeline := mongo.Pipeline{
 		bson.D{
@@ -214,15 +219,12 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 	return c.JSON(sneakersData)
 }
 
-
-
-
 func SendSneakerQuantities(c *fiber.Ctx) error {
 	type SneakersTypes struct {
-		SneakerId      string `json:"sneakerId,omitempty"`
-		SneakerColorId string `json:"sneakerColorId,omitempty"`
-		Size 		   float32 `json:"size,omitempty"`
-		Quantity 	   int     `json:"quantity"`
+		SneakerId      string  `json:"sneakerId,omitempty"`
+		SneakerColorId string  `json:"sneakerColorId,omitempty"`
+		Size           float32 `json:"size,omitempty"`
+		Quantity       int     `json:"quantity"`
 	}
 	var sneakers []SneakersTypes
 	if err := c.BodyParser(&sneakers); err != nil {
@@ -237,17 +239,14 @@ func SendSneakerQuantities(c *fiber.Ctx) error {
 	return c.JSON(sneakers)
 }
 
-
-
 func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int {
 	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
-		for _, sneakerType := range sneakerWithColor.Types {
-			for _, sneakerSize := range sneakerType.Sizes {
-				if sneakerSize.Value == size {
-					return sneakerSize.Quantity
-				}
+	for _, sneakerType := range sneakerWithColor.Types {
+		for _, sneakerSize := range sneakerType.Sizes {
+			if sneakerSize.Value == size {
+				return sneakerSize.Quantity
 			}
+		}
 	}
 	return 0
 }
-
