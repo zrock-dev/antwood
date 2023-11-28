@@ -3,6 +3,8 @@ package responses
 import (
 	"context"
 	"product_management/app/database"
+	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -77,24 +79,41 @@ func SendSneakersFiltersOptions(c *fiber.Ctx) error {
 	return c.JSON(filters)
 }
 
+func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32, float32) {
+	brand := c.Query("brand", "")
+	color := c.Query("color", "")
+
+	tagsEntry := c.Query("tags", "")
+	minPriceEntry := c.Query("minPrice", "0")
+	maxPriceEntry := c.Query("maxPrice", "0")
+	sizeEntry := c.Query("size", "0")
+	minPrice, _ := strconv.ParseFloat(minPriceEntry, 32)
+	maxPrice, _ := strconv.ParseFloat(maxPriceEntry, 32)
+	size, _ := strconv.ParseFloat(sizeEntry, 32)
+
+	tags := strings.Split(tagsEntry, ",")
+	return brand, color, tags, float32(minPrice), float32(maxPrice), float32(size)
+}
+
 func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
+	brand, color, tags, minPrice, maxPrice, size := getFilterOptions(c)
 
 	pipeline := mongo.Pipeline{
 		bson.D{
 			{Key: "$match", Value: bson.D{
 				{Key: "$and", Value: []interface{}{
-					bson.D{{Key: "brand", Value: "converse"}},
-					bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: []string{"women"}}}}},
-					bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{"black"}}}}}}}}}},
+					bson.D{{Key: "brand", Value: brand}},
+					bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: tags}}}},
+					bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{color}}}}}}}}}},
 				},
 			},
 			}},
 		bson.D{
 			{Key: "$match", Value: bson.D{
 				{Key: "$and", Value: []interface{}{
-					bson.D{{Key: "price", Value: bson.D{{Key: "$lte", Value: 200}}}},
-					bson.D{{Key: "price", Value: bson.D{{Key: "$gte", Value: 200}}}},
+					bson.D{{Key: "price", Value: bson.D{{Key: "$lte", Value: maxPrice}}}},
+					bson.D{{Key: "price", Value: bson.D{{Key: "$gte", Value: minPrice}}}},
 				}},
 			},
 			},
@@ -112,7 +131,7 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 				{Key: "types.sizes", Value: bson.D{
 					{Key: "$elemMatch", Value: bson.D{
 						{Key: "value", Value: bson.D{
-							{Key: "$in", Value: []float32{12}},
+							{Key: "$in", Value: []float32{size}},
 						}},
 					}},
 				}},
@@ -125,18 +144,19 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 		bson.D{
 			{Key: "$limit", Value: limit},
 		},
-		bson.D{
-			{Key: "$project", Value: bson.D{
-				{Key: "tags", Value: 0},
-				{Key: "qualification", Value: 0},
-				{Key: "description", Value: 0},
-				{Key: "reviews", Value: 0},
-				{Key: "brand", Value: 0},
-				{Key: "types.sizes", Value: 0},
-				{Key: "types.quantity", Value: 0},
-			}},
-		},
 	}
+
+	pipeline = append(pipeline, bson.D{
+		{Key: "$project", Value: bson.D{
+			{Key: "tags", Value: 0},
+			{Key: "qualification", Value: 0},
+			{Key: "description", Value: 0},
+			{Key: "reviews", Value: 0},
+			{Key: "brand", Value: 0},
+			{Key: "types.sizes", Value: 0},
+			{Key: "types.quantity", Value: 0},
+		}},
+	})
 
 	return sendSneakersUsingPipeline(pipeline, c)
 }
