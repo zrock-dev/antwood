@@ -3,6 +3,7 @@ package responses
 import (
 	"context"
 	"product_management/app/database"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -78,5 +79,71 @@ func SendSneakersFiltersOptions(c *fiber.Ctx) error {
 }
 
 func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
-	return c.SendString("filters")
+	page := c.Query("page", "1")
+	pageSize := c.Query("pageSize", "9")
+	pageInt, _ := strconv.Atoi(page)
+	pageSizeInt, _ := strconv.Atoi(pageSize)
+
+	skip := (pageInt - 1) * pageSizeInt
+	limit := pageSizeInt
+
+	pipeline := mongo.Pipeline{
+		bson.D{
+			{Key: "$match", Value: bson.D{
+				{Key: "$and", Value: []interface{}{
+					bson.D{{Key: "brand", Value: "converse"}},
+					bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: []string{"women"}}}}},
+					bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{"black"}}}}}}}}}},
+				},
+			},
+			}},
+		bson.D{
+			{Key: "$match", Value: bson.D{
+				{Key: "$and", Value: []interface{}{
+					bson.D{{Key: "price", Value: bson.D{{Key: "$lte", Value: 200}}}},
+					bson.D{{Key: "price", Value: bson.D{{Key: "$gte", Value: 200}}}},
+				}},
+			},
+			},
+		},
+		bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "sneakerColors"},
+				{Key: "localField", Value: "colors.0._id"},
+				{Key: "foreignField", Value: "_id"},
+				{Key: "as", Value: "types"},
+			}},
+		},
+		bson.D{
+			{Key: "$match", Value: bson.D{
+				{Key: "types.sizes", Value: bson.D{
+					{Key: "$elemMatch", Value: bson.D{
+						{Key: "value", Value: bson.D{
+							{Key: "$in", Value: []float32{12}},
+						}},
+					}},
+				}},
+			},
+			},
+		},
+		bson.D{
+			{Key: "$skip", Value: skip},
+		},
+		bson.D{
+			{Key: "$limit", Value: limit},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "tags", Value: 0},
+				{Key: "qualification", Value: 0},
+				{Key: "description", Value: 0},
+				{Key: "reviews", Value: 0},
+				{Key: "brand", Value: 0},
+				{Key: "types.sizes", Value: 0},
+				{Key: "types.quantity", Value: 0},
+			}},
+		},
+	}
+
+	return sendSneakersUsingPipeline(pipeline, c)
 }
