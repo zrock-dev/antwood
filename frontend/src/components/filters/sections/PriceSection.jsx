@@ -1,7 +1,13 @@
 'use client';
 import Section from '@/components/Section';
 
-const PriceSection = ({ minPrice, maxPrice }) => {
+const PriceSection = ({
+	minPrice,
+	maxPrice,
+	setPriceRange,
+	currentMinPrice,
+	currentMaxPrice
+}) => {
 	return (
 		<Section style="secction-container space-left-30" title={'Prices'}>
 			<div>

@@ -12,25 +12,52 @@ import ColorSection from './sections/ColorSection';
 import PriceSection from './sections/PriceSection';
 
 const FilterRenderer = () => {
-	const { filters, setBrand } = useContext(ProductResultsContext);
+	const {
+		filterOptions,
+		filters,
+		setBrand,
+		setColor,
+		setPriceRange,
+		setSize,
+		addTag
+	} = useContext(ProductResultsContext);
 
 	return (
 		<div className="filters-main-container">
 			<h3 className="space-left-30">FILTERS</h3>
-			{filters ? (
+			{filterOptions ? (
 				<div className="filters-container">
 					<span className="horizontal-separator margin-20px"></span>
-					<BrandSection brands={filters.brands} setBrand={setBrand} />
+					<BrandSection
+						brands={filterOptions.brands}
+						currentBrand={filters.brand}
+						setBrand={setBrand}
+					/>
 					<span className="horizontal-separator margin-20px"></span>
-					<OthersSection tags={filters.tags} />
+					<OthersSection
+						tags={filterOptions.tags}
+						currentTags={filters.tags}
+						addTag={addTag}
+					/>
 					<span className="horizontal-separator margin-20px"></span>
-					<SizeSection sizes={filters.sizes} />
+					<SizeSection
+						sizes={filterOptions.sizes}
+						currentSize={filters.size}
+						setSize={setSize}
+					/>
 					<span className="horizontal-separator margin-20px"></span>
-					<ColorSection colors={filters.colors} />
+					<ColorSection
+						colors={filterOptions.colors}
+						currentColor={filters.color}
+						setColor={setColor}
+					/>
 					<span className="horizontal-separator margin-20px"></span>
 					<PriceSection
-						minPrice={filters.minPrice}
-						maxPrice={filters.maxPrice}
+						minPrice={filterOptions.minPrice}
+						maxPrice={filterOptions.maxPrice}
+						setPriceRange={setPriceRange}
+						currentMinPrice={filters.minPrice}
+						currentMaxPrice={filters.maxPrice}
 					/>
 				</div>
 			) : (
