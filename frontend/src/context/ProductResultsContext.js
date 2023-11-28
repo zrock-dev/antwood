@@ -18,7 +18,7 @@ const ProductResultsProvider = ({ children }) => {
 	const [filters, setFilters] = useState(null);
 
 	useEffect(() => {
-		if (pathname.includes('filters') && !filters) {
+		if (pathname.includes('products') && !filters) {
 			getFilterOptions()
 				.then((data) => setFilters(data))
 				.catch(() => setFilters(emptyFilters));
@@ -26,7 +26,7 @@ const ProductResultsProvider = ({ children }) => {
 	}, []);
 
 	return (
-		<ProductResultsContext.Provider value={emptyFilters}>
+		<ProductResultsContext.Provider value={{filters}}>
 			{children}
 		</ProductResultsContext.Provider>
 	);
