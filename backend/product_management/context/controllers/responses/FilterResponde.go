@@ -99,17 +99,65 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
 	brand, color, tags, minPrice, maxPrice, size := getFilterOptions(c)
 
-	pipeline := mongo.Pipeline{
+	pipeline := mongo.Pipeline{}
+	pipeline = getMatchFilters(pipeline, brand, tags, color)
+	pipeline = getPriceFilter(pipeline, minPrice, maxPrice)
+	pipeline = append(pipeline, bson.D{
+		{Key: "$lookup", Value: bson.D{
+			{Key: "from", Value: "sneakerColors"},
+			{Key: "localField", Value: "colors.0._id"},
+			{Key: "foreignField", Value: "_id"},
+			{Key: "as", Value: "types"},
+		}},
+	})
+	pipeline = getSizeFilter(pipeline, size)
+	pipeline = append(pipeline,
 		bson.D{
-			{Key: "$match", Value: bson.D{
-				{Key: "$and", Value: []interface{}{
-					bson.D{{Key: "brand", Value: brand}},
-					bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: tags}}}},
-					bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{color}}}}}}}}}},
-				},
-			},
+			{Key: "$skip", Value: skip},
+		},
+		bson.D{
+			{Key: "$limit", Value: limit},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "tags", Value: 0},
+				{Key: "qualification", Value: 0},
+				{Key: "description", Value: 0},
+				{Key: "reviews", Value: 0},
+				{Key: "brand", Value: 0},
+				{Key: "types.sizes", Value: 0},
+				{Key: "types.quantity", Value: 0},
 			}},
-		bson.D{
+		})
+
+	return sendSneakersUsingPipeline(pipeline, c)
+}
+
+func getMatchFilters(pipeline mongo.Pipeline, brand string, tags []string, color string) mongo.Pipeline {
+	if brand != "" || len(tags) > 0 || color != "" {
+		andMatch := []interface{}{}
+		if brand != "" {
+			andMatch = append(andMatch, bson.D{{Key: "brand", Value: brand}})
+		}
+		if len(tags) > 0 {
+			andMatch = append(andMatch, bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: tags}}}})
+		}
+		if color != "" {
+			andMatch = append(andMatch, bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{color}}}}}}}}})
+		}
+
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: bson.D{
+				{Key: "$and", Value: andMatch},
+			}},
+		})
+	}
+	return pipeline
+}
+
+func getPriceFilter(pipeline mongo.Pipeline, minPrice float32, maxPrice float32) mongo.Pipeline {
+	if minPrice > 0 && maxPrice > 0 {
+		pipeline = append(pipeline, bson.D{
 			{Key: "$match", Value: bson.D{
 				{Key: "$and", Value: []interface{}{
 					bson.D{{Key: "price", Value: bson.D{{Key: "$lte", Value: maxPrice}}}},
@@ -117,16 +165,14 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 				}},
 			},
 			},
-		},
-		bson.D{
-			{Key: "$lookup", Value: bson.D{
-				{Key: "from", Value: "sneakerColors"},
-				{Key: "localField", Value: "colors.0._id"},
-				{Key: "foreignField", Value: "_id"},
-				{Key: "as", Value: "types"},
-			}},
-		},
-		bson.D{
+		})
+	}
+	return pipeline
+}
+
+func getSizeFilter(pipeline mongo.Pipeline, size float32) mongo.Pipeline {
+	if size > 0 {
+		pipeline = append(pipeline, bson.D{
 			{Key: "$match", Value: bson.D{
 				{Key: "types.sizes", Value: bson.D{
 					{Key: "$elemMatch", Value: bson.D{
@@ -137,26 +183,8 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 				}},
 			},
 			},
-		},
-		bson.D{
-			{Key: "$skip", Value: skip},
-		},
-		bson.D{
-			{Key: "$limit", Value: limit},
-		},
+		})
 	}
 
-	pipeline = append(pipeline, bson.D{
-		{Key: "$project", Value: bson.D{
-			{Key: "tags", Value: 0},
-			{Key: "qualification", Value: 0},
-			{Key: "description", Value: 0},
-			{Key: "reviews", Value: 0},
-			{Key: "brand", Value: 0},
-			{Key: "types.sizes", Value: 0},
-			{Key: "types.quantity", Value: 0},
-		}},
-	})
-
-	return sendSneakersUsingPipeline(pipeline, c)
+	return pipeline
 }
