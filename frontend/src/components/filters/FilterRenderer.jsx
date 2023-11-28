@@ -1,6 +1,6 @@
 'use client';
 
-import FilterSection from './FilterSection';
+import Section from '../Section';
 import '../../styles/filters/filters.css';
 
 const FilterRenderer = () => {
@@ -8,21 +8,21 @@ const FilterRenderer = () => {
 		<div className='filter-main-container'>
 			<h3>FILTERS</h3>
 			<span className="horizontal-separator"></span>
-			<FilterSection title="Brands">
+			<Section title="Brands">
 				<div>Brands</div>
-			</FilterSection>
+			</Section>
 			<span className="horizontal-separator"></span>
-			<FilterSection title="Others">
+			<Section title="Others">
 				<div>Others</div>
-			</FilterSection>
+			</Section>
 			<span className="horizontal-separator"></span>
-			<FilterSection title="Sizes">
+			<Section title="Sizes">
 				<div>Sizes</div>
-			</FilterSection>
+			</Section>
 			<span className="horizontal-separator"></span>
-			<FilterSection title="Colors">
+			<Section title="Colors">
 				<div>Colors</div>
-			</FilterSection>
+			</Section>
 		</div>
 	);
 };
