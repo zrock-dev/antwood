@@ -1,14 +1,24 @@
-version: "1.0"  
+version: "3"
 
 services:
 
   web:
     image: nginx:1.25-alpine3.18
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
     volumes:
-      - ./utils/nginx/:/etc/nginx/conf.d/
+      - ./utils/nginx/:/etc/nginx/conf.d/:ro
+      - ./utils/certbot/conf:/etc/nginx/ssl:rw
     ports:
       - "80:80"
+      - "443:443"
       - "5555:5555"
+
+  certbot:
+    image: certbot/certbot:amd64-v2.7.4
+    volumes:
+      - ./utils/certbot/www/:/var/www/certbot/:rw
+      - ./utils/certbot/conf/:/etc/letsencrypt/:rw
 
   swagger:
     image: swaggerapi/swagger-ui
