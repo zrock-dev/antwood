@@ -18,7 +18,7 @@ const ProductReview = ({ product }) => {
             product.reviews  = data.summaryUpdate
             setReviews(data.reviews)
         }).catch((err) => {
-            toast.error("could not obtain more products");
+            location.replace("/")
         })
     }
 

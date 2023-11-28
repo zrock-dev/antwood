@@ -16,6 +16,9 @@ const SingleProductRenderer = ({ id }) => {
 	useEffect(() => {
 		getSneakerById(id)
 			.then((response) => {
+				if (response.colors.length === 0) {
+					throw new Error('Product not found');
+				}
 				setProduct(response);
 			})
 			.catch((e) => {

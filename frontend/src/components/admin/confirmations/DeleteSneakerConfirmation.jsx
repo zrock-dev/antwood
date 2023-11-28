@@ -1,10 +1,22 @@
 import XMark from '@/icons/XMark';
 import '../../../styles/admin/confirmations.css';
+import { deleteSneakerById } from "@/requests/SneakersRequest";
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const DeleteSneakerConfirmation = ({ id, sneakerName, closeConfirmation }) => {
-	const deleteSneaker = () => {
-		// delete sneaker using id
-		alert('delete function is comming');
+	const router = useRouter();
+	const deleteSneaker = async () => {
+		toast.promise(deleteSneakerById(id), {
+			loading: 'Deleting sneaker...',
+			success: ()=>{
+				closeConfirmation();
+				router.replace("/admin");
+				location.reload();
+				return 'Sneaker deleted successfully'
+			},
+			error: 'Error when deleting sneaker',
+		})
 	};
 
 	return (
