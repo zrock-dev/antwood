@@ -15,3 +15,7 @@
 	padding: 20px 0;
 	margin-inline: auto;
 }
+
+.products-container.width-100 {
+	width: 100%;
+}

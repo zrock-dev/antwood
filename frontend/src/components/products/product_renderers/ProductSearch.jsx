@@ -9,6 +9,7 @@ const ProductSearch = ({ input }) => {
 			<FilterRenderer />
 			<ProductRenderer
 				fetchMethod={(page) => getSearchByPagination(input, page)}
+				style='products-container width-100'
 			/>
 		</div>
 	);

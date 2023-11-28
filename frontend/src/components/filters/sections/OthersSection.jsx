@@ -4,9 +4,11 @@ import Section from '@/components/Section';
 const OthersSection = ({ tags }) => {
 	return (
 		<Section title={'Others'}>
-			<div>
+			<div className="filter-text-container">
 				{tags.map((tag, index) => (
-					<button key={index}>{tag}</button>
+					<button className="filter-text" key={index}>
+						{tag}
+					</button>
 				))}
 			</div>
 		</Section>

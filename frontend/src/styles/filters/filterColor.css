@@ -1,0 +1,19 @@
+.filter-color-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.filter-color {
+	border-radius: 50%;
+	padding: 19px;
+	border: none;
+
+	box-shadow: 0 0 10px #ddd;
+}
+
+.filter-color:hover,
+.filter-color.selected {
+    box-shadow: 0 0 3px #333;
+
+}

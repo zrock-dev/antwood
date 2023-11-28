@@ -22,10 +22,21 @@
 	margin: 15px 0;
 }
 
+.horizontal-separator.margin-20px {
+	margin: 20px 0;
+}
+
 .secction-item-row {
 	display: flex;
 	gap: 5px;
 	flex-wrap: wrap;
+}
+
+.sneaker-size-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+	row-gap: 5px;
+	column-gap: 5px;
 }
 
 .sneaker-size {
@@ -206,9 +217,15 @@
 
 	background-color: transparent;
 	border: none;
+	& svg {
+		height: 0.8em;
+	}
 }
 
 .layout-filter {
 	display: grid;
-	grid-template-columns: 20% 80%;
+	grid-template-columns: 22% 78%;
+	column-gap: 25px;
+
+	padding: 0 50px;
 }

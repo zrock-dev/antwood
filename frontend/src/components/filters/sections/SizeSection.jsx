@@ -7,7 +7,7 @@ const SizeSection = ({ sizes }) => {
 
 	return (
 		<Section title={'Sizes'}>
-			<div>
+			<div className="sneaker-size-container">
 				{sizes.map((size, index) => (
 					<button
 						className={`sneaker-size ${sizeIndex === index && 'selected'}`}

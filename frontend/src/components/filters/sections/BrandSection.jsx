@@ -4,9 +4,11 @@ import Section from '@/components/Section';
 const BrandSection = ({ brands }) => {
 	return (
 		<Section title={'Brands'}>
-			<div>
+			<div className="filter-text-container">
 				{brands.map((brand, index) => (
-					<button key={index}>{brand}</button>
+					<button className="filter-text" key={index}>
+						{brand}
+					</button>
 				))}
 			</div>
 		</Section>

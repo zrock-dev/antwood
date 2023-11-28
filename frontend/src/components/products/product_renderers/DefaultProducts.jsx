@@ -9,6 +9,7 @@ const DefaultProducts = () => {
 			<FilterRenderer />
 			<ProductRenderer
 				fetchMethod={(page) => getAllProductsByPagination(page, 3)}
+				style='products-container width-100'
 			/>
 		</div>
 	);

@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { ProductResultsContext } from '@/context/ProductResultsContext';
 
 import '../../styles/filters/filters.css';
+import '../../styles/filters/filterText.css';
 import BrandSection from './sections/BrandSection';
 import OthersSection from './sections/OthersSection';
 import SizeSection from './sections/SizeSection';
@@ -14,23 +15,19 @@ const FilterRenderer = () => {
 	const { filters } = useContext(ProductResultsContext);
 
 	return (
-		<div className="filter-main-container">
+		<div className="filters-main-container">
 			<h3>FILTERS</h3>
-			<span className="horizontal-separator"></span>
 			{filters ? (
-				<div>
+				<div className="filters-container">
+					<span className="horizontal-separator margin-20px "></span>
 					<BrandSection brands={filters.brands} />
-					<span className="horizontal-separator"></span>
-
+					<span className="horizontal-separator margin-20px "></span>
 					<OthersSection tags={filters.tags} />
-					<span className="horizontal-separator"></span>
-
+					<span className="horizontal-separator margin-20px "></span>
 					<SizeSection sizes={filters.sizes} />
-					<span className="horizontal-separator"></span>
-
+					<span className="horizontal-separator margin-20px "></span>
 					<ColorSection colors={filters.colors} />
-					<span className="horizontal-separator"></span>
-
+					<span className="horizontal-separator margin-20px "></span>
 					<PriceSection
 						minPrice={filters.minPrice}
 						maxPrice={filters.maxPrice}

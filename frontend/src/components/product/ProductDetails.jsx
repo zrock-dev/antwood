@@ -178,7 +178,7 @@ const ProductDetails = ({ product }) => {
 					title="Shoe Sizes"
 					description="We have these sizes available for this sneaker in this color"
 				>
-					<div className="secction-item-row">
+					<div className="sneaker-size-container">
 						{colorData.sizes.map((size, index) => (
 							<button
 								className={`sneaker-size ${
