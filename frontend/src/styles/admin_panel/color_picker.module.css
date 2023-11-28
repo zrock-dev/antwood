@@ -1,0 +1,109 @@
+.color_picker {
+  position: relative;
+}
+
+.color_picker label {
+  margin-right: 5px;
+}
+.color {
+  width: 51px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: solid 1px var(--medium-gray);
+  position: relative;
+}
+
+.color:hover .color_prompt {
+  visibility: visible;
+}
+
+.color_prompt {
+  color: var(--main-color);
+  position: absolute;
+  top: 25px;
+  visibility: hidden;
+  background-color: var(--medium-gray);
+  border-radius: 4px;
+  padding: 0 4px;
+  z-index: 10;
+}
+.color_picker_popup {
+  width: 300px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  position: absolute;
+  top: 0;
+  left: 95px;
+  z-index: 40;
+  background-color: var(--primary-color);
+  transition: transform 0.5s ease;
+}
+
+.color_picker_ctn {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 35px;
+  padding: 15px;
+  justify-content: center;
+}
+
+.open {
+  transform: translateY(0px);
+  visibility: visible;
+}
+
+.close {
+  transform: translateY(-100px);
+  visibility: hidden;
+}
+
+.active {
+  transform: translateY(-100px);
+  visibility: visible;
+}
+
+.inactive {
+  transform: translateY(-300px);
+  visibility: hidden;
+}
+
+.color_custome_ctn {
+  margin-top: 10px;
+}
+
+.color_custome_ctn input {
+  outline: none;
+
+  margin-right: 5px;
+  width: 145px;
+  line-height: 15px;
+  font-size: 15px;
+  padding: 5px;
+}
+
+.tag {
+  cursor: pointer;
+  background-color: var(--medium-gray);
+  padding: 5px;
+  border-radius: 4px;
+  color: var(--main-color);
+  margin-right: 5px;
+}
+
+.tag:hover {
+  background-color: rgb(255, 129, 129);
+}
+
+.error{
+  font-size: 12px;
+  color: rgb(255, 23, 23);
+}
+
+.popup_btn {
+  display: flex;
+}
+

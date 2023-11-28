@@ -15,7 +15,7 @@ type Sneaker struct {
 	ID            primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
 	Name          string               `json:"name" form:"name" bson:"name"`
 	Description   string               `json:"description" form:"description" bson:"description"`
-	Price         int                  `json:"price" form:"price" bson:"price"`
+	Price         float32              `json:"price" form:"price" bson:"price"`
 	Brand         string               `json:"brand,omitempty" form:"brand,omitempty" bson:"brand,omitempty"`
 	Colors        []ColorObject        `json:"colors" form:"colors" bson:"colors"`
 	Tags          []string             `json:"tags" form:"tags" bson:"tags"`

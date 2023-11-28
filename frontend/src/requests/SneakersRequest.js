@@ -5,9 +5,26 @@ export const getSneakerById = async (id) => {
 	return response.data;
 };
 
+export const getSneakerColorById = async (id) => {
+	const response = await axios.get(`/sneakercolor/${id}`);
+  return response.data;
+}
+
 export const getAllProductsByPagination = async (page) => {
 	const response = await axios.get(`/sneakers?page=${page}&pageSize=4`);
 	return response.data;
+};
+
+
+
+export const checkSneakerExistence = async (id) => {
+	try {
+		const response = await axios.get(`/check-sneaker-existence/${id}`);
+		return response.data.exists;
+	} catch (error) {
+		console.error('Error checking sneaker existence:', error);
+		return false;
+	}
 };
 
 export const getSneakerQuantityInformation = async (sneakerId) => {
@@ -61,3 +78,58 @@ export const getSearchByPaginationForAdmin = async (input, page) => {
 	);
 	return response.data;
 };
+
+
+export const createSneaker = async(sneaker)=>{
+	const response = await axios.post("/sneaker", sneaker, {
+		headers: {
+			'Content-Type': 'application/json',
+			Accept: 'application/json'
+		}
+	});
+
+	return response.data
+}
+
+export const  insertSneakerColor = async(form, id)=>{
+	const response = await axios.post(`/sneakercolor?sneakerid=${id}`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Accept: "application/json",
+    },
+  });
+  return response.data
+}
+
+export const updateSneakerColorById = async (form, id) => {
+  const response = await axios.put(`/sneakercolor/${id}`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Accept: "application/json",
+    },
+  });
+  return response.data;
+};
+
+
+export const updateSneakerById = async(sneaker)=>{
+	const response = await axios.put(`/sneaker/${sneaker._id}`, sneaker, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+  return response.data
+}
+
+
+export const deleteSneakerById = async(id)=>{
+	const response = await axios.delete(`/sneaker/${id}`);
+	return response.data
+}
+
+export const  deleteSneakerColorById = async(sneakerColorId)=>{
+	const response = await axios.delete(`/sneakercolor/${sneakerColorId}`);
+	const data = response.data;
+}
+

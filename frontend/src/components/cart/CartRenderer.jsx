@@ -9,7 +9,6 @@ import "../../styles/cart/cartPage.css";
 import QuantityRenderer from "./QuantityRenderer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getSneakerQuantities } from "@/requests/SneakersRequest";
 
 const CartRenderer = () => {
   const {
@@ -17,55 +16,9 @@ const CartRenderer = () => {
     products,
     updateProduct,
     removeProduct,
-    setCartState,
-    calculateSubTotal,
-    calculateTotalItems,
   } = useContext(CartContext);
   const router = useRouter();
   const [hasProducts, setHasProducts] = useState(false);
-  const firstUpdate = useRef(true);
-
-  const getCurrentSneakerQuantities = async (dataRequest) => {
-    let dataResult = await getSneakerQuantities(dataRequest);
-
-    let availableProducts = [];
-    for (let i = 0; i < products.length; i++) {
-        if (dataResult[i].quantity>0){
-            products[i].quantity = dataResult[i].quantity
-            availableProducts.push(products[i]);
-    }  };
-	let subtotal = 	calculateSubTotal(availableProducts)
-    let totalItems = calculateTotalItems(availableProducts)
-
-  setCartState({
-    ...cartState,
-    totalItems: totalItems,
-    subTotal: subtotal,
-    total: subtotal + cartState.extra,
-    products: availableProducts,
-  })
-}
-
-  useEffect(() => {
-    if (cartState && products) {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-      } else {
-        return;
-      }
-
-      let dataRequest = [];
-      for (let i = 0; i < products.length; i++) {
-        dataRequest.push({
-          sneakerId: products[i].sneakerId,
-          sneakerColorId: products[i].sneakerColorId,
-          size: products[i].size,
-          quantity: products[i].quantity,
-        });
-      }
-      getCurrentSneakerQuantities(dataRequest);
-    }
-  }, [cartState, products]);
 
 
   useEffect(() => {

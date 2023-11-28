@@ -33,21 +33,34 @@ function ReviewForm({ product, setReviews }) {
 
 
   const addReviewToProduct = async (currentUser) => {
-    const data = await getReviewsByUserEmail(product._id, currentUser.email);
-    if (data.length > 0) {
-      toast.info("you have already reviewed this product")
-      return
+    try {
+      const data = await getReviewsByUserEmail(product._id, currentUser.email);
+      if (data.length > 0) {
+        toast.info("you have already reviewed this product")
+        return
+      }
+    } catch (error) {
+      console.log("error", error);
+      location.replace("/");
+    }finally{
+      reviewHandle.resetReview();
     }
 
     let review = reviewHandle.review;
     review.description  = review.description.trim();
     review.username = currentUser.username;
     review.userEmail = currentUser.email;
-    const response = await addReview(product._id, review);
-    product.reviews = response.sneakerReview;
+    try{
+const response = await addReview(product._id, review);
+        product.reviews = response.sneakerReview;
     review = response.review;
     reviewHandle.resetReview();
     setReviews((reviews) => [review, ...reviews]);
+    }catch(error){
+      console.log("error", error);
+      location.replace("/");
+    }
+
   }
 
   useEffect(() => {
