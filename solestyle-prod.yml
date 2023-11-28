@@ -1,0 +1,37 @@
+version: "1.0"  
+
+services:
+
+  web:
+    image: nginx:1.25-alpine3.18
+    volumes:
+      - ./utils/nginx/:/etc/nginx/conf.d/
+    ports:
+      - "80:80"
+      - "5555:5555"
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: "/config/swagger.json"
+    volumes:
+      - ./utils/swagger/swagger.json:/config/swagger.json
+
+  frontend:
+    image: solestyleimages/frontend
+
+  product_management:
+    image: solestyleimages/product_management_service
+    environment:
+      DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY}
+
+  account_management:
+    image: solestyleimages/account_management_service
+    environment:
+      DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY}
+
+  shopping_cart_management:
+    image: solestyleimages/shopping_cart_management
+    environment:
+      DOTENV_KEY: ${DOTENV_SHOPPING_CART_MANAGEMENT_KEY}
+

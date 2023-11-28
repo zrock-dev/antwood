@@ -1,0 +1,226 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "SoleStyle API - OpenAPI 3.0",
+    "description": "This is the access to SoleStyle's API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "solestyle28@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.17"
+  },
+  "servers": [
+    {
+      "url": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "Store products management"
+    }
+  ],
+  "paths": {
+    "/sneaker/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Get product by ID",
+        "description": "Get a product by its ID",
+        "operationId": "getSneakerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID value"
+          }
+        }
+      }
+    },
+    "/sneakers": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "List Available products",
+        "description": "The list has a size of 4 items",
+        "operationId": "getSneakerList",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Describes the number of the page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID value"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The unique identifier of the product."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the product."
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the product."
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the product."
+          },
+          "colors": {
+            "type": "null",
+            "description": "The colors available for the product (null in this case)."
+          },
+          "types": {
+            "type": "array",
+            "description": "An array of product types.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "type": "string",
+                  "description": "The unique identifier of the type."
+                },
+                "images": {
+                  "type": "array",
+                  "description": "An array of images associated with the type String."
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "description": "An array of tags associated with the product.",
+            "items": {
+              "type": "string",
+              "description": "Individual tag."
+            }
+          },
+          "reviews": {
+            "type": "object",
+            "description": "Reviews related to the product.",
+            "properties": {
+              "ratingSummary": {
+                "type": "object",
+                "description": "Summary of ratings.",
+                "properties": {
+                  "star1": {
+                    "type": "integer",
+                    "description": "Number of 1-star ratings."
+                  },
+                  "star2": {
+                    "type": "integer",
+                    "description": "Number of 2-star ratings."
+                  },
+                  "star3": {
+                    "type": "integer",
+                    "description": "Number of 3-star ratings."
+                  },
+                  "star4": {
+                    "type": "integer",
+                    "description": "Number of 4-star ratings."
+                  },
+                  "star5": {
+                    "type": "integer",
+                    "description": "Number of 5-star ratings."
+                  },
+                  "total": {
+                    "type": "integer",
+                    "description": "Total number of ratings."
+                  }
+                }
+              },
+              "total": {
+                "type": "integer",
+                "description": "The total number of reviews."
+              },
+              "lastDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The date of the last review."
+              }
+            }
+          },
+          "salesQuantity": {
+            "type": "integer",
+            "description": "The quantity of sales for the product."
+          },
+          "promotionCode": {
+            "type": "string",
+            "description": "The promotion code associated with the product."
+          },
+          "brand": {
+            "type": "string",
+            "description": "The brand of the product."
+          }
+        }
+      },
+      "ProductsList": {
+        "type": "array",
+        "description": "A list of products.",
+        "items": {
+          "$ref": "#/components/schemas/Product"
+        }
+      }
+    }
+  }
+}

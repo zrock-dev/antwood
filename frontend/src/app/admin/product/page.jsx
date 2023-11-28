@@ -1,12 +1,12 @@
-import AdminProduct from '@/components/admin/product/AdminProduct';
+import AdminPanelRenderer from '@/components/admin-panel/AdminPanelRenderer';
 import AdminLayout from '@/components/layouts/AdminLayout';
 
 const EmptyAdminProduct = () => {
 	return (
-		<AdminLayout>
-			<AdminProduct />
-		</AdminLayout>
-	);
+    <AdminLayout>
+      <AdminPanelRenderer />
+    </AdminLayout>
+  );
 };
 
 export default EmptyAdminProduct;
