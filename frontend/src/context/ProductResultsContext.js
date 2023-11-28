@@ -13,24 +13,13 @@ const emptyFilterOptions = {
 	tags: []
 };
 
-const emptyFilters = {
+export const emptyFilters = {
 	brand: '',
 	color: '',
 	minPrice: 0,
 	maxPrice: 0,
 	size: 0,
 	tags: []
-};
-
-const isEmptyFilters = (filters, filterOptions) => {
-	return (
-		filters.brand === '' &&
-		filters.color === '' &&
-		(filters.minPrice === 0 || filters.minPrice === filterOptions.minPrice) &&
-		(filters.maxPrice === 0 || filters.maxPrice === filterOptions.maxPrice) &&
-		filters.size === 0 &&
-		filters.tags.length === 0
-	);
 };
 
 const ProductResultsProvider = ({ children }) => {
@@ -84,6 +73,19 @@ const ProductResultsProvider = ({ children }) => {
 		});
 	};
 
+	const isEmptyFilters = () => {
+		return (
+			filters &&
+			filterOptions &&
+			filters.brand === '' &&
+			filters.color === '' &&
+			(filters.minPrice === 0 || filters.minPrice === filterOptions.minPrice) &&
+			(filters.maxPrice === 0 || filters.maxPrice === filterOptions.maxPrice) &&
+			filters.size === 0 &&
+			filters.tags.length === 0
+		);
+	};
+
 	useEffect(() => {
 		if (pathname.includes('/products') && !filterOptions) {
 			getFilterOptions()
@@ -93,14 +95,9 @@ const ProductResultsProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		if (
-			filterOptions &&
-			filters &&
-			!isEmptyFilters(filters, filterOptions) &&
-			!pathname.includes('/filter')
-		) {
+		if (filterOptions && filters && !isEmptyFilters()) {
 			console.log(filters);
-			router.push('/products/filter');
+			router.push(`/products/filter`);
 		}
 	}, [filters]);
 
@@ -113,7 +110,8 @@ const ProductResultsProvider = ({ children }) => {
 				setColor,
 				setPriceRange,
 				setSize,
-				addTag
+				addTag,
+				isEmptyFilters
 			}}
 		>
 			{children}

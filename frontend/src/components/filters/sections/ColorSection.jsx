@@ -12,6 +12,7 @@ const ColorSection = ({ colors, currentColor, setColor }) => {
 						style={{ backgroundColor: color }}
 						key={index}
 						onClick={() => setColor(color)}
+						title={color}
 					></button>
 				))}
 			</div>
