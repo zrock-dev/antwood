@@ -12,7 +12,7 @@ import ColorSection from './sections/ColorSection';
 import PriceSection from './sections/PriceSection';
 
 const FilterRenderer = () => {
-	const { filters } = useContext(ProductResultsContext);
+	const { filters, setBrand } = useContext(ProductResultsContext);
 
 	return (
 		<div className="filters-main-container">
@@ -20,7 +20,7 @@ const FilterRenderer = () => {
 			{filters ? (
 				<div className="filters-container">
 					<span className="horizontal-separator margin-20px "></span>
-					<BrandSection brands={filters.brands} />
+					<BrandSection brands={filters.brands} setBrand={setBrand} />
 					<span className="horizontal-separator margin-20px "></span>
 					<OthersSection tags={filters.tags} />
 					<span className="horizontal-separator margin-20px "></span>

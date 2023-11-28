@@ -1,6 +1,6 @@
 'use client';
 import { getFilterOptions } from '@/requests/SneakersRequest';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useEffect, useState } from 'react';
 
 export const ProductResultsContext = createContext();
@@ -15,7 +15,15 @@ const emptyFilters = {
 
 const ProductResultsProvider = ({ children }) => {
 	const pathname = usePathname();
+	const router = useRouter();
 	const [filters, setFilters] = useState(null);
+
+	const setBrand = (brand) => {
+		setFilters({
+			...filters,
+			brand
+		});
+	};
 
 	useEffect(() => {
 		if (pathname.includes('products') && !filters) {
@@ -25,8 +33,16 @@ const ProductResultsProvider = ({ children }) => {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (filters) {
+			router.push('/products/filter?brand=converse&tags=men', {
+				brand: filters.brand
+			});
+		}
+	}, [filters]);
+
 	return (
-		<ProductResultsContext.Provider value={{filters}}>
+		<ProductResultsContext.Provider value={{ filters, setBrand }}>
 			{children}
 		</ProductResultsContext.Provider>
 	);
