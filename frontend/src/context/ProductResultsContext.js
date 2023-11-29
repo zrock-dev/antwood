@@ -95,8 +95,12 @@ const ProductResultsProvider = ({ children }) => {
 	};
 
 	const clearFiltersAndRedirect = (redirection = '/') => {
-		setFilters(emptyFilters);
+		clearFilters();
 		router.push(redirection);
+	};
+
+	const clearFilters = () => {
+		setFilters(emptyFilters);
 	};
 
 	const isEmptyFilters = () => {
@@ -105,9 +109,9 @@ const ProductResultsProvider = ({ children }) => {
 			filters &&
 			filters.brand === '' &&
 			filters.color === '' &&
-			filters.minPrice == 0 &&
-			filters.maxPrice == 0 &&
-			filters.size == 0 &&
+			filters.minPrice === 0 &&
+			filters.maxPrice === 0 &&
+			filters.size === 0 &&
 			filters.tags.length <= 0
 		);
 	};
@@ -151,7 +155,8 @@ const ProductResultsProvider = ({ children }) => {
 				setSize,
 				addTag,
 				isEmptyFilters,
-				clearFiltersAndRedirect
+				clearFiltersAndRedirect,
+				clearFilters
 			}}
 		>
 			{children}
