@@ -16,7 +16,7 @@ const Navbar = () => {
 	const { signoutUser } = useAuthHandler();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const { filters, setCollection } = useContext(ProductResultsContext);
+	const { filters, addTag } = useContext(ProductResultsContext);
 
 	return (
 		<div className="navbar-main-container">
@@ -46,7 +46,7 @@ const Navbar = () => {
 						filters.tags.includes('men') &&
 						'selected'
 					}`}
-					onClick={() => setCollection('men')}
+					onClick={() => addTag('men')}
 				>
 					Men
 				</button>
@@ -56,7 +56,7 @@ const Navbar = () => {
 						filters.tags.includes('women') &&
 						'selected'
 					}`}
-					onClick={() => setCollection('women')}
+					onClick={() => addTag('women')}
 				>
 					Women
 				</button>
@@ -66,7 +66,7 @@ const Navbar = () => {
 						filters.tags.includes('kids') &&
 						'selected'
 					}`}
-					onClick={() => setCollection('kids')}
+					onClick={() => addTag('kids')}
 				>
 					Kids
 				</button>

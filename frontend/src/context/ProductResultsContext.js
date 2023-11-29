@@ -25,7 +25,6 @@ export const emptyFilters = {
 const ProductResultsProvider = ({ children }) => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const params = useSearchParams();
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [filters, setFilters] = useState(emptyFilters);
 
@@ -63,12 +62,24 @@ const ProductResultsProvider = ({ children }) => {
 	};
 
 	const addTag = (tag) => {
-		let newTags;
+		let newTags = filters.tags;
+		if (tag === 'men') {
+			newTags = filters.tags.filter(
+				(tagToCompare) => tagToCompare !== 'women' && tagToCompare !== 'kids'
+			);
+		} else if (tag === 'women') {
+			newTags = filters.tags.filter(
+				(tagToCompare) => tagToCompare !== 'men' && tagToCompare !== 'kids'
+			);
+		} else if (tag === 'kids') {
+			newTags = filters.tags.filter(
+				(tagToCompare) => tagToCompare !== 'women' && tagToCompare !== 'men'
+			);
+		}
 
-		if (filters.tags.includes(tag)) {
-			newTags = filters.tags.filter((tagToCompage) => tagToCompage !== tag);
+		if (newTags.includes(tag)) {
+			newTags = newTags.filter((tagToCompage) => tagToCompage !== tag);
 		} else {
-			newTags = filters.tags;
 			newTags.push(tag);
 		}
 
@@ -83,61 +94,12 @@ const ProductResultsProvider = ({ children }) => {
 		return (
 			filters.brand === '' &&
 			filters.color === '' &&
-			(filters.minPrice == 0 || filters.minPrice == filterOptions.minPrice) &&
-			(filters.maxPrice == 0 || filters.maxPrice == filterOptions.maxPrice) &&
+			filters.minPrice == 0 &&
+			filters.maxPrice == 0 &&
 			filters.size == 0 &&
 			filters.tags.length <= 0
 		);
 	};
-
-	const setCollection = (collection) => {
-		let tags;
-		if (collection === 'men') {
-			tags = filters.tags.filter((tag) => tag !== 'women' && tag !== 'kids');
-		} else if (collection === 'women') {
-			tags = filters.tags.filter((tag) => tag !== 'men' && tag !== 'kids');
-		} else if (collection === 'kids') {
-			tags = filters.tags.filter((tag) => tag !== 'women' && tag !== 'men');
-		}
-
-		if (tags.includes(collection)) {
-			tags = tags.filter((tagToCompage) => tagToCompage !== collection);
-		} else {
-			tags.push(collection);
-		}
-		setFilters({
-			...filters,
-			tags
-		});
-	};
-
-	useEffect(() => {
-		if (pathname.includes('/filter')) {
-			const collection = params.get('collection');
-			if (collection) {
-				let tags;
-				if (collection === 'men') {
-					tags = filters.tags.filter(
-						(tag) => tag !== 'women' && tag !== 'kids'
-					);
-				} else if (collection === 'women') {
-					tags = filters.tags.filter((tag) => tag !== 'men' && tag !== 'kids');
-				} else if (collection === 'kids') {
-					tags = filters.tags.filter((tag) => tag !== 'women' && tag !== 'men');
-				}
-
-				if (tags.includes(collection)) {
-					tags = tags.filter((tagToCompage) => tagToCompage !== collection);
-				} else {
-					tags.push(collection);
-				}
-				setFilters({
-					...filters,
-					tags
-				});
-			}
-		}
-	}, [params]);
 
 	useEffect(() => {
 		if (pathname.includes('/products') && !filterOptions) {
@@ -157,8 +119,7 @@ const ProductResultsProvider = ({ children }) => {
 				setPriceRange,
 				setSize,
 				addTag,
-				isEmptyFilters,
-				setCollection
+				isEmptyFilters
 			}}
 		>
 			{children}

@@ -11,8 +11,13 @@ const PriceSection = ({
 	return (
 		<Section style="secction-container space-left-30" title={'Prices'}>
 			<div>
-				<button>{minPrice}</button>
-				<button>{maxPrice}</button>
+				<input
+					type="range"
+					min={minPrice}
+					max={maxPrice}
+					defaultValue={maxPrice}
+					onMouseUp={(e) => setPriceRange(minPrice, e.target.value)}
+				/>
 			</div>
 		</Section>
 	);
