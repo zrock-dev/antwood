@@ -56,8 +56,6 @@ const FilterRenderer = () => {
 						minPrice={filterOptions.minPrice}
 						maxPrice={filterOptions.maxPrice}
 						setPriceRange={setPriceRange}
-						currentMinPrice={filters.minPrice}
-						currentMaxPrice={filters.maxPrice}
 					/>
 				</div>
 			) : (
