@@ -174,7 +174,7 @@ func HandleOnIntentSuccess(orderId string) error {
 
 
 
-	req, err := http.NewRequest("PUT", "http://172.25.0.12:4000/sneakers/quantities", bytes.NewBuffer(orderJSON))
+	req, err := http.NewRequest("PUT", "http://product_management:4000/sneakers/quantities", bytes.NewBuffer(orderJSON))
 	if err != nil {
 		log.Println("Error when creating request:", err)
 		return err

@@ -1,10 +1,4 @@
 version: "3.9"  
-networks:
-  solestyle_network:
-    ipam:
-      config:
-        - subnet: "172.25.0.0/16"
-
 
 services:
 
@@ -14,13 +8,6 @@ services:
       - ./utils/nginx/:/etc/nginx/conf.d/
     ports:
       - "80:80"
-      - "5555:5555"
-    expose:
-      - 3000
-    networks:
-      solestyle_network:
-        ipv4_address: "172.25.0.10"
-
 
   swagger:
     image: swaggerapi/swagger-ui
@@ -38,47 +25,34 @@ services:
     image: solestyle_dev/frontend
     volumes:
       - $PWD/frontend:/home/node/app/
-    expose:
-      - 3000
-    networks:
-      solestyle_network:
-        ipv4_address: "172.25.0.11"
 
   product_management:
     build:
       context: backend/product_management
       dockerfile: Dockerfile.dev
     image: solestyle_dev/product_management_service
-    expose:
-      - 4000
+    ports:
+      - '4000:4000' 
     environment:
       DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY}
-    networks:
-      solestyle_network:
-        ipv4_address: "172.25.0.12"
 
   account_management:
     build:
       context: backend/account_management
       dockerfile: Dockerfile.dev
     image: solestyle_dev/account_management_service
-    expose:
-      - 4500
+    ports:
+      - '4500:4500' 
     environment:
       DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY}
-    networks:
-      solestyle_network:
-        ipv4_address: "172.25.0.13"
 
   shopping_cart_management:
     build:
       context: backend/shoppingCardManagement
       dockerfile: Dockerfile.dev
     image: solestyle_dev/shopping_cart_management
-    expose:
-      - "5000:5000"
+    ports:
+      - '5000:5000' 
     environment:
       DOTENV_KEY: ${DOTENV_SHOPPING_CART_MANAGEMENT_KEY}
-    networks:
-      solestyle_network:
-        ipv4_address: "172.25.0.14"
+
