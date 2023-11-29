@@ -2,6 +2,7 @@ package responses
 
 import (
 	"context"
+	"fmt"
 	"product_management/app/database"
 	"strconv"
 	"strings"
@@ -134,12 +135,13 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 }
 
 func getMatchFilters(pipeline mongo.Pipeline, brand string, tags []string, color string) mongo.Pipeline {
-	if brand != "" || len(tags) > 0 || color != "" {
+	if brand != "" || (tags[0] != "" && len(tags) > 0) || color != "" {
+		fmt.Println(tags[0])
 		andMatch := []interface{}{}
 		if brand != "" {
 			andMatch = append(andMatch, bson.D{{Key: "brand", Value: brand}})
 		}
-		if len(tags) > 0 {
+		if tags[0] != "" && len(tags) > 0 {
 			andMatch = append(andMatch, bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: tags}}}})
 		}
 		if color != "" {
