@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react';
 const PriceSection = ({
 	minPrice,
 	maxPrice,
+	currentMaxPrice,
 	setPriceRange,
 	isOpen = false
 }) => {
-	const [max, setMax] = useState(maxPrice);
+	const [max, setMax] = useState(currentMaxPrice);
 
 	useEffect(() => {
 		setPriceRange(minPrice, max);
@@ -28,7 +29,7 @@ const PriceSection = ({
 						type="range"
 						min={minPrice}
 						max={maxPrice}
-						defaultValue={maxPrice}
+						defaultValue={currentMaxPrice}
 						onMouseUp={(e) => setMax(e.target.value)}
 						title={`${minPrice} $   -   ${max} $`}
 					/>

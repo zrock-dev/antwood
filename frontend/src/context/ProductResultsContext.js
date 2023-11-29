@@ -91,8 +91,9 @@ const ProductResultsProvider = ({ children }) => {
 		router.push('/products/filter');
 	};
 
-	const clearFilters = () => {
+	const clearFiltersAndRedirect = (redirection = '/') => {
 		setFilters(emptyFilters);
+		router.push(redirection);
 	};
 
 	const isEmptyFilters = () => {
@@ -147,7 +148,7 @@ const ProductResultsProvider = ({ children }) => {
 				setSize,
 				addTag,
 				isEmptyFilters,
-				clearFilters
+				clearFiltersAndRedirect
 			}}
 		>
 			{children}

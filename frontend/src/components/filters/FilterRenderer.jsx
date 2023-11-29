@@ -60,11 +60,11 @@ const FilterRenderer = () => {
 					<PriceSection
 						minPrice={filterOptions.minPrice}
 						maxPrice={filterOptions.maxPrice}
+						currentMaxPrice={filters.maxPrice}
 						setPriceRange={setPriceRange}
 						isOpen={
 							filters.minPrice > 0 &&
 							filters.maxPrice > 0 &&
-							filters.minPrice !== filterOptions.minPrice &&
 							filters.maxPrice !== filterOptions.maxPrice
 						}
 					/>

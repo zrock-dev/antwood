@@ -6,7 +6,7 @@ import CartModalRenderer from '../cart/CartModalRenderer';
 import Searcher from '../search/Searcher';
 import NavLogo from './NavLogo';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
 import { ProductResultsContext } from '@/context/ProductResultsContext';
 
@@ -15,31 +15,37 @@ const Navbar = () => {
 		useAuth();
 	const { signoutUser } = useAuthHandler();
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const { filters, addTag } = useContext(ProductResultsContext);
+	const { filters, addTag, clearFiltersAndRedirect } = useContext(
+		ProductResultsContext
+	);
 
 	return (
 		<div className="navbar-main-container">
 			<div className="navbar-sub-container left">
 				<NavLogo style="logo hover" />
-				<Link
+				<button
 					className={`navbar-option space-left-15 ${
 						pathname === '/' && 'selected'
 					}`}
-					href="/"
+					onClick={() => clearFiltersAndRedirect('/')}
 				>
 					Home
-				</Link>
-				<Link
+				</button>
+				<button
 					className={`navbar-option ${
 						(pathname.includes('/products/search') ||
-							pathname === '/products') &&
+							pathname === '/products' ||
+							(filters &&
+								!filters.tags.includes('men') &&
+								!filters.tags.includes('women') &&
+								!filters.tags.includes('kids') &&
+								pathname === '/products/filter')) &&
 						'selected'
 					}`}
-					href="/products"
+					onClick={() => clearFiltersAndRedirect('/products')}
 				>
 					All
-				</Link>
+				</button>
 				<button
 					className={`navbar-option ${
 						pathname.includes('filter') &&
