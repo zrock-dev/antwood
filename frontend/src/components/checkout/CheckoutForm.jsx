@@ -47,7 +47,7 @@ export default function CheckoutForm({ clientSecret }) {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `https://test-solestyle.westus3.cloudapp.azure.com/${
+        return_url: `http://localhost/${
           isAuthenticated ? "/profile/order" : ""
         }`,
       },

@@ -1,13 +1,12 @@
-"use client"
+"use client";
 import { useEffect, useState, useContext } from "react";
 import Modal from "@/components/Modal";
 import "@/styles/message.css";
 import { verifyOrderStatus } from "@/requests/OrderRequest";
 
-
-const PaymentMessage = ({resetCartState}) => {
+const PaymentMessage = ({ resetCartState , promise }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [badRequest , setBadRequest] = useState(false);
+  const [badRequest, setBadRequest] = useState(false);
 
   useEffect(() => {
     let timer;
@@ -15,6 +14,9 @@ const PaymentMessage = ({resetCartState}) => {
       setModalOpen(true);
       timer = setTimeout(() => {
         setModalOpen(false);
+        if (promise) {
+          promise()
+        }
       }, 4000);
     } else {
       setModalOpen(false);
@@ -22,7 +24,6 @@ const PaymentMessage = ({resetCartState}) => {
     }
     return () => clearTimeout(timer);
   }, [isModalOpen]);
-
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -33,26 +34,30 @@ const PaymentMessage = ({resetCartState}) => {
     if (paymentIntent && clientSecret && redirectStatus) {
       (async () => {
         const data = await verifyOrderStatus(paymentIntent, redirectStatus);
-        if (data.status === 200 ) {
-             setBadRequest(false);
-             resetCartState();
-             setModalOpen(true);
-        }else if (data.status === 400) {
+        if (data.status === 200) {
+          setBadRequest(false);
+          resetCartState();
+          setModalOpen(true);
+        } else if (data.status === 400) {
           setBadRequest(true);
-           setModalOpen(true);
+          setModalOpen(true);
         }
-          const newUrl = window.location.origin + window.location.pathname;
-          window.history.replaceState({}, document.title, newUrl);
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
       })();
     }
   });
 
   return (
     <Modal isModalOpen={isModalOpen} setModalOpen={setModalOpen}>
-      <div className={`message-ctn  ${badRequest ? "bad-request" : "ok-request"}`}>
+      <div
+        className={`message-ctn  ${badRequest ? "bad-request" : "ok-request"}`}
+      >
         <i
           className={
-            badRequest ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-check"
+            badRequest
+              ? "fa-solid fa-triangle-exclamation"
+              : "fa-solid fa-circle-check"
           }
         ></i>
         <h3>{badRequest ? "Payment Failed" : "Payment Successful!"}</h3>

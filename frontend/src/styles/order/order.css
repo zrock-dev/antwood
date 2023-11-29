@@ -1,0 +1,87 @@
+.orders-ctn {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 40px;
+  justify-content: center;
+  flex-grow: 1;
+}
+.orders {
+  flex-grow: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
+  grid-template-rows: 2;
+  gap: 1rem;
+  grid-auto-flow: row;
+  justify-items: center;
+  justify-content: start;
+}
+
+.order {
+  height: 250px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+    rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  cursor: pointer;
+}
+
+.order:hover {
+  background-color: var(--light-gray);
+}
+
+.order-products-ctn {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 20px;
+  gap: 2rem;
+  width: 100%;
+}
+
+.order-products-ctn div p:first-child {
+  font-weight: bold;
+}
+
+.order-products-ctn div{
+  flex-grow: 1;
+}
+
+.order-products{
+  overflow-y: auto;
+}
+.order-products p {
+   margin-left: 30px;
+}
+
+
+.order-pagination-ctn {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.receipt-loading{
+  opacity: 0.5;
+  color: var(--primary-color);
+}
+
+.receipt-loading-order{
+  user-select: none;
+  pointer-events: none;
+}
+
+.pagination-active{
+  background-color: var(--dark-black)!important;
+}

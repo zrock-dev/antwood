@@ -1,27 +1,105 @@
-import { useState , useEffect} from "react"
-import {getUserOrders} from "../../requests/OrderRequest"
-import { useAuth } from "@/context/AuthContext"
+import { useState, useEffect, useRef, useContext } from "react";
+import { getUserOrders } from "../../requests/OrderRequest";
+import { useAuth } from "@/context/AuthContext";
+import "@/styles/order/order.css";
+import ReceiptModalRenderer from "./ReceipModalRenderer";
+import Pagination from "./Pagination";
+import { dateParser } from "@/utils/Parser";
+import PaymentMessage from "@/components/PaymentMessage";
+import { CartContext } from "@/context/CartContext";
 
 const OrderRenderer = () => {
-    const  [orders , setOrders] = useState([])
-    const {user, isAuthenticated} = useAuth()
-  
-    useEffect(() => {
-           const fetchOrders = async () => {
-             if (user) {
-               const res = await getUserOrders(user.email);
-                setOrders(res.orders);
-             }
-           };
-         fetchOrders()
-    },[isAuthenticated])
+  const [orders, setOrders] = useState([]);
+  const [order, setOrder] = useState();
+  const [loading, setLoading] = useState(false);
+  const [displayReceiptDetails, setDisplayReceiptDetails] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+  const paginationRef = useRef(1);
+  const { resetCartState } = useContext(CartContext);
 
-    return (
-      <>
-        <div></div>
-      </>
-    );
-}
+  const fetchOrders = async (ordersPage) => {
+    if (user) {
+      setLoading(true);
+      const res = await getUserOrders(user.email, ordersPage);
+      console.log(res);
+      setOrders(res.orders);
+      paginationRef.current = res.totalPages;
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchOrders(1);
+  }, [isAuthenticated]);
 
-export default OrderRenderer
+  const showOrderDetails = (order) => {
+    setOrder(order);
+    setDisplayReceiptDetails(true);
+  };
+
+  return (
+    <>
+      <PaymentMessage resetCartState={resetCartState}  promise={()=>fetchOrders(1)}/>
+      <div className="orders-ctn">
+        <div className={`orders ${loading ? "receipt-loading" : ""}`}>
+          {orders &&
+            orders.map((order) => {
+              return (
+                <div
+                  className={`order ${loading ? "receipt-loading-order" : ""}`}
+                  key={order.id}
+                  onClick={() => showOrderDetails(order)}
+                >
+                  <div>
+                    <p>Order Id : {order.id}</p>
+                    <p>Date : {dateParser(order.date)}</p>
+                  </div>
+                  <div className="order-products-ctn">
+                    <div>
+                      <p>Products</p>
+                      <p>Total Items : {order.totalItems}</p>
+                      <p>SubTotal Price : ${order.subtotal}</p>
+                      <p>Sales Taxes : ${order.extra}</p>
+                      <p>Total Price : ${order.total}</p>
+                    </div>
+                    <div>
+                      <p>Shipping Address</p>
+                      <p>
+                        {order?.shipping.address.country}
+                        {"  ,   "}
+                        {order?.shipping.address.postal_code}
+                      </p>
+                      <p>
+                        {order?.shipping.address.city}
+                        {","} {order?.shipping.address.state}
+                      </p>
+                      <p>{order?.shipping.address.line1}</p>
+                      <p>{order?.shipping.address.line2}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+        {loading && (
+          <div className="loader-ctn">
+            <div className="loader black"></div>
+          </div>
+        )}
+        {paginationRef.current > 1 && (
+          <Pagination
+            totalPages={paginationRef.current}
+            setPage={fetchOrders}
+          />
+        )}
+        <ReceiptModalRenderer
+          displayReceiptDetails={displayReceiptDetails}
+          setDisplayReceiptDetails={setDisplayReceiptDetails}
+          order={order}
+        />
+      </div>
+    </>
+  );
+};
+
+export default OrderRenderer;
