@@ -29,17 +29,19 @@ const ProductFilter = ({ style = 'products-container' }) => {
 	};
 
 	useEffect(() => {
-		console.log(filters);
-	}, []);
-
-	useEffect(() => {
-		setProducts(products.filter((product) => false));
-		setHasMore(true);
-		setPage(1);
-		console.log(filters);
+		if (isEmptyFilters()) {
+			setProducts([]);
+			setHasMore(false);
+			setPage(1);
+		} else {
+			setProducts([]);
+			setHasMore(true);
+			setPage(1);
+		}
 	}, [filters]);
 
 	useEffect(() => {
+		console.log(products);
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
 				if (hasMore && entry.isIntersecting) {
@@ -67,7 +69,7 @@ const ProductFilter = ({ style = 'products-container' }) => {
 						<ProductCard key={product._id} product={product} />
 					))}
 				</div>
-				{products.length < 1 && !hasMore && (
+				{!hasMore && products.length < 1 && (
 					<NoProductsFound redirection={'/products'} />
 				)}
 				{hasMore && (
