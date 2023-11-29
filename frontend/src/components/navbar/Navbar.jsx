@@ -7,6 +7,8 @@ import Searcher from '../search/Searcher';
 import NavLogo from './NavLogo';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { useContext } from 'react';
+import { ProductResultsContext } from '@/context/ProductResultsContext';
 
 const Navbar = () => {
 	const { setShowModalAuth, updateUser, setIsAuthenticated, isAuthenticated } =
@@ -14,6 +16,7 @@ const Navbar = () => {
 	const { signoutUser } = useAuthHandler();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const { filters, setCollection } = useContext(ProductResultsContext);
 
 	return (
 		<div className="navbar-main-container">
@@ -37,30 +40,36 @@ const Navbar = () => {
 				>
 					All
 				</Link>
-				<Link
+				<button
 					className={`navbar-option ${
-						searchParams.get('tags')?.split(',').includes('men') && 'selected'
+						pathname.includes('filter') &&
+						filters.tags.includes('men') &&
+						'selected'
 					}`}
-					href="/products/filter?tags=men"
+					onClick={() => setCollection('men')}
 				>
 					Men
-				</Link>
-				<Link
+				</button>
+				<button
 					className={`navbar-option ${
-						searchParams.get('tags')?.split(',').includes('women') && 'selected'
+						pathname.includes('filter') &&
+						filters.tags.includes('women') &&
+						'selected'
 					}`}
-					href="/products/filter?tags=women"
+					onClick={() => setCollection('women')}
 				>
 					Women
-				</Link>
-				<Link
+				</button>
+				<button
 					className={`navbar-option ${
-						searchParams.get('tags')?.includes('kids') && 'selected'
+						pathname.includes('filter') &&
+						filters.tags.includes('kids') &&
+						'selected'
 					}`}
-					href="/products/filter?tags=kids"
+					onClick={() => setCollection('kids')}
 				>
 					Kids
-				</Link>
+				</button>
 			</div>
 			<div className="navbar-sub-container right">
 				{!isAuthenticated ? (
