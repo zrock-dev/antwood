@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { getPaymentIntent } from "@/requests/OrderRequest";
 
+
 const stripePromise = loadStripe(
   "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
 );
@@ -39,7 +40,7 @@ const CheckoutPageRenderer = () => {
     },
   });
   const { cartState, setCartState } = useContext(CartContext);
-  const tax = 100;
+  const [tax, setTax] = useState(0);
 
   useEffect(() => {
     if (addresConfirmed) {
@@ -55,6 +56,7 @@ const CheckoutPageRenderer = () => {
             });
           }
           setClientSecret(cs);
+          setTax(data.tax);
         });
     }
   }, [addresConfirmed]);
