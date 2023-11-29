@@ -17,7 +17,7 @@ const ProductFilter = ({ style = 'products-container' }) => {
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
-		if (!isEmptyFilters()) {
+		if (!isEmptyFilters(filters)) {
 			const data = await getSneakerFilteredByPagination(filters, page, 3);
 			if (data.sneakers.length === 0) {
 				setHasMore(false);

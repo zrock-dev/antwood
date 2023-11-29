@@ -43,6 +43,7 @@ const Navbar = () => {
 				<button
 					className={`navbar-option ${
 						pathname.includes('filter') &&
+						filters &&
 						filters.tags.includes('men') &&
 						'selected'
 					}`}
@@ -53,6 +54,7 @@ const Navbar = () => {
 				<button
 					className={`navbar-option ${
 						pathname.includes('filter') &&
+						filters &&
 						filters.tags.includes('women') &&
 						'selected'
 					}`}
@@ -63,6 +65,7 @@ const Navbar = () => {
 				<button
 					className={`navbar-option ${
 						pathname.includes('filter') &&
+						filters &&
 						filters.tags.includes('kids') &&
 						'selected'
 					}`}

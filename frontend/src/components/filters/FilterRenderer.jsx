@@ -10,6 +10,7 @@ import OthersSection from './sections/OthersSection';
 import SizeSection from './sections/SizeSection';
 import ColorSection from './sections/ColorSection';
 import PriceSection from './sections/PriceSection';
+import Link from 'next/link';
 
 const FilterRenderer = () => {
 	const {
@@ -57,6 +58,7 @@ const FilterRenderer = () => {
 						maxPrice={filterOptions.maxPrice}
 						setPriceRange={setPriceRange}
 					/>
+					<Link href={'/products/filter'}>Apply</Link>
 				</div>
 			) : (
 				<div className="loader-container">

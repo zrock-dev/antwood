@@ -88,31 +88,39 @@ export const getSneakerFilteredByPagination = async (
 	page,
 	pageSize = 3
 ) => {
-	const params = {
-		page,
-		pageSize
-	};
-	if (filters.brand !== '') {
-		params['brand'] = filters.brand;
-	}
-	if (filters.color !== '') {
-		params['color'] = filters.color;
-	}
-	if (filters.minPrice != 0 && filters.maxPrice != 0) {
-		params['minPrice'] = filters.minPrice;
-		params['maxPrice'] = filters.maxPrice;
-	}
-	if (filters.size != 0) {
-		params['size'] = filters.size;
-	}
-	if (filters.tags.length > 0) {
-		params['tags'] = filters.tags.toString();
-	}
-	const queryParams = queryString.stringify(params);
-	console.log(queryParams);
-	const response = await axios.get(`/sneakers/filters/products?${queryParams}`);
+	if (filters) {
+		const params = {
+			page,
+			pageSize
+		};
+		if (filters.brand !== '') {
+			params['brand'] = filters.brand;
+		}
+		if (filters.color !== '') {
+			params['color'] = filters.color;
+		}
+		if (filters.minPrice != 0 && filters.maxPrice != 0) {
+			params['minPrice'] = filters.minPrice;
+			params['maxPrice'] = filters.maxPrice;
+		}
+		if (filters.size != 0) {
+			params['size'] = filters.size;
+		}
+		if (filters.tags.length > 0) {
+			params['tags'] = filters.tags.toString();
+		}
+		const queryParams = queryString.stringify(params);
+		console.log(queryParams);
+		const response = await axios.get(
+			`/sneakers/filters/products?${queryParams}`
+		);
 
-	return response.data;
+		return response.data;
+	}
+
+	return {
+		sneakers: []
+	};
 };
 
 export const createSneaker = async (sneaker) => {

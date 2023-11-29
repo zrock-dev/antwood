@@ -1,6 +1,8 @@
 'use client';
 import { getFilterOptions } from '@/requests/SneakersRequest';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { stringToJson } from '@/utils/Parser';
+import { getItem, saveItem } from '@/utils/StorageManagement';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useEffect, useState } from 'react';
 
 export const ProductResultsContext = createContext();
@@ -26,39 +28,35 @@ const ProductResultsProvider = ({ children }) => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [filterOptions, setFilterOptions] = useState(null);
-	const [filters, setFilters] = useState(emptyFilters);
+	const [filters, setFilters] = useState(null);
 
 	const setBrand = (brand) => {
-		setFilters({
-			...filters,
+		setFilters((prev) => ({
+			...prev,
 			brand: brand === filters.brand ? '' : brand
-		});
-		router.push(`/products/filter`);
+		}));
 	};
 
 	const setColor = (color) => {
-		setFilters({
-			...filters,
+		setFilters((prev) => ({
+			...prev,
 			color: color === filters.color ? '' : color
-		});
-		router.push(`/products/filter`);
+		}));
 	};
 
 	const setPriceRange = (minPrice, maxPrice) => {
-		setFilters({
-			...filters,
+		setFilters((prev) => ({
+			...prev,
 			minPrice: minPrice,
 			maxPrice: maxPrice
-		});
-		router.push(`/products/filter`);
+		}));
 	};
 
 	const setSize = (size) => {
-		setFilters({
-			...filters,
+		setFilters((prev) => ({
+			...prev,
 			size: size === filters.size ? 0 : size
-		});
-		router.push(`/products/filter`);
+		}));
 	};
 
 	const addTag = (tag) => {
@@ -83,15 +81,16 @@ const ProductResultsProvider = ({ children }) => {
 			newTags.push(tag);
 		}
 
-		setFilters({
-			...filters,
+		setFilters((prev) => ({
+			...prev,
 			tags: newTags
-		});
-		router.push(`/products/filter`);
+		}));
 	};
 
 	const isEmptyFilters = () => {
 		return (
+			filterOptions &&
+			filters &&
 			filters.brand === '' &&
 			filters.color === '' &&
 			filters.minPrice == 0 &&
@@ -108,6 +107,26 @@ const ProductResultsProvider = ({ children }) => {
 				.catch(() => setFilterOptions(emptyFilterOptions));
 		}
 	}, []);
+
+	useEffect(() => {
+		const filtersSaved = getItem('filters');
+		if (filtersSaved) {
+			setFilters(stringToJson(filtersSaved));
+		} else {
+			setFilters(emptyFilters);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (filters) {
+			saveItem(
+				'filters',
+				JSON.stringify({
+					...filters
+				})
+			);
+		}
+	}, [filters]);
 
 	return (
 		<ProductResultsContext.Provider
