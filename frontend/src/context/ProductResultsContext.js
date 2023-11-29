@@ -52,6 +52,9 @@ const ProductResultsProvider = ({ children }) => {
 			minPrice: minPrice,
 			maxPrice: maxPrice
 		}));
+		if (minPrice > 0 && maxPrice > 0 && maxPrice !== filterOptions.maxPrice) {
+			router.push('/products/filter');
+		}
 	};
 
 	const setSize = (size) => {

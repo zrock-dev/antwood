@@ -10,7 +10,6 @@ import OthersSection from './sections/OthersSection';
 import SizeSection from './sections/SizeSection';
 import ColorSection from './sections/ColorSection';
 import PriceSection from './sections/PriceSection';
-import Link from 'next/link';
 
 const FilterRenderer = () => {
 	const {
@@ -60,7 +59,9 @@ const FilterRenderer = () => {
 					<PriceSection
 						minPrice={filterOptions.minPrice}
 						maxPrice={filterOptions.maxPrice}
-						currentMaxPrice={filters.maxPrice}
+						currentMaxPrice={
+							filters.maxPrice === 0 ? filterOptions.maxPrice : filters.maxPrice
+						}
 						setPriceRange={setPriceRange}
 						isOpen={
 							filters.minPrice > 0 &&

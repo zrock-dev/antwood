@@ -9,6 +9,7 @@ const PriceSection = ({
 	setPriceRange,
 	isOpen = false
 }) => {
+	const [currentMax, setCurrentMax] = useState(currentMaxPrice);
 	const [max, setMax] = useState(currentMaxPrice);
 
 	useEffect(() => {
@@ -30,13 +31,14 @@ const PriceSection = ({
 						min={minPrice}
 						max={maxPrice}
 						defaultValue={currentMaxPrice}
+						onChange={(e) => setCurrentMax(e.target.value)}
 						onMouseUp={(e) => setMax(e.target.value)}
 						title={`${minPrice} $   -   ${max} $`}
 					/>
 				</div>
 				<div className="filter-prices">
 					<span>{minPrice} $</span>
-					<span>{max} $</span>
+					<span>{currentMax} $</span>
 				</div>
 			</div>
 		</Section>

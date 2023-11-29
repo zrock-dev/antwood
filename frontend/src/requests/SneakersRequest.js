@@ -66,14 +66,14 @@ export const getSearchSuggestionsForAdmin = async (input = '') => {
 
 export const getSearchByPagination = async (input, page) => {
 	const response = await axios.get(
-		`/sneakers/search/products/${input}?page=${page}`
+		`/sneakers/search/products/${input}?page=${page}&pageSize=3`
 	);
 	return response.data;
 };
 
 export const getSearchByPaginationForAdmin = async (input, page) => {
 	const response = await axios.get(
-		`/sneakers/search/products/${input}?page=${page}&foradmin=true`
+		`/sneakers/search/products/${input}?page=${page}&pageSize=4&foradmin=true`
 	);
 	return response.data;
 };
