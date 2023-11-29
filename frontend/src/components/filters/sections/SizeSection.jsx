@@ -1,9 +1,13 @@
 'use client';
 import Section from '@/components/Section';
 
-const SizeSection = ({ sizes, setSize, currentSize }) => {
+const SizeSection = ({ sizes, setSize, currentSize, isOpen = false }) => {
 	return (
-		<Section style="secction-container space-left-30" title={'Sizes'}>
+		<Section
+			style="secction-container space-left-30"
+			title={'Sizes'}
+			isOpen={isOpen}
+		>
 			<div className="sneaker-size-container">
 				{sizes.map((size, index) => (
 					<button

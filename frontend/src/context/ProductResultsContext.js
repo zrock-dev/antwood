@@ -35,6 +35,7 @@ const ProductResultsProvider = ({ children }) => {
 			...prev,
 			brand: brand === filters.brand ? '' : brand
 		}));
+		router.push('/products/filter');
 	};
 
 	const setColor = (color) => {
@@ -42,6 +43,7 @@ const ProductResultsProvider = ({ children }) => {
 			...prev,
 			color: color === filters.color ? '' : color
 		}));
+		router.push('/products/filter');
 	};
 
 	const setPriceRange = (minPrice, maxPrice) => {
@@ -57,6 +59,7 @@ const ProductResultsProvider = ({ children }) => {
 			...prev,
 			size: size === filters.size ? 0 : size
 		}));
+		router.push('/products/filter');
 	};
 
 	const addTag = (tag) => {
@@ -85,6 +88,11 @@ const ProductResultsProvider = ({ children }) => {
 			...prev,
 			tags: newTags
 		}));
+		router.push('/products/filter');
+	};
+
+	const clearFilters = () => {
+		setFilters(emptyFilters);
 	};
 
 	const isEmptyFilters = () => {
@@ -138,7 +146,8 @@ const ProductResultsProvider = ({ children }) => {
 				setPriceRange,
 				setSize,
 				addTag,
-				isEmptyFilters
+				isEmptyFilters,
+				clearFilters
 			}}
 		>
 			{children}

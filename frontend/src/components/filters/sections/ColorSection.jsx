@@ -2,9 +2,13 @@
 import Section from '@/components/Section';
 import '../../../styles/filters/filterColor.css';
 
-const ColorSection = ({ colors, currentColor, setColor }) => {
+const ColorSection = ({ colors, currentColor, setColor, isOpen = false }) => {
 	return (
-		<Section style="secction-container space-left-30" title={'Colors'}>
+		<Section
+			style="secction-container space-left-30"
+			title={'Colors'}
+			isOpen={isOpen}
+		>
 			<div className="filter-color-container">
 				{colors.map((color, index) => (
 					<button

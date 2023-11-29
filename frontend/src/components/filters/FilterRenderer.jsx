@@ -33,32 +33,41 @@ const FilterRenderer = () => {
 						brands={filterOptions.brands}
 						currentBrand={filters.brand}
 						setBrand={setBrand}
+						isOpen={filters.brand !== ''}
 					/>
 					<span className="horizontal-separator margin-20px"></span>
 					<OthersSection
 						tags={filterOptions.tags}
 						currentTags={filters.tags}
 						addTag={addTag}
+						isOpen={filters.tags.length > 0}
 					/>
 					<span className="horizontal-separator margin-20px"></span>
 					<SizeSection
 						sizes={filterOptions.sizes}
 						currentSize={filters.size}
 						setSize={setSize}
+						isOpen={filters.size !== 0}
 					/>
 					<span className="horizontal-separator margin-20px"></span>
 					<ColorSection
 						colors={filterOptions.colors}
 						currentColor={filters.color}
 						setColor={setColor}
+						isOpen={filters.color !== ''}
 					/>
 					<span className="horizontal-separator margin-20px"></span>
 					<PriceSection
 						minPrice={filterOptions.minPrice}
 						maxPrice={filterOptions.maxPrice}
 						setPriceRange={setPriceRange}
+						isOpen={
+							filters.minPrice > 0 &&
+							filters.maxPrice > 0 &&
+							filters.minPrice !== filterOptions.minPrice &&
+							filters.maxPrice !== filterOptions.maxPrice
+						}
 					/>
-					<Link href={'/products/filter'}>Apply</Link>
 				</div>
 			) : (
 				<div className="loader-container">

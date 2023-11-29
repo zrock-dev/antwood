@@ -5,6 +5,8 @@
 }
 
 .filter-color {
+	position: relative;
+
 	border-radius: 50%;
 	padding: 19px;
 	border: none;
@@ -12,8 +14,21 @@
 	box-shadow: 0 0 10px #ddd;
 }
 
-.filter-color:hover,
-.filter-color.selected {
-    box-shadow: 0 0 3px #333;
+.filter-color::before {
+	position: absolute;
+	content: ' ';
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
+	width: 70%;
+	height: 70%;
+	border-radius: 50%;
+	border: 4px solid transparent;
+	background-color: transparent;
+}
+
+.filter-color:hover::before,
+.filter-color.selected::before {
+	border: 4px solid #e9e9e9;
 }
