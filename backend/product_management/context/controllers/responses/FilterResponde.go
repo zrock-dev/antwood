@@ -148,7 +148,7 @@ func getMatchFilters(pipeline mongo.Pipeline, brand string, tags []string, color
 			andMatch = append(andMatch, bson.D{{Key: "brand", Value: brand}})
 		}
 		if tags[0] != "" && len(tags) > 0 {
-			andMatch = append(andMatch, bson.D{{Key: "tags", Value: bson.D{{Key: "$in", Value: tags}}}})
+			andMatch = append(andMatch, bson.D{{Key: "tags", Value: bson.D{{Key: "$all", Value: tags}}}})
 		}
 		if color != "" {
 			andMatch = append(andMatch, bson.D{{Key: "colors", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "color", Value: bson.D{{Key: "$in", Value: []string{color}}}}}}}}})
