@@ -2,7 +2,6 @@ package responses
 
 import (
 	"context"
-	"fmt"
 	"product_management/app/database"
 	"strconv"
 	"strings"
@@ -100,43 +99,50 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
 	brand, color, tags, minPrice, maxPrice, size := getFilterOptions(c)
 
-	pipeline := mongo.Pipeline{}
-	pipeline = getMatchFilters(pipeline, brand, tags, color)
-	pipeline = getPriceFilter(pipeline, minPrice, maxPrice)
-	pipeline = append(pipeline, bson.D{
-		{Key: "$lookup", Value: bson.D{
-			{Key: "from", Value: "sneakerColors"},
-			{Key: "localField", Value: "colors.0._id"},
-			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "types"},
-		}},
-	})
-	pipeline = getSizeFilter(pipeline, size)
-	pipeline = append(pipeline,
-		bson.D{
-			{Key: "$skip", Value: skip},
-		},
-		bson.D{
-			{Key: "$limit", Value: limit},
-		},
-		bson.D{
-			{Key: "$project", Value: bson.D{
-				{Key: "tags", Value: 0},
-				{Key: "qualification", Value: 0},
-				{Key: "description", Value: 0},
-				{Key: "reviews", Value: 0},
-				{Key: "brand", Value: 0},
-				{Key: "types.sizes", Value: 0},
-				{Key: "types.quantity", Value: 0},
+	if brand != "" || (tags[0] != "" && len(tags) > 0) || color != "" ||
+		(minPrice > 0 && maxPrice > 0) || size > 0 {
+		pipeline := mongo.Pipeline{}
+		pipeline = getMatchFilters(pipeline, brand, tags, color)
+		pipeline = getPriceFilter(pipeline, minPrice, maxPrice)
+		pipeline = append(pipeline, bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "sneakerColors"},
+				{Key: "localField", Value: "colors.0._id"},
+				{Key: "foreignField", Value: "_id"},
+				{Key: "as", Value: "types"},
 			}},
 		})
+		pipeline = getSizeFilter(pipeline, size)
+		pipeline = append(pipeline,
+			bson.D{
+				{Key: "$skip", Value: skip},
+			},
+			bson.D{
+				{Key: "$limit", Value: limit},
+			},
+			bson.D{
+				{Key: "$project", Value: bson.D{
+					{Key: "tags", Value: 0},
+					{Key: "qualification", Value: 0},
+					{Key: "description", Value: 0},
+					{Key: "reviews", Value: 0},
+					{Key: "brand", Value: 0},
+					{Key: "types.sizes", Value: 0},
+					{Key: "types.quantity", Value: 0},
+				}},
+			})
 
-	return sendSneakersUsingPipeline(pipeline, c)
+		return sendSneakersUsingPipeline(pipeline, c)
+	}
+
+	return c.JSON(fiber.Map{
+		"sneakers": []string{},
+	})
+
 }
 
 func getMatchFilters(pipeline mongo.Pipeline, brand string, tags []string, color string) mongo.Pipeline {
 	if brand != "" || (tags[0] != "" && len(tags) > 0) || color != "" {
-		fmt.Println(tags[0])
 		andMatch := []interface{}{}
 		if brand != "" {
 			andMatch = append(andMatch, bson.D{{Key: "brand", Value: brand}})

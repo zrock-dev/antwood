@@ -12,23 +12,31 @@ const ProductFilter = ({ style = 'products-container' }) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
-	const { filters } = useContext(ProductResultsContext);
+	const { filters, isEmptyFilters } = useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
-		const data = await getSneakerFilteredByPagination(filters, page, 3);
-		if (data.sneakers.length === 0) {
-			setHasMore(false);
-		} else {
-			setProducts((prev) => [...prev, ...data.sneakers]);
-			setPage((prev) => prev + 1);
+		if (!isEmptyFilters()) {
+			const data = await getSneakerFilteredByPagination(filters, page, 3);
+			if (data.sneakers.length === 0) {
+				setHasMore(false);
+			} else {
+				setProducts((prev) => [...prev, ...data.sneakers]);
+				setPage((prev) => prev + 1);
+			}
 		}
 	};
 
 	useEffect(() => {
-		setProducts([]);
+		console.log(filters);
+	}, []);
+
+	useEffect(() => {
+		setProducts(products.filter((product) => false));
 		setHasMore(true);
+		setPage(1);
+		console.log(filters);
 	}, [filters]);
 
 	useEffect(() => {

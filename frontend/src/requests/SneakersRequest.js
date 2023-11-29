@@ -95,7 +95,7 @@ export const getSneakerFilteredByPagination = async (
 	if (filters.brand !== '') {
 		params['brand'] = filters.brand;
 	}
-	if (filters.color != '') {
+	if (filters.color !== '') {
 		params['color'] = filters.color;
 	}
 	if (filters.minPrice != 0 && filters.maxPrice != 0) {
@@ -109,6 +109,7 @@ export const getSneakerFilteredByPagination = async (
 		params['tags'] = filters.tags.toString();
 	}
 	const queryParams = queryString.stringify(params);
+	console.log(queryParams);
 	const response = await axios.get(`/sneakers/filters/products?${queryParams}`);
 
 	return response.data;

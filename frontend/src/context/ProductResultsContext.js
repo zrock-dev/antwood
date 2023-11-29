@@ -79,10 +79,10 @@ const ProductResultsProvider = ({ children }) => {
 			filterOptions &&
 			filters.brand === '' &&
 			filters.color === '' &&
-			(filters.minPrice === 0 || filters.minPrice === filterOptions.minPrice) &&
-			(filters.maxPrice === 0 || filters.maxPrice === filterOptions.maxPrice) &&
-			filters.size === 0 &&
-			filters.tags.length === 0
+			(filters.minPrice == 0 || filters.minPrice == filterOptions.minPrice) &&
+			(filters.maxPrice == 0 || filters.maxPrice == filterOptions.maxPrice) &&
+			filters.size == 0 &&
+			filters.tags.length <= 0
 		);
 	};
 
@@ -95,8 +95,7 @@ const ProductResultsProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		if (filterOptions && filters && !isEmptyFilters()) {
-			console.log(filters);
+		if (!isEmptyFilters() && !pathname.includes('filter')) {
 			router.push(`/products/filter`);
 		}
 	}, [filters]);
