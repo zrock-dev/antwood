@@ -5,11 +5,13 @@ import PaymentMessage from "@/components/PaymentMessage";
 const ProductSuggestions = () => {
 
 	return (
-			<>
-    <PaymentMessage  />
-    <ProductRenderer fetchMethod={getAllProductsByPagination} />;
-  </>
-	)
+    <>
+      <div className="sub-main-container">
+        <PaymentMessage />
+        <ProductRenderer fetchMethod={getAllProductsByPagination} />;
+      </div>
+    </>
+  );
 };
 
 export default ProductSuggestions;
