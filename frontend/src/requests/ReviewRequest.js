@@ -22,3 +22,8 @@ export const getReviewsByAmount = async (sneakerId, from , amount) => {
   const response = await axios.get(`/review/${sneakerId}?index=${from}&amount=${amount}`,axiosConfig);
   return response.data;
 }
+
+export const userCanReview = async(email,sneaker) =>{
+  const response = await axios.get(`/api/payment/orders/cancomment/${email}/${sneaker}`);
+  return response.data
+}

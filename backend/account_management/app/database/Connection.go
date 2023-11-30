@@ -14,7 +14,6 @@ var DB *mongo.Database
 var UsersCollection *mongo.Collection
 var ReviewsCollection *mongo.Collection
 
-
 func Connect() {
 	mongodb_uri := os.Getenv("MONGODB_URI")
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongodb_uri))
@@ -35,4 +34,3 @@ func Disconnect() {
 		panic(err)
 	}
 }
-
