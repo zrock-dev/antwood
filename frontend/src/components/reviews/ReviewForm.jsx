@@ -125,12 +125,12 @@ function ReviewForm({ product, setReviews }) {
             type="reset"
             btnStyle='third_btn'
             onClick={reviewHandle.resetReview}>
-            Cancel
+            CANCEL
           </Button>
           <Button
             onClick={onAddReview}
           >
-            Add
+            ADD
           </Button>
         </div>
       </div>

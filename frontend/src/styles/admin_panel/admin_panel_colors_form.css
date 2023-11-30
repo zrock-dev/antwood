@@ -69,6 +69,10 @@
   font-size: 18px;
 }
 
+.admin-panel-colors-form-droopdown-inputs span {
+  margin-right: 5px;
+}
+
 .admin-panel-colors-droopdown-list {
   display: flex;
   flex-direction: row;
