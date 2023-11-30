@@ -17,7 +17,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o shopping_cart_management
 FROM base AS runner 
 WORKDIR /service
 COPY --from=builder /service/shopping_cart_management .
-COPY .env .
+COPY .env.vault .
 LABEL org.opencontainers.image.description="Shopping Cart Management Service"
 
 ENTRYPOINT ["./shopping_cart_management"]

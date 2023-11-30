@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { CartContext } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { confirmAvailableSizes } from "@/requests/SneakersRequest";
+import { useRouter } from "next/navigation";
+
 export default function CheckoutForm({ clientSecret }) {
   const { products } = useContext(CartContext);
   const stripe = useStripe();
@@ -16,6 +18,7 @@ export default function CheckoutForm({ clientSecret }) {
   const { isAuthenticated } = useAuth();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,8 +38,7 @@ export default function CheckoutForm({ clientSecret }) {
     const res = await confirmAvailableSizes(products);
 
     if (!res.areAvailable) {
-      toast.error("Sneakers in Stock");
-      window.history.back();
+      router.push("/cart");
       return;
     }
 

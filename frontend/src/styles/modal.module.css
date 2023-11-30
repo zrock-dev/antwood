@@ -10,5 +10,5 @@
     justify-items: center;
     align-items: center;
     align-content: center;
-    z-index: 100;
+    z-index: 1000;
 }
