@@ -110,7 +110,6 @@ export const getSneakerFilteredByPagination = async (
 			params['tags'] = filters.tags.toString();
 		}
 		const queryParams = queryString.stringify(params);
-		console.log(queryParams);
 		const response = await axios.get(
 			`/sneakers/filters/products?${queryParams}`
 		);

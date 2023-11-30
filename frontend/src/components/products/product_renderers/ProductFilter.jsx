@@ -9,42 +9,57 @@ import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
 
 const ProductFilter = ({ style = 'products-container' }) => {
-	const [products, setProducts] = useState([]);
-	const [hasMore, setHasMore] = useState(true);
-	const [page, setPage] = useState(1);
+	const [rendererState, setRendererState] = useState({
+		products: [],
+		hasMore: true,
+		page: 1
+	});
 	const { filters, isEmptyFilters } = useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
 		if (!isEmptyFilters(filters)) {
-			const data = await getSneakerFilteredByPagination(filters, page, 3);
+			const data = await getSneakerFilteredByPagination(
+				filters,
+				rendererState.page,
+				3
+			);
 			if (data.sneakers.length === 0) {
-				setHasMore(false);
+				setRendererState({
+					...rendererState,
+					hasMore: false
+				});
 			} else {
-				setProducts((prev) => [...prev, ...data.sneakers]);
-				setPage((prev) => prev + 1);
+				setRendererState({
+					...rendererState,
+					products: [...rendererState.products, ...data.sneakers],
+					page: rendererState.page + 1
+				});
 			}
 		}
 	};
 
 	useEffect(() => {
 		if (isEmptyFilters()) {
-			setProducts([]);
-			setHasMore(false);
-			setPage(1);
+			setRendererState({
+				products: [],
+				hasMore: false,
+				page: 1
+			});
 		} else {
-			setProducts([]);
-			setHasMore(true);
-			setPage(1);
+			setRendererState({
+				products: [],
+				hasMore: true,
+				page: 1
+			});
 		}
 	}, [filters]);
 
 	useEffect(() => {
-		console.log(products);
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
-				if (hasMore && entry.isIntersecting) {
+				if (rendererState.hasMore && entry.isIntersecting) {
 					fetchMoreProducts();
 				}
 			});
@@ -58,21 +73,21 @@ const ProductFilter = ({ style = 'products-container' }) => {
 				observer.disconnect();
 			}
 		};
-	}, [products]);
+	}, [rendererState.products]);
 
 	return (
 		<div className="layout-filter">
 			<FilterRenderer />
 			<div className="products-main-container">
 				<div className={style}>
-					{products.map((product) => (
+					{rendererState.products.map((product) => (
 						<ProductCard key={product._id} product={product} />
 					))}
 				</div>
-				{!hasMore && products.length < 1 && (
+				{!rendererState.hasMore && rendererState.products.length < 1 && (
 					<NoProductsFound redirection={'/products'} />
 				)}
-				{hasMore && (
+				{rendererState.hasMore && (
 					<div ref={lastProduct} className="loader-container">
 						<span className="loader"></span>
 					</div>
