@@ -15,9 +15,9 @@
 	transition: position ease 400ms;
 }
 
-.navbar-main-container.fixed {
+/* .navbar-main-container.fixed {
 	position: fixed;
-}
+} */
 
 .navbar-sub-container {
 	display: flex;

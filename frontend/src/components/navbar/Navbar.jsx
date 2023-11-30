@@ -8,9 +8,12 @@ import NavLogo from './NavLogo';
 import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ProductResultsContext } from '@/context/ProductResultsContext';
+import UserIcon from '@/icons/UserIcon';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
 	const navbar = useRef(null);
+	const router = useRouter();
 	const { setShowModalAuth, updateUser, setIsAuthenticated, isAuthenticated } =
 		useAuth();
 	const { signoutUser } = useAuthHandler();
@@ -93,15 +96,16 @@ const Navbar = () => {
 				</button>
 			</div>
 			<div className="navbar-sub-container right">
-				{!isAuthenticated ? (
-					<Button className="rm-padding" onClick={() => setShowModalAuth(true)}>
-						log in
-					</Button>
-				) : (
-					<Button className="rm-padding" onClick={signoutUser}>
-						log out
-					</Button>
-				)}
+				<Button
+					className="rm-padding"
+					onClick={
+						!isAuthenticated
+							? () => setShowModalAuth(true)
+							: () => router.push('/profile')
+					}
+				>
+					<UserIcon />
+				</Button>
 				<CartModalRenderer />
 				<Searcher />
 			</div>
