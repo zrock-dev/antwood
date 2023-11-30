@@ -37,7 +37,7 @@ const OrderRenderer = () => {
 
   return (
     <>
-      <PaymentMessage  promise={()=>fetchOrders(1)}/>
+      <PaymentMessage promise={() => fetchOrders(1)} />
       <div className="orders-ctn">
         <div className={`orders ${loading ? "receipt-loading" : ""}`}>
           {orders &&
@@ -90,12 +90,14 @@ const OrderRenderer = () => {
             setPage={fetchOrders}
           />
         )}
-        <ReceiptModalRenderer
-          displayReceiptDetails={displayReceiptDetails}
-          setDisplayReceiptDetails={setDisplayReceiptDetails}
-          order={order}
-          setOrder={setOrder}
-        />
+        {displayReceiptDetails && (
+          <ReceiptModalRenderer
+            displayReceiptDetails={displayReceiptDetails}
+            setDisplayReceiptDetails={setDisplayReceiptDetails}
+            order={order}
+            setOrder={setOrder}
+          />
+        )}
       </div>
     </>
   );

@@ -95,3 +95,8 @@
   border-top: 1px solid black;
   position: sticky;
 }
+
+
+.receipt-ctn-loader{
+  height: 200px!important;
+}

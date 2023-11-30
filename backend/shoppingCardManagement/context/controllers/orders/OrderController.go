@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetOrdersPageByUserEmail(c *fiber.Ctx) error {
@@ -51,4 +52,23 @@ func parseQueries(pageSize string, page string) (int, int) {
 	}
 
 	return pageSizeInt, pageInt
+}
+
+
+func UserAlreadyPurchaseSneaker(c *fiber.Ctx) error {
+	email := c.Params("email")
+	sneakerID := c.Params("sneaker")
+
+	objectID, err := primitive.ObjectIDFromHex(sneakerID)
+
+	orders, err := repository.UserAlreadyOrderSneaker(email, objectID)
+
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"message": err.Error(),
+			"status":  fiber.StatusInternalServerError,
+		})
+	}
+
+	return c.JSON(orders)
 }

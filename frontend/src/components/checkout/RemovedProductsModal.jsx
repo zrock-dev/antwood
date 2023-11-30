@@ -53,14 +53,14 @@ const RemovedProductsModal = () => {
               <div className="removed-products">
                 <div className="removed-product-header">
                   <span className="product-header-image">Image</span>
-                  <span className="product-card-name">Product Name</span>
+                  <span className="product-card-name-modal">Product Name</span>
                   <span className="product-card-size">Size</span>
                 </div>
                 {removedProducts.map((product) => {
                   return (
                     <div className="removed-product" key={product.sneakerId}>
                       <img src={product.image} alt="" />
-                      <span className="product-card-name">{product.name}</span>
+                      <span className="product-card-name-modal">{product.name}</span>
                       <span>{product.size}</span>
                     </div>
                   );
@@ -79,14 +79,14 @@ const RemovedProductsModal = () => {
               </div>
               <div className="removed-products">
                 <div className="removed-product-header">
-                  <span className="product-card-name">Product Name</span>
+                  <span className="product-card-name-modal">Product Name</span>
                   <span className="product-card-size">Size</span>
                 </div>
                 {unavailableProducts.map((product) => {
                   return (
                     <>
                       <div className="removed-product" key={product.sneakerId}>
-                        <span className="product-card-name">
+                        <span className="product-card-name-modal">
                           {product.name}
                         </span>
                         <span>{product.size}</span>

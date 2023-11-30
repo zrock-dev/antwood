@@ -6,6 +6,8 @@ import (
 	"shopping-card-management/app/models"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -32,8 +34,6 @@ func GetOrderPageByUserEmail(email string, skip int, pageSize int) ([]*models.Or
 
 func GetOrderCountByEmail(email string) (int, error) {
 
-
-
     cursor , err := database.OrdersCollection.Find(context.TODO(), bson.M{"email": email})
 	
 	if err != nil {
@@ -49,3 +49,34 @@ func GetOrderCountByEmail(email string) (int, error) {
     return len(orders), nil
 }
 
+
+func UserAlreadyOrderSneaker(email string, sneakerID primitive.ObjectID) (interface{}, error) {
+	groupOrdersByEmail := bson.D{
+		{Key: "$match", Value: bson.D{
+			{Key: "email", Value: email}}}}
+
+	groupOrdersBySneakerID := bson.D{
+		{Key: "$match", Value: bson.D{
+			{Key: "products", Value: bson.D{
+				{Key: "$elemMatch", Value: bson.D{
+					{Key: "sneakerId", Value: sneakerID}}}}}}}}
+
+	countResults := bson.D{
+		{Key: "$count", Value: "purchases"}}
+
+	pipeline := mongo.Pipeline{groupOrdersByEmail, groupOrdersBySneakerID, countResults}
+
+	cursor, err := database.OrdersCollection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []bson.M
+
+	err = cursor.All(context.TODO(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
