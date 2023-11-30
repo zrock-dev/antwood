@@ -97,6 +97,7 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 
 	if strings.ReplaceAll(searchInput, " ", "") != "" {
 		skip, limit := getPaginationValues(c)
+		sortField, sortOrder := getSortValues(c)
 
 		searchInput = strings.TrimSpace(searchInput)
 		searchInput, err := url.QueryUnescape(searchInput)
@@ -136,6 +137,8 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 				}},
 			},
 		}
+
+		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
 
 		return sendSneakersUsingPipeline(pipeline, c)
 	}

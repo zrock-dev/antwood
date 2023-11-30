@@ -7,18 +7,24 @@ import FilterRenderer from '@/components/filters/FilterRenderer';
 import NoProductsFound from '../NoProductsFound';
 import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
+import SubNavbar from '@/components/navbar/SubNavbar';
 
 const ProductFilter = ({ style = 'products-container' }) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
-	const { filters, isEmptyFilters } = useContext(ProductResultsContext);
+	const { sorter, filters, isEmptyFilters } = useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
 		if (!isEmptyFilters(filters)) {
-			const data = await getSneakerFilteredByPagination(filters, page, 3);
+			const data = await getSneakerFilteredByPagination(
+				filters,
+				page,
+				3,
+				sorter
+			);
 			if (data.sneakers.length === 0) {
 				setHasMore(false);
 			} else {
@@ -39,6 +45,12 @@ const ProductFilter = ({ style = 'products-container' }) => {
 			setPage(1);
 		}
 	}, [filters]);
+
+	useEffect(() => {
+		setProducts([]);
+		setHasMore(true);
+		setPage(1);
+	}, [sorter]);
 
 	useEffect(() => {
 		console.log(products);
@@ -62,6 +74,7 @@ const ProductFilter = ({ style = 'products-container' }) => {
 
 	return (
 		<div className="layout-filter">
+			<SubNavbar />
 			<FilterRenderer />
 			<div className="products-main-container">
 				<div className={style}>

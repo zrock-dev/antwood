@@ -24,11 +24,24 @@ export const emptyFilters = {
 	tags: []
 };
 
+export const defaultSorter = {
+	sortField: 'lastDate',
+	sortOrder: 'asc'
+};
+
 const ProductResultsProvider = ({ children }) => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [filters, setFilters] = useState(null);
+	const [sorter, setSorter] = useState(defaultSorter);
+
+	const setSort = (sortField, sortOrder) => {
+		setSorter({
+			sortField,
+			sortOrder
+		});
+	};
 
 	const setBrand = (brand) => {
 		setFilters((prev) => ({
@@ -156,7 +169,9 @@ const ProductResultsProvider = ({ children }) => {
 				addTag,
 				isEmptyFilters,
 				clearFiltersAndRedirect,
-				clearFilters
+				clearFilters,
+				sorter,
+				setSort
 			}}
 		>
 			{children}

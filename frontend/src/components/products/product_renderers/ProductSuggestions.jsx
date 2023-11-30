@@ -9,7 +9,12 @@ const ProductSuggestions = () => {
 	return (
 		<div className="sub-main-container">
 			<PaymentMessage resetCartState={resetCartState} />
-			<ProductRenderer fetchMethod={getAllProductsByPagination} />;
+			<ProductRenderer
+				fetchMethod={(page, sorter) =>
+					getAllProductsByPagination(page, 4, sorter)
+				}
+			/>
+			;
 		</div>
 	);
 };

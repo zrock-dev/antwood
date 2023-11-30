@@ -1,9 +1,10 @@
 .subnavbar-main-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	grid-area: subnavbar;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-    width: 90%;
-    padding: 20px 0;
-    margin-inline: auto;
+	width: 90%;
+	padding: 20px 0;
+	margin-inline: auto;
 }

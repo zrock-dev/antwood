@@ -1,4 +1,5 @@
 .products-main-container {
+	grid-area: products;
 	display: flex;
 	flex-direction: column;
 }
