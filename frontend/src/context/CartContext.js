@@ -4,6 +4,7 @@ import { getItem, saveItem } from "@/utils/StorageManagement";
 import { createContext, useEffect, useState, useRef } from "react";
 import { getSneakerQuantities } from "@/requests/SneakersRequest";
 import { packCurrentQuantityQuery } from "@/utils/Packer";
+import { getTaxes } from "@/requests/OrderRequest";
 export const CartContext = createContext();
 
 export const EMPTY_CART = {
@@ -173,6 +174,10 @@ const CartProvider = ({ children }) => {
       setRemovedProducts(true);
       saveItem("removedProducts", JSON.stringify([...removedResult ]));
     }
+
+    const taxes  = await getTaxes(cartState.subTotal);
+    cartState.extra = taxes;
+
     updateProducts(availableProducts);
   };
 
