@@ -26,8 +26,8 @@ func CreatePaymentIntent(c *fiber.Ctx) error {
 	taxParams := &stripe.TaxCalculationParams{
 		Currency: stripe.String(string(stripe.CurrencyUSD)),
 		LineItems: []*stripe.TaxCalculationLineItemParams{
-			&stripe.TaxCalculationLineItemParams{
-				Amount:    stripe.Int64(int64(order.Subtotal)),
+			{
+				Amount:    stripe.Int64(int64(order.Subtotal * 100)),
 				Reference: stripe.String(order.ID.Hex()),
 			},
 		},
