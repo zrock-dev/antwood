@@ -11,7 +11,7 @@ const Footer = () => {
 		<div className="footer-main-container">
 			<div className="footer-social-network-container">
 				<Link
-					href="https://www.facebook.com/tu-pagina-de-facebook"
+					href="https://www.facebook.com"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -19,7 +19,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://twitter.com/tu-cuenta-de-twitter"
+					href="https://twitter.com"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -27,7 +27,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://www.instagram.com/tu-cuenta-de-instagram"
+					href="https://www.instagram.com"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -35,7 +35,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://www.youtube.com/tu-canal-de-youtube"
+					href="https://www.youtube.com"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
