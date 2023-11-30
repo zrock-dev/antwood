@@ -1,0 +1,37 @@
+.footer-main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 80px 0;
+
+    background-color: black;
+    color: white;
+
+    & svg {
+        fill: #999;
+    }
+}
+
+.footer-social-network-container {
+    display: flex;
+    gap: 10px;
+
+    & svg:hover {
+        fill: white;
+    }
+}
+
+.footer-location-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-weight: 900;
+}
+
+.footer-copyright {
+    font-size: 14px;
+    color: #999;
+}
