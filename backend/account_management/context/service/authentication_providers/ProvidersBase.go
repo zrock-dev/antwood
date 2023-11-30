@@ -15,6 +15,8 @@ type Provider interface {
 
 func UseProvider(provider string) Provider {
 	switch provider {
+	case "google":
+		return ProviderGoogle{}
 	case "solestyle":
 		return ProviderSoleStyle{}
 	default:
