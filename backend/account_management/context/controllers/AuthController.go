@@ -3,6 +3,7 @@ package controllers
 import (
 	"account_management/context/records"
 	"account_management/context/service"
+	"account_management/context/service/authentication_providers"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -10,8 +11,7 @@ import (
 )
 
 func Register(c *fiber.Ctx) error {
-
-	authProvider := service.UseProvider(c.Query("provider"))
+	authProvider := authentication_providers.UseProvider(c.Query("provider"))
 
 	authentication_token, user, authError := authProvider.Register(c)
 
@@ -48,7 +48,7 @@ func Register(c *fiber.Ctx) error {
 }
 
 func Login(c *fiber.Ctx) error {
-	authProvider := service.UseProvider(c.Query("provider"))
+	authProvider := authentication_providers.UseProvider(c.Query("provider"))
 
 	authentication_token, user, authError := authProvider.Login(c)
 
@@ -85,17 +85,16 @@ func Login(c *fiber.Ctx) error {
 }
 
 func GetUserByToken(c *fiber.Ctx) error {
-	authProvider := service.UseProvider(c.Query("provider"))
+	authProvider := authentication_providers.UseProvider(c.Query("provider"))
 
 	authToken := c.Cookies("jwt")
-
 
 	claims, authError := service.GetAppClaims(authToken)
 
 	if authError != nil {
 		return c.JSON(fiber.Map{
 			"status": fiber.StatusForbidden,
-			"error": authError.Error(),
+			"error":  authError.Error(),
 		})
 	}
 
@@ -106,7 +105,7 @@ func GetUserByToken(c *fiber.Ctx) error {
 	if userError != nil {
 		return c.JSON(fiber.Map{
 			"status": fiber.StatusForbidden,
-			"error": userError.Error(),
+			"error":  userError.Error(),
 		})
 	}
 
@@ -115,7 +114,7 @@ func GetUserByToken(c *fiber.Ctx) error {
 }
 
 func Logout(c *fiber.Ctx) error {
-	authProvider := service.UseProvider(c.Query("provider"))
+	authProvider := authentication_providers.UseProvider(c.Query("provider"))
 	authToken := c.Cookies("jwt")
 
 	claims, authError := service.GetAppClaims(authToken)
