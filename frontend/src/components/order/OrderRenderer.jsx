@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUserOrders } from "../../requests/OrderRequest";
 import { useAuth } from "@/context/AuthContext";
 import "@/styles/order/order.css";
@@ -6,7 +6,7 @@ import ReceiptModalRenderer from "./ReceipModalRenderer";
 import Pagination from "./Pagination";
 import { dateParser } from "@/utils/Parser";
 import PaymentMessage from "@/components/PaymentMessage";
-import { CartContext } from "@/context/CartContext";
+
 
 const OrderRenderer = () => {
   const [orders, setOrders] = useState([]);
@@ -15,14 +15,12 @@ const OrderRenderer = () => {
   const [displayReceiptDetails, setDisplayReceiptDetails] = useState(false);
   const { user, isAuthenticated } = useAuth();
   const paginationRef = useRef(1);
-  const { resetCartState } = useContext(CartContext);
 
   const fetchOrders = async (ordersPage) => {
     if (user) {
       setLoading(true);
       const res = await getUserOrders(user.email, ordersPage);
-      console.log(res);
-      setOrders(res.orders);
+      setOrders(res.orders ? res.orders : []);
       paginationRef.current = res.totalPages;
       setLoading(false);
     }
@@ -39,7 +37,7 @@ const OrderRenderer = () => {
 
   return (
     <>
-      <PaymentMessage resetCartState={resetCartState}  promise={()=>fetchOrders(1)}/>
+      <PaymentMessage  promise={()=>fetchOrders(1)}/>
       <div className="orders-ctn">
         <div className={`orders ${loading ? "receipt-loading" : ""}`}>
           {orders &&

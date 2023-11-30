@@ -1,7 +1,6 @@
 "use client";
 import "@/styles/profile/profile.css";
 import Link from "next/link";
-
 import { useAuth } from "@/context/AuthContext";
 import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";

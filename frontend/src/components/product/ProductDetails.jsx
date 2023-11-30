@@ -7,6 +7,7 @@ import QuantityRenderer from '../cart/QuantityRenderer';
 import { CartContext } from '@/context/CartContext';
 import { getItem, isValidToRequestStorage } from '@/utils/StorageManagement';
 import { stringToJson } from '@/utils/Parser';
+import Section from '../Section';
 
 const ProductDetails = ({ product }) => {
 	const {
@@ -177,7 +178,7 @@ const ProductDetails = ({ product }) => {
 					title="Shoe Sizes"
 					description="We have these sizes available for this sneaker in this color"
 				>
-					<div className="secction-item-row">
+					<div className="sneaker-size-container">
 						{colorData.sizes.map((size, index) => (
 							<button
 								className={`sneaker-size ${
@@ -216,11 +217,11 @@ const ProductDetails = ({ product }) => {
 						))}
 					</div>
 				</DetailSection>
-				<DetailSection title="Description">
+				<Section title={'Description'} isOpen={true}>
 					<p className="product-details-color-description">
 						{product.description}
 					</p>
-				</DetailSection>
+				</Section>
 				<div className="product-details-cart-management">
 					{colorData.sizes[color.sizeIndex].quantity > 0 && (
 						<QuantityRenderer

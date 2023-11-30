@@ -1,0 +1,90 @@
+.removed-products-ctn {
+  display: flex;
+  width: 500px;
+  flex-direction: column;
+  background-color: var(--primary-color);
+  position: relative;
+}
+
+.removed-products-header {
+  padding: 15px;
+  text-align: center;
+  background-color: rgb(255, 124, 124);
+}
+
+.unavailable-products-header {
+  padding: 15px;
+  text-align: center;
+  background-color: rgb(202, 202, 202);
+}
+
+.removed-products-header p,
+.unavailable-products-header p {
+  font-size: 12px;
+}
+
+.removed-products {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.removed-product {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.removed-product span:last-child {
+  width: 50px;
+  text-align: center;
+  font-weight: bolder;
+}
+
+.product-card-name {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.removed-product img {
+  width: 100px;
+  height: 100px;
+}
+
+.removed-product-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  font-weight: bolder;
+  text-align: center;
+}
+.product-card-name {
+  flex-grow: 1;
+}
+.product-header-image {
+  width: 100px;
+}
+.product-card-size {
+  width: 66px;
+  text-align: center;
+}
+
+.close-removed-products-modal-sold-out {
+  position: absolute;
+  padding: 10px;
+ background-color:  rgb(255, 126, 126);
+ right: 0;
+}
+
+.close-removed-products-modal-unavailable {
+  position: absolute;
+  padding: 10px;
+ background-color:  rgb(202, 202, 202);
+ right: 0;
+}

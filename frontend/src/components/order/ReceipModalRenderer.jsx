@@ -13,9 +13,10 @@ const ReceiptModalRenderer = ({
 
   const getCurrentSneakerQuantities = async (dataRequest) => {
     let dataResult = await getSneakerQuantities(dataRequest);
-    console.log(dataResult);
     for (let i = 0; i < order?.products.length; i++) {
-      order.products[i].images = dataResult[i].images
+      if (!dataResult[i].image){
+              order.products[i].image = ""
+      }
     }
 
     setOrder({
@@ -82,11 +83,15 @@ const ReceiptModalRenderer = ({
                   <>
                     <tr key={product.id}>
                       <td>
-                        <img
-                          src={product.image}
-                          alt=""
-                          className="receipt-product-image"
-                        />
+                        {product.image === "" ? (
+                          <span>-</span>
+                        ) : (
+                          <img
+                            src={product.image}
+                            alt=""
+                            className="receipt-product-image"
+                          />
+                        )}
                       </td>
                       <td className="receipt-product-name">{product.name}</td>
                       <td>{product.size}</td>

@@ -1,13 +1,14 @@
 'use client';
 
 import { getSearchSuggestions } from '@/requests/SneakersRequest';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 
 import '../../styles/search/search.css';
 import SearchIcon from '@/icons/SearchIcon';
 import SearchSuggestion from './SearchSuggestion';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { ProductResultsContext } from '@/context/ProductResultsContext';
 
 const Searcher = ({
 	fecthSuggestions = getSearchSuggestions,
@@ -16,6 +17,7 @@ const Searcher = ({
 	const router = useRouter();
 	const pathname = usePathname();
 	const params = useParams();
+	const { clearFilters } = useContext(ProductResultsContext);
 	const suggestionsElements = useRef(null);
 	const [suggestions, setSuggestions] = useState([]);
 	const [searchState, setSearchState] = useState({
@@ -43,6 +45,7 @@ const Searcher = ({
 		if (inputToSearch.trim() !== '') {
 			router.push(`${searchRoute}/${inputToSearch}`);
 		}
+		clearFilters();
 	};
 
 	const selectSuggestion = (suggestion) => {

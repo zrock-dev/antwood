@@ -42,7 +42,6 @@ const Pagination = ({ totalPages, setPage }) => {
         </Button>
       );
     }
-    console.log(paginationRef.current, btnsPage)
     return btns;
   };
 
