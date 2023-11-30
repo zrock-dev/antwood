@@ -5,6 +5,7 @@ import (
 	"account_management/app/repository"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetUserByEmail(c *fiber.Ctx) error {
@@ -72,4 +73,36 @@ func ChangeUserRoleToUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(result)
+}
+
+func AddFavoriteSneaker(c *fiber.Ctx) error {
+	m := c.Queries()
+	email := m["email"]
+	sneakerID := m["id"]
+
+	objectID, err := primitive.ObjectIDFromHex(sneakerID)
+	if err != nil {
+		return c.JSON(err)
+	}
+
+	res, err := repository.AddSneakerToUserFavorites(objectID, email)
+
+	if err != nil {
+		return c.JSON(err)
+	}
+
+	return c.JSON(res)
+}
+
+func GetFavoriteSneakers(c *fiber.Ctx) error {
+	m := c.Queries()
+	email := m["email"]
+
+	res, err := repository.GetUserFavoriteSneakers(email)
+
+	if err != nil {
+		return c.JSON(err)
+	}
+
+	return c.JSON(res)
 }

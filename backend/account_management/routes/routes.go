@@ -17,6 +17,10 @@ func AuthRoutes(app *fiber.App) {
 	app.Get("/auth/user/id/:id", controllers.GetUserById)
 	app.Get("/auth/verify-code", controllers.VerifyCode)
 
+	app.Post("/auth/add-favorite", controllers.AddFavoriteSneaker)
+	app.Get("/auth/get-favorites", controllers.GetFavoriteSneakers)
+
 	app.Get("/auth/rol/admin", controllers.ChangeUserRoleToAdmin)
 	app.Get("/auth/rol/user", controllers.ChangeUserRoleToUser)
+
 }
