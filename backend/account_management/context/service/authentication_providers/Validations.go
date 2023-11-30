@@ -14,8 +14,7 @@ type ResponseCookies struct {
 }
 
 type ResponseBody struct {
-	Credential string `form:"credential"`
-	Token      string `form:"g_csrf_token"`
+	Credential string `form:"credential" json:"credential"`
 }
 
 type UserData struct {

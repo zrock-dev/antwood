@@ -97,7 +97,9 @@ function AuthFormWrapper({ isModalOpen }) {
         <h3>{hasAccount ? "Sign Up" : "Sign In"}</h3>
         <p className={authStyle.subtitle}>SoleStyle*</p>
       </div>
-      <GoogleSignInButton/>
+      <GoogleSignInButton
+          hasAccount={hasAccount}
+      />
       <div className={authStyle.delimiter}>o</div>
       <form className={authStyle.form_inputs}>
         <div>
