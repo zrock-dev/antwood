@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/paymentintent"
-	"github.com/stripe/stripe-go/v76/taxrate"
+	"github.com/stripe/stripe-go/v76/tax/calculation"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -23,13 +23,29 @@ func CreatePaymentIntent(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	taxRate, err := calculateTaxRate(order.Shipping.Address)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	taxParams := &stripe.TaxCalculationParams{
+		Currency: stripe.String(string(stripe.CurrencyUSD)),
+		LineItems: []*stripe.TaxCalculationLineItemParams{
+			&stripe.TaxCalculationLineItemParams{
+				Amount:    stripe.Int64(int64(order.Subtotal)),
+				Reference: stripe.String(order.ID.Hex()),
+			},
+		},
+		CustomerDetails: &stripe.TaxCalculationCustomerDetailsParams{
+			Address: &stripe.AddressParams{
+				Line1:      stripe.String(order.Shipping.Address.Line1),
+				City:       stripe.String(order.Shipping.Address.City),
+				State:      stripe.String(order.Shipping.Address.State),
+				PostalCode: stripe.String(order.Shipping.Address.PostalCode),
+				Country:    stripe.String(order.Shipping.Address.Country),
+			},
+			AddressSource: stripe.String(string(stripe.TaxCalculationCustomerDetailsAddressSourceShipping)),
+		},
 	}
+	result, _ := calculation.New(taxParams)
 
-	order.Extra = order.Subtotal * float32(taxRate)
-	order.Total = order.Subtotal + order.Subtotal*float32(taxRate)
+	order.Extra = float32(result.TaxAmountExclusive)
+	order.Total = float32(result.AmountTotal)
 
 	params := &stripe.PaymentIntentParams{
 		Amount:   stripe.Int64(int64(order.Total * 100)),
@@ -37,13 +53,16 @@ func CreatePaymentIntent(c *fiber.Ctx) error {
 		PaymentMethodTypes: stripe.StringSlice([]string{
 			"card",
 		}),
+
 		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
 			Enabled: stripe.Bool(false),
 		},
 	}
 
+	params.AddMetadata("tax_calculation", result.ID)
+
 	order.Email = email
-	err = repository.SaveDynamicUnpaidOrder(order)
+	err := repository.SaveDynamicUnpaidOrder(order)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
@@ -140,19 +159,4 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 			"status":  fiber.StatusBadRequest,
 		})
 	}
-}
-
-func calculateTaxRate(address models.Address) (float64, error) {
-	params := &stripe.TaxRateParams{
-		DisplayName:  stripe.String("Sales Tax"),
-		Jurisdiction: stripe.String(address.Country),
-		Percentage:   stripe.Float64(0),
-	}
-
-	taxRate, err := taxrate.New(params)
-	if err != nil {
-		return 0, err
-	}
-
-	return taxRate.Percentage, nil
 }
