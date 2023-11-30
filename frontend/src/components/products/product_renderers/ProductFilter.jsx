@@ -9,7 +9,7 @@ import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
 import SubNavbar from '@/components/navbar/SubNavbar';
 
-const ProductFilter = ({ style = 'products-container' }) => {
+const ProductFilter = ({ style = 'products-container width-100' }) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);

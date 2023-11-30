@@ -2,27 +2,15 @@
 
 import { ProductResultsContext } from '@/context/ProductResultsContext';
 import { useContext } from 'react';
+import Sorter from '../filters/sorter/Sorter';
 
 const SubNavbar = () => {
-	const { setSort } = useContext(ProductResultsContext);
+	const {} = useContext(ProductResultsContext);
 
 	return (
-		<div className="subnavbar-main-container">
+		<div className="subnavbar-main-container width-100">
 			<h3>All</h3>
-			<div>
-				<button onClick={() => setSort('name', 'asc')}>Name Ascending</button>
-				<button onClick={() => setSort('name', 'desc')}>Name Descending</button>
-				<button onClick={() => setSort('price', 'asc')}>Price Ascending</button>
-				<button onClick={() => setSort('price', 'desc')}>
-					Price Descending
-				</button>
-				<button onClick={() => setSort('lastDate', 'asc')}>
-					Date Ascending
-				</button>
-				<button onClick={() => setSort('lastDate', 'desc')}>
-					Date Descending
-				</button>
-			</div>
+			<Sorter />
 		</div>
 	);
 };

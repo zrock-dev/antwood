@@ -225,7 +225,10 @@
 .layout-filter {
 	display: grid;
 	grid-template-columns: 22% 78%;
-	grid-template-areas: 'filters subnavbar' 'filters products';
+	grid-template-rows: 10vh 90vh;
+	grid-template-areas:
+		'filters subnavbar'
+		'filters products';
 	column-gap: 25px;
 
 	padding-right: 80px;

@@ -2,6 +2,10 @@
 	margin-top: 15px;
 }
 
+.margin-top-25 {
+	margin-top: 25px;
+}
+
 .column-container {
 	display: flex;
 	flex-direction: column;

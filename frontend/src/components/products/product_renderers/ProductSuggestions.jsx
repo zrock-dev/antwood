@@ -13,6 +13,7 @@ const ProductSuggestions = () => {
 				fetchMethod={(page, sorter) =>
 					getAllProductsByPagination(page, 4, sorter)
 				}
+				style="products-container margin-top-25"
 			/>
 			;
 		</div>
