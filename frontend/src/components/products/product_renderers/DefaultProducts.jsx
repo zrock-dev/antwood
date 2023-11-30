@@ -6,15 +6,17 @@ import SubNavbar from '@/components/navbar/SubNavbar';
 
 const DefaultProducts = () => {
 	return (
-		<div className="layout-filter">
+		<div className="layout-filter-horizontal">
 			<FilterRenderer />
-			<SubNavbar />
-			<ProductRenderer
-				fetchMethod={(page, sorter) =>
-					getAllProductsByPagination(page, 3, sorter)
-				}
-				style="products-container width-100"
-			/>
+			<div className="layout-filter-vertical">
+				<SubNavbar />
+				<ProductRenderer
+					fetchMethod={(page, sorter) =>
+						getAllProductsByPagination(page, 3, sorter)
+					}
+					style="products-container width-100"
+				/>
+			</div>
 		</div>
 	);
 };

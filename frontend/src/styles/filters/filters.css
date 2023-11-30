@@ -1,6 +1,5 @@
 .filters-main-container {
-	grid-area: filters;
-	position: fixed;
+	position: sticky;
 	top: 7vh;
 	left: 0;
 	overflow-y: auto;

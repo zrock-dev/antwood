@@ -234,3 +234,18 @@
 	padding-right: 80px;
 	min-height: 93vh;
 }
+
+.layout-filter-horizontal {
+	display: flex;
+	padding-right: 50px;
+	gap: 25px;
+
+	width: 100%;
+}
+
+.layout-filter-vertical {
+	display: flex;
+	flex-direction: column;
+
+	width: 100%;
+}
