@@ -45,7 +45,7 @@
   font-weight: bolder;
 }
 
-.product-card-name {
+.product-card-name-modal {
   flex-grow: 1;
   text-align: center;
 }
@@ -64,7 +64,7 @@
   font-weight: bolder;
   text-align: center;
 }
-.product-card-name {
+.product-card-name-modal {
   flex-grow: 1;
 }
 .product-header-image {
