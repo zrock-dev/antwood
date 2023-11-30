@@ -96,6 +96,7 @@ const OrderRenderer = () => {
           displayReceiptDetails={displayReceiptDetails}
           setDisplayReceiptDetails={setDisplayReceiptDetails}
           order={order}
+          setOrder={setOrder}
         />
       </div>
     </>

@@ -1,7 +1,7 @@
 .receipt-ctn {
   background-color: var(--primary-color);
   padding: 20px;
-  width: 650px;
+  width: 800px;
 }
 
 .receipt-details {
@@ -47,12 +47,15 @@
 }
 
 
+
+.receipt-table tr th:not(:first-child) ,
 .receipt-table tr td:not(:first-child) {
   text-align: center;
   width: 100px;
 }
 
-.receipt-table tr th:not(:first-child) {
+.receipt-table tr td:first-child,
+.receipt-table tr th:first-child {
   text-align: center;
   width: 100px;
 }
@@ -60,22 +63,33 @@
 .receipt-product-name {
   height: 100px;
   max-height: 100px;
+  width: 200px!important;
+  max-width: 200px!important;
+   overflow: hidden;
+  text-overflow:clip;
+  width: 200px;
 }
 
-.receipt-details-column{
+.receipt-details-column-name{
+  width: 200px!important;
+  max-width: 200px!important;
+}
+
+
+.receipt-product-name-header {
+  width: 200px!important;
+}
+
+.receipt-details-column {
   height: 30px;
   max-height: 30px;
 }
 
-.receipt-table tr td:first-child {
-  width: 150px;
+.receipt-product-image {
+  height: 100px;
+  width: 100px;
+  max-width: 100px;
 }
-
-
-.receipt-table tr th:first-child {
-  width: 150px;
-}
-
 
 .receipt-total-row {
   border-top: 1px solid black;
