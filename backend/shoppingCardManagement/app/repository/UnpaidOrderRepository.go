@@ -4,6 +4,7 @@ import (
 	"context"
 	"shopping-card-management/app/database"
 	"shopping-card-management/app/models"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -82,7 +83,7 @@ func UpdateUnpaidOrderPaidById(id string, paidState string) ( *models.Order ,err
 		return models.NewOrder(), err
 	}
 
-	res , err:= database.UnpaidOrdersCollection.UpdateOne(context.TODO(), bson.M{"_id": ojId}, bson.M{"$set": bson.M{"paid": paidState}})
+	res , err:= database.UnpaidOrdersCollection.UpdateOne(context.TODO(), bson.M{"_id": ojId}, bson.M{"$set": bson.M{"paid": paidState, "date": time.Now()}})
 
 	if res.MatchedCount == 0 {
 		return models.NewOrder(),err

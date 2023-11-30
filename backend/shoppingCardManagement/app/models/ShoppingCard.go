@@ -1,6 +1,10 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 
 type Product struct {
@@ -24,6 +28,7 @@ type Order struct {
 	Paid string `json:"paid" bson:"paid"`
 	Email string `json:"email" bson:"email"`
 	Shipping Shipping `json:"shipping" bson:"shipping"`
+	Date primitive.DateTime `json:"date" bson:"date"`
 }
 
 
@@ -53,6 +58,7 @@ func NewOrder() *Order {
 		Paid: "no-payed",
 		Email: "",
 		Shipping: *NewShipping(),
+		Date: primitive.NewDateTimeFromTime(time.Now()),
 	}
 }
 
