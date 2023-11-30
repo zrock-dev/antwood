@@ -39,16 +39,19 @@ const Sorter = () => {
 		>
 			<span className="sorter-title">
 				Sort By{''}
-				<b>
-					{sorter.sortField === 'lastDate' ? 'Date' : sorter.sortField}{' '}
-					{sorter.sortOrder === 'asc' ? 'Ascending' : 'Descending'}{' '}
-				</b>
+				{sorter && (
+					<b>
+						{sorter.sortField === 'lastDate' ? 'Date' : sorter.sortField}{' '}
+						{sorter.sortOrder === 'asc' ? 'Ascending' : 'Descending'}{' '}
+					</b>
+				)}
 				<SortIcon />
 			</span>
 			{isOpen && (
 				<div className="sorter-options-container">
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'name' &&
 							sorter.sortOrder === 'asc' &&
 							'selected'
@@ -59,6 +62,7 @@ const Sorter = () => {
 					</button>
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'name' &&
 							sorter.sortOrder === 'desc' &&
 							'selected'
@@ -69,6 +73,7 @@ const Sorter = () => {
 					</button>
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'price' &&
 							sorter.sortOrder === 'asc' &&
 							'selected'
@@ -79,6 +84,7 @@ const Sorter = () => {
 					</button>
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'price' &&
 							sorter.sortOrder === 'desc' &&
 							'selected'
@@ -89,6 +95,7 @@ const Sorter = () => {
 					</button>
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'lastDate' &&
 							sorter.sortOrder === 'asc' &&
 							'selected'
@@ -99,6 +106,7 @@ const Sorter = () => {
 					</button>
 					<button
 						className={`sorter-option ${
+							sorter &&
 							sorter.sortField === 'lastDate' &&
 							sorter.sortOrder === 'desc' &&
 							'selected'

@@ -34,7 +34,7 @@ const ProductResultsProvider = ({ children }) => {
 	const router = useRouter();
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [filters, setFilters] = useState(null);
-	const [sorter, setSorter] = useState(defaultSorter);
+	const [sorter, setSorter] = useState(null);
 
 	const setSort = (sortField, sortOrder) => {
 		setSorter({
@@ -156,6 +156,27 @@ const ProductResultsProvider = ({ children }) => {
 			);
 		}
 	}, [filters]);
+
+	useEffect(() => {
+		const sorterSaved = getItem('sorter');
+		if (sorterSaved) {
+			setSorter(stringToJson(sorterSaved));
+		} else {
+			setSorter(defaultSorter);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (sorter) {
+			console.log(sorter);
+			saveItem(
+				'sorter',
+				JSON.stringify({
+					...sorter
+				})
+			);
+		}
+	}, [sorter]);
 
 	return (
 		<ProductResultsContext.Provider

@@ -7,12 +7,17 @@ export const getSneakerById = async (id) => {
 };
 
 export const getAllProductsByPagination = async (page, size = 4, sorter) => {
-	const query = queryString.stringify(sorter);
-	console.log(`/sneakers?page=${page}&pageSize=${size}&${query}`);
-	const response = await axios.get(
-		`/sneakers?${query}&page=${page}&pageSize=${size}`
-	);
-	return response.data;
+	if (sorter) {
+		const query = queryString.stringify(sorter);
+		const response = await axios.get(
+			`/sneakers?${query}&page=${page}&pageSize=${size}`
+		);
+		return response.data;
+	}
+
+	return {
+		sneakers: []
+	};
 };
 
 export const getSneakerColorById = async (id) => {
@@ -69,11 +74,17 @@ export const getSearchSuggestionsForAdmin = async (input = '') => {
 };
 
 export const getSearchByPagination = async (input, page, sorter) => {
-	const query = queryString.stringify(sorter);
-	const response = await axios.get(
-		`/sneakers/search/products/${input}?${query}&page=${page}&pageSize=3`
-	);
-	return response.data;
+	if (sorter) {
+		const query = queryString.stringify(sorter);
+		const response = await axios.get(
+			`/sneakers/search/products/${input}?${query}&page=${page}&pageSize=3`
+		);
+		return response.data;
+	}
+
+	return {
+		sneakers: []
+	};
 };
 
 export const getSearchByPaginationForAdmin = async (input, page) => {
@@ -94,7 +105,7 @@ export const getSneakerFilteredByPagination = async (
 	pageSize = 3,
 	sorter
 ) => {
-	if (filters) {
+	if (filters && sorter) {
 		const params = {
 			page,
 			pageSize
