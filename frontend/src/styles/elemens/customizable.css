@@ -25,3 +25,15 @@
 	visibility: hidden !important;
 	cursor: default;
 }
+
+.sub-main-container {
+	width: 100%;
+}
+
+.space-left-15 {
+	margin-left: 15px;
+}
+
+.space-left-30 {
+	margin-left: 50px;
+}

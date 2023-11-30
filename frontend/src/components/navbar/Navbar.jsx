@@ -5,16 +5,80 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import CartModalRenderer from '../cart/CartModalRenderer';
 import Searcher from '../search/Searcher';
 import NavLogo from './NavLogo';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
+import { ProductResultsContext } from '@/context/ProductResultsContext';
 
 const Navbar = () => {
 	const { setShowModalAuth, updateUser, setIsAuthenticated, isAuthenticated } =
 		useAuth();
 	const { signoutUser } = useAuthHandler();
+	const pathname = usePathname();
+	const { filters, addTag, clearFiltersAndRedirect } = useContext(
+		ProductResultsContext
+	);
 
 	return (
 		<div className="navbar-main-container">
 			<div className="navbar-sub-container left">
 				<NavLogo style="logo hover" />
+				<button
+					className={`navbar-option space-left-15 ${
+						pathname === '/' && 'selected'
+					}`}
+					onClick={() => clearFiltersAndRedirect('/')}
+				>
+					Home
+				</button>
+				<button
+					className={`navbar-option ${
+						(pathname.includes('/products/search') ||
+							pathname === '/products' ||
+							(filters &&
+								!filters.tags.includes('men') &&
+								!filters.tags.includes('women') &&
+								!filters.tags.includes('kids') &&
+								pathname === '/products/filter')) &&
+						'selected'
+					}`}
+					onClick={() => clearFiltersAndRedirect('/products')}
+				>
+					All
+				</button>
+				<button
+					className={`navbar-option ${
+						pathname.includes('filter') &&
+						filters &&
+						filters.tags.includes('men') &&
+						'selected'
+					}`}
+					onClick={() => addTag('men')}
+				>
+					Men
+				</button>
+				<button
+					className={`navbar-option ${
+						pathname.includes('filter') &&
+						filters &&
+						filters.tags.includes('women') &&
+						'selected'
+					}`}
+					onClick={() => addTag('women')}
+				>
+					Women
+				</button>
+				<button
+					className={`navbar-option ${
+						pathname.includes('filter') &&
+						filters &&
+						filters.tags.includes('kids') &&
+						'selected'
+					}`}
+					onClick={() => addTag('kids')}
+				>
+					Kids
+				</button>
 			</div>
 			<div className="navbar-sub-container right">
 				{!isAuthenticated ? (

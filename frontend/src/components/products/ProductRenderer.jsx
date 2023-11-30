@@ -9,7 +9,8 @@ import NoProductsFound from './NoProductsFound';
 const ProductRenderer = ({
 	fetchMethod,
 	ProductCardView = ProductCard,
-	redirection = '/products'
+	redirection = '/products',
+	style = "products-container"
 }) => {
 	const [products, setProducts] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -46,8 +47,8 @@ const ProductRenderer = ({
 		};
 	}, [products]);
 	return (
-		<>
-			<div className="products-main-container">
+		<div className="products-main-container">
+			<div className={style}>
 				{products.map((product) => (
 					<ProductCardView key={product._id} product={product} />
 				))}
@@ -60,7 +61,7 @@ const ProductRenderer = ({
 					<span className="loader"></span>
 				</div>
 			)}
-		</>
+		</div>
 	);
 };
 

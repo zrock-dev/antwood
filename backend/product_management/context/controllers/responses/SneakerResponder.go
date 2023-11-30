@@ -85,7 +85,7 @@ func sendSneakersUsingPipeline(pipeline mongo.Pipeline, c *fiber.Ctx) error {
 	})
 }
 
-func SendSneakersByPagination(c *fiber.Ctx) error {
+func getPaginationValues(c *fiber.Ctx) (int, int) {
 	page := c.Query("page", "1")
 	pageSize := c.Query("pageSize", "9")
 	pageInt, _ := strconv.Atoi(page)
@@ -93,6 +93,11 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 
 	skip := (pageInt - 1) * pageSizeInt
 	limit := pageSizeInt
+	return skip, limit
+}
+
+func SendSneakersByPagination(c *fiber.Ctx) error {
+	skip, limit := getPaginationValues(c)
 
 	pipeline := mongo.Pipeline{
 		bson.D{
@@ -215,7 +220,6 @@ func SendColorRelatedProducts(c *fiber.Ctx) error {
 	return c.JSON(sneakersData)
 }
 
-
 func CheckSneakerExistence(c *fiber.Ctx) error {
 	requiredSneakerID := c.Params("id")
 
@@ -234,16 +238,14 @@ func CheckSneakerExistence(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"exists": true})
 }
 
-
-
 func SendSneakerQuantities(c *fiber.Ctx) error {
 	type SneakersTypes struct {
-		SneakerId      string `json:"sneakerId,omitempty"`
-		SneakerColorId string `json:"sneakerColorId,omitempty"`
-		Size 		   float32 `json:"size,omitempty"`
-		Quantity 	   int     `json:"quantity"`
-		Image          string `json:"image,omitempty"`
-		Name           string `json:"name,omitempty"`
+		SneakerId      string  `json:"sneakerId,omitempty"`
+		SneakerColorId string  `json:"sneakerColorId,omitempty"`
+		Size           float32 `json:"size,omitempty"`
+		Quantity       int     `json:"quantity"`
+		Image          string  `json:"image,omitempty"`
+		Name           string  `json:"name,omitempty"`
 		Price          float32 `json:"price,omitempty"`
 	}
 	var sneakers []SneakersTypes
@@ -252,7 +254,7 @@ func SendSneakerQuantities(c *fiber.Ctx) error {
 	}
 
 	for index, sneaker := range sneakers {
-		size, name , price, image := GetUpdatedQuantity(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
+		size, name, price, image := GetUpdatedQuantity(sneaker.SneakerId, sneaker.SneakerColorId, sneaker.Size)
 		sneakers[index].Quantity = size
 		sneakers[index].Name = name
 		sneakers[index].Price = price
@@ -262,30 +264,27 @@ func SendSneakerQuantities(c *fiber.Ctx) error {
 	return c.JSON(sneakers)
 }
 
-
-
-func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float32) (int , string , float32, string){
+func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float32) (int, string, float32, string) {
 	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
-		for _, sneakerType := range sneakerWithColor.Types {
-			for _, sneakerSize := range sneakerType.Sizes {
-				if sneakerSize.Value == size {
-					return sneakerSize.Quantity, sneakerWithColor.Name, sneakerWithColor.Price , sneakerWithColor.Types[0].Images[0].URL
-				}
+	for _, sneakerType := range sneakerWithColor.Types {
+		for _, sneakerSize := range sneakerType.Sizes {
+			if sneakerSize.Value == size {
+				return sneakerSize.Quantity, sneakerWithColor.Name, sneakerWithColor.Price, sneakerWithColor.Types[0].Images[0].URL
 			}
+		}
 	}
 
 	return 0, "Sneaker not found", 0, ""
 }
 
-
-func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int{
+func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int {
 	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
-		for _, sneakerType := range sneakerWithColor.Types {
-			for _, sneakerSize := range sneakerType.Sizes {
-				if sneakerSize.Value == size {
-					return sneakerSize.Quantity
-				}
+	for _, sneakerType := range sneakerWithColor.Types {
+		for _, sneakerSize := range sneakerType.Sizes {
+			if sneakerSize.Value == size {
+				return sneakerSize.Quantity
 			}
+		}
 	}
 
 	return 0
