@@ -1,11 +1,12 @@
 .filters-main-container {
-	position: sticky;
+	grid-area: filters;
+	position: fixed;
 	top: 7vh;
 	left: 0;
 	overflow-y: auto;
 
+	width: 22%;
 	padding: 40px 25px 40px 0;
-	/* padding-right: 25px; */
 	height: 93vh;
 	max-height: 93vh;
 

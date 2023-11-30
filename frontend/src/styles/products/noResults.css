@@ -1,4 +1,5 @@
 .no-found-main-container {
+	grid-area: products;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

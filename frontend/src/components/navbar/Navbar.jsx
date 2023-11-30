@@ -5,12 +5,12 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import CartModalRenderer from '../cart/CartModalRenderer';
 import Searcher from '../search/Searcher';
 import NavLogo from './NavLogo';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ProductResultsContext } from '@/context/ProductResultsContext';
 
 const Navbar = () => {
+	const navbar = useRef(null);
 	const { setShowModalAuth, updateUser, setIsAuthenticated, isAuthenticated } =
 		useAuth();
 	const { signoutUser } = useAuthHandler();
@@ -19,8 +19,20 @@ const Navbar = () => {
 		ProductResultsContext
 	);
 
+	useEffect(() => {
+		if (navbar && navbar.current) {
+			window.addEventListener('scroll', () => {
+				if (navbar && navbar.current && window.scrollY > 50) {
+					navbar.current.classList.add('fixed');
+				} else if (navbar && navbar.current) {
+					navbar.current.classList.remove('fixed');
+				}
+			});
+		}
+	}, []);
+
 	return (
-		<div className="navbar-main-container">
+		<div className={`navbar-main-container`} ref={navbar}>
 			<div className="navbar-sub-container left">
 				<NavLogo style="logo hover" />
 				<button

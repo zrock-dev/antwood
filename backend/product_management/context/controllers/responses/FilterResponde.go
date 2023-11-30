@@ -97,6 +97,7 @@ func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32,
 
 func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
+	sortField, sortOrder := getSortValues(c)
 	brand, color, tags, minPrice, maxPrice, size := getFilterOptions(c)
 
 	if brand != "" || (tags[0] != "" && len(tags) > 0) || color != "" ||
@@ -131,6 +132,8 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 					{Key: "types.quantity", Value: 0},
 				}},
 			})
+
+		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
 
 		return sendSneakersUsingPipeline(pipeline, c)
 	}

@@ -96,8 +96,32 @@ func getPaginationValues(c *fiber.Ctx) (int, int) {
 	return skip, limit
 }
 
+func getSortValues(c *fiber.Ctx) (string, string) {
+	sortField := c.Query("sortField", "")
+	sortOrder := c.Query("sortOrder", "")
+	return sortField, sortOrder
+}
+
+func addSortToPipeline(pipeline mongo.Pipeline, field string, order string) mongo.Pipeline {
+	if field != "" && order != "" {
+		var orderInt = 1
+		if order == "desc" {
+			orderInt = -1
+		}
+
+		pipeline = append(pipeline, bson.D{
+			{Key: "$sort", Value: bson.D{
+				{Key: field, Value: orderInt},
+			}},
+		})
+	}
+
+	return pipeline
+}
+
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
+	sortField, sortOrder := getSortValues(c)
 
 	pipeline := mongo.Pipeline{
 		bson.D{
@@ -126,6 +150,8 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 			}},
 		},
 	}
+
+	pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
 
 	return sendSneakersUsingPipeline(pipeline, c)
 }
