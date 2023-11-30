@@ -23,7 +23,6 @@ const ProductRenderer = ({
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
-		console.log('fetching...');
 		const data = await fetchMethod(rendererState.page, sorter);
 		if (data.sneakers.length === 0) {
 			setRendererState({
@@ -52,7 +51,6 @@ const ProductRenderer = ({
 			entries.forEach((entry) => {
 				if (rendererState.hasMore && entry.isIntersecting) {
 					fetchMoreProducts();
-					console.log('nose');
 				}
 			});
 		});

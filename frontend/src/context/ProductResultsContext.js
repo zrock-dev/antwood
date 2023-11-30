@@ -168,7 +168,6 @@ const ProductResultsProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (sorter) {
-			console.log(sorter);
 			saveItem(
 				'sorter',
 				JSON.stringify({
