@@ -7,6 +7,7 @@ import '@/styles/reviews/review_form.css';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
+import { userCanReview } from "@/requests/ReviewRequest"
 
 function ReviewForm({ product, setReviews }) {
   const reviewHandle = useReviewForm();
@@ -17,6 +18,7 @@ function ReviewForm({ product, setReviews }) {
 
   const onAddReview = async (e) => {
     e.preventDefault();
+    
     if (!reviewHandle.validateForm()){
         setTimeout(() => {
          reviewHandle.resetError();
@@ -24,7 +26,8 @@ function ReviewForm({ product, setReviews }) {
         return
       }
     if (!isAuthenticated) {
-      setPendingAction(() => async (currentUser) => await addReviewToProduct(currentUser))
+      setPendingAction(() => async (currentUser) =>{ 
+        await addReviewToProduct(currentUser)})
       setShowModalAuth(true);
       return
     }
@@ -34,6 +37,12 @@ function ReviewForm({ product, setReviews }) {
 
   const addReviewToProduct = async (currentUser) => {
     try {
+      const validation = await userCanReview(currentUser.email,product._id)
+      if(!validation){
+        toast.info("you do not purchase this sneaker")
+        return
+      }
+      
       const data = await getReviewsByUserEmail(product._id, currentUser.email);
       if (data.length > 0) {
         toast.info("you have already reviewed this product")
@@ -51,7 +60,7 @@ function ReviewForm({ product, setReviews }) {
     review.username = currentUser.username;
     review.userEmail = currentUser.email;
     try{
-const response = await addReview(product._id, review);
+        const response = await addReview(product._id, review);
         product.reviews = response.sneakerReview;
     review = response.review;
     reviewHandle.resetReview();
