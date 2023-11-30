@@ -16,8 +16,8 @@
 	background-color: transparent;
 }
 
-.langin-collection-container:hover {
-    opacity: .7;
+.langin-collection-container:hover > img{
+    opacity: .6;
 }
 
 .langin-collection-title {
