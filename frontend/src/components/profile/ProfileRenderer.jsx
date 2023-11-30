@@ -1,10 +1,13 @@
 "use client";
 import "@/styles/profile/profile.css";
 import Link from "next/link";
-
 import { useAuth } from "@/context/AuthContext";
+
 const ProfileRenderer = ({children}) => {
-    const { user } = useAuth();
+    const { user} = useAuth();
+
+
+
     return (
       <div className="profile-container">
         <div className="profile-account-section">

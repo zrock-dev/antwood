@@ -68,9 +68,6 @@ func SendReviewsByIndex(c *fiber.Ctx) error {
 
 
 
-
-
-
 func SendReviewsByUserEmail(c *fiber.Ctx) error {
 	sneakerID := c.Params("sneakerid")
 	userEmail := c.Params("useremail")

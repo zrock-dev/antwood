@@ -20,7 +20,6 @@ const AdminPanelRenderer = ({ id }) => {
   const [form, setForm] = useState(SNEAKER_DATA);
   const [sneakerColors, setSneakerColors] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const resetForm = () => {
     if (id) {
       setFormValue();
@@ -31,23 +30,32 @@ const AdminPanelRenderer = ({ id }) => {
   };
 
   const saveSneaker = async () => {
+
     form.price = parseFloat(form.price);
-    if (id) {
+
+    if (id || form._id) {
       updateSneaker();
     } else {
-      toast.info("sneaker saved");
-      const res = await createSneaker(form);
-      setForm({
-        ...form,
-        _id: res.id,
-      });
+      try {
+        const res = await createSneaker(form);
+        setForm({
+          ...form,
+          _id: res.id,
+        });
+      } catch (err) {
+        toast.error("Wait a moment and try again");
+      } 
     }
   };
 
   const updateSneaker = async () => {
-    const data = await updateSneakerById(form);
-    if (data) {
-      toast.info("sneaker updated");
+    try {
+      const data = await updateSneakerById(form);
+      if (!data) {
+        toast.error("Wait a moment and try again");
+      }
+    } catch (err) {
+      toast.error("Wait a moment and try again");
     }
   };
 
@@ -58,7 +66,7 @@ const AdminPanelRenderer = ({ id }) => {
       setForm(sneaker);
       setSneakerColors(sneaker.colors);
     } catch (err) {
-      window.location.replace("/");
+      window.location.replace("/admin");
     } finally {
       setLoading(false);
     }

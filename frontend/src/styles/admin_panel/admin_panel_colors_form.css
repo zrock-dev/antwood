@@ -6,6 +6,7 @@
 
 .admin-panel-disabled {
   pointer-events: none;
+  user-select: none;
 }
 
 .admin-panel-droopdown-disabled {

@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"log"
+	"net/http"
 	"os"
 	"shopping-card-management/app/models"
 	"shopping-card-management/app/repository"
@@ -13,7 +16,7 @@ import (
 )
 
 func CreatePaymentIntent(c *fiber.Ctx) error {
-	stripe.Key = "sk_test_51OCWLLAx0MjRmRXcKRpa1l8BHpfWWOgABHD3618tkI2hQYTAasIbXwMsrZ0p5uYcbJaAVEy7qbfkSr5HfMZvqLVD00OkKmfBWA"
+	stripe.Key = os.Getenv("PAYMENT_SECRET_KEY")
 	email := c.Params("email")
 	order := models.NewOrder()
 	if err := c.BodyParser(&order); err != nil {
@@ -90,7 +93,7 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 
-	_ , err = repository.UpdateUnpaidOrderPaidById(orderObjId.Hex(), "paid")
+	err = HandleOnIntentSuccess(orderId)
 
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -100,11 +103,9 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 
-
-	order, err:= repository.FindOUnpaidrderById(orderObjId)
+	order, err := repository.FindOUnpaidrderById(orderObjId)
 
 	if err != nil {
-		
 		return c.JSON(fiber.Map{
 			"message" : err.Error(),
 			"status" : fiber.StatusForbidden,
@@ -113,6 +114,12 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 
 
 	if order.Paid == "paid" && status == "succeeded" {
+		log.Println("**************************************************************************************************************")
+		log.Println("**************************************************************************************************************")
+		log.Println("Payment success")
+		log.Println(orderId)
+		log.Println("**************************************************************************************************************")
+		log.Println("**************************************************************************************************************")
 		err  = repository.DeleteUnpaidOrderById(orderId)
 	
 		if err != nil {
@@ -133,3 +140,76 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 		})
 	}
 }
+
+
+func HandleOnIntentSuccess(orderId string) error {
+
+	orderObjectId , err := primitive.ObjectIDFromHex(orderId)
+
+	if err!= nil {
+		return err
+	}
+
+	order, err := repository.FindOUnpaidrderById(orderObjectId)
+
+	if err != nil {
+		return err
+	}
+
+	if order.Paid == "paid" {
+		return &fiber.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Order already paid",
+		}
+	}
+
+	orderJSON, err := json.Marshal(order.Products)
+	if err != nil {
+		log.Println("Error parsing sneakers JSON:", err)
+		return err
+	}
+
+
+	log.Println("orderJSON:", orderJSON)
+
+
+
+	req, err := http.NewRequest("PUT", "http://product_management:4000/sneakers/quantities", bytes.NewBuffer(orderJSON))
+	if err != nil {
+		log.Println("Error when creating request:", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error when sending request:", err)
+		return err
+	}
+
+
+	if resp.StatusCode != http.StatusOK {
+		return &fiber.Error{
+			Code:    resp.StatusCode,
+			Message: "Error updating quantities",
+		}
+	}
+
+	defer resp.Body.Close()
+
+	if err != nil {
+		log.Println("Error obtaining the order JSON:", err)
+		return err
+	}
+
+	_ , err = repository.UpdateUnpaidOrderPaidById(orderId, "paid")
+
+	if err != nil{
+		return err 
+	}
+
+	return nil
+}
+

@@ -14,6 +14,7 @@ import CheckoutItems from "./CheckoutItems";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { getPaymentIntent } from "@/requests/OrderRequest";
+import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
   "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
@@ -22,11 +23,15 @@ const stripePromise = loadStripe(
 
 const CheckoutPageRenderer = () => {
   const [clientSecret, setClientSecret] = useState(undefined);
-    const { products } = useContext(CartContext);
+  const { products } = useContext(CartContext);
   const { user, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [emailSaved, setEmailSaved] = useState(false);
   const [addresConfirmed, setAddresConfirmed] = useState(false);
+
+  const router = useRouter();
+
+
 
 
   const [address, setAddress] = useState({
@@ -63,11 +68,19 @@ const CheckoutPageRenderer = () => {
   const verifyAvailableOrder = () => {
     let isAvailable = products.length > 0;
     if (!isAvailable) {
-      toast.error("Cart is empty");
+        toast.error("Cart is empty");
+        router.replace("/cart");
       return false;
     }
     return true;
   }
+
+
+  useEffect(() => {
+  if (products && products.length <= 0) {
+    verifyAvailableOrder();
+  }   
+  }, [products])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -116,7 +129,7 @@ const CheckoutPageRenderer = () => {
               setEmailSaved={setEmailSaved}
               setEmail={setEmail}
             />
-            {emailSaved  && verifyAvailableOrder() && (
+            {emailSaved  && (
               <>
                 <div className="hidden-email-element">
                   <LinkAuthenticationElement

@@ -63,3 +63,9 @@ body {
 
 	background-color: var(--primary-color);
 }
+
+
+.disabled {
+	pointer-events: none;
+	user-select: none;
+}
