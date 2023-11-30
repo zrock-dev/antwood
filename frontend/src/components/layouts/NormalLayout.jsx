@@ -1,6 +1,6 @@
 import CartProvider from '@/context/CartContext';
 import Navbar from '../navbar/Navbar';
-import Footer from '../footer/Footer'
+import Footer from '../landing_page/Footer'
 import Layout from './Layout';
 
 const NormalLayout = ({ children }) => {
