@@ -1,7 +1,8 @@
 import CartProvider from '@/context/CartContext';
 import Navbar from '../navbar/Navbar';
-import Footer from '../landing_page/Footer'
+import Footer from '../landing_page/Footer';
 import Layout from './Layout';
+import '../../styles/landing_page/footer.css';
 
 const NormalLayout = ({ children }) => {
 	return (
@@ -10,7 +11,7 @@ const NormalLayout = ({ children }) => {
 				<Navbar />
 				<div id="overlay"></div>
 				{children}
-				<Footer/>
+				<Footer />
 			</CartProvider>
 		</Layout>
 	);

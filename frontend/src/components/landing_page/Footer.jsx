@@ -1,16 +1,15 @@
 'use client';
-import Facebook from '@/icons/footer/Facebook';
-import Twitter from '@/icons/footer/Twitter';
-import Instagram from '@/icons/footer/Instagram';
-import Youtube from '@/icons/footer/Youtube';
+import Facebook from '@/icons/Footer/Facebook';
+import Twitter from '@/icons/Footer/Twitter';
+import Instagram from '@/icons/Footer/Instagram';
+import Youtube from '@/icons/Footer/Youtube';
 import Link from 'next/link';
+import Pointer from '@/icons/Footer/Pointer';
 
 const Footer = () => {
-	const añoActual = new Date().getFullYear();
-
 	return (
 		<div className="footer-main-container">
-			<div className="social-network-container">
+			<div className="footer-social-network-container">
 				<Link
 					href="https://www.facebook.com/tu-pagina-de-facebook"
 					target="_blank"
@@ -44,14 +43,14 @@ const Footer = () => {
 				</Link>
 			</div>
 
-			<div className="location-container">
-				<pointer />
+			<div className="footer-location-container">
+				<Pointer />
 				<p> Bolivia</p>
 			</div>
 
-			<div className="copyright-container">
-				&copy; {añoActual} Solestyle , All Right Reserved
-			</div>
+			<span className="footer-copyright">
+				&copy; {new Date().getFullYear()} Solestyle , All Right Reserved
+			</span>
 		</div>
 	);
 };
