@@ -20,13 +20,15 @@ const Navbar = () => {
 	);
 
 	useEffect(() => {
-		window.addEventListener('scroll', () => {
-			if (window.scrollY > 50) {
-				navbar.current.classList.add('fixed');
-			} else {
-				navbar.current.classList.remove('fixed');
-			}
-		});
+		if (navbar && navbar.current) {
+			window.addEventListener('scroll', () => {
+				if (window.scrollY > 50) {
+					navbar.current.classList.add('fixed');
+				} else {
+					navbar.current.classList.remove('fixed');
+				}
+			});
+		}
 	}, []);
 
 	return (

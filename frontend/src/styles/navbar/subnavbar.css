@@ -7,9 +7,12 @@
 	width: 90%;
 	padding: 20px 0;
 	margin-inline: auto;
-    height: 10vh;
 }
 
 .subnavbar-main-container.width-100 {
 	width: 100%;
+}
+
+.subnavbar-main-container.filter {
+	height: 10vh;
 }

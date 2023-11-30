@@ -9,7 +9,7 @@ const AdminGallery = () => {
 			fetchMethod={(page, sorter) =>
 				getAllProductsByPagination(page, 4, sorter)
 			}
-			style="products-container margin-top-25"
+			style="products-container margin-top-25 margin-bottom-25"
 			ProductCardView={AdminProductCard}
 			redirection="/admin"
 		/>
