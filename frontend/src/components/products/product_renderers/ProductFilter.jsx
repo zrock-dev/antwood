@@ -7,14 +7,17 @@ import FilterRenderer from '@/components/filters/FilterRenderer';
 import NoProductsFound from '../NoProductsFound';
 import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
+import SubNavbar from '@/components/navbar/SubNavbar';
 
-const ProductFilter = ({ style = 'products-container' }) => {
+const ProductFilter = ({
+	style = 'products-container width-100'
+}) => {
 	const [rendererState, setRendererState] = useState({
 		products: [],
 		hasMore: true,
 		page: 1
 	});
-	const { filters, isEmptyFilters } = useContext(ProductResultsContext);
+	const { sorter, filters, isEmptyFilters } = useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
@@ -23,7 +26,8 @@ const ProductFilter = ({ style = 'products-container' }) => {
 			const data = await getSneakerFilteredByPagination(
 				filters,
 				rendererState.page,
-				3
+				3,
+				sorter
 			);
 			if (data.sneakers.length === 0) {
 				setRendererState({
@@ -57,6 +61,14 @@ const ProductFilter = ({ style = 'products-container' }) => {
 	}, [filters]);
 
 	useEffect(() => {
+		setRendererState({
+			products: [],
+			hasMore: true,
+			page: 1
+		});
+	}, [sorter]);
+
+	useEffect(() => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
 				if (rendererState.hasMore && entry.isIntersecting) {
@@ -77,6 +89,7 @@ const ProductFilter = ({ style = 'products-container' }) => {
 
 	return (
 		<div className="layout-filter">
+			<SubNavbar />
 			<FilterRenderer />
 			<div className="products-main-container">
 				<div className={style}>

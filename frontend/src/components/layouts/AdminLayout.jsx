@@ -1,7 +1,6 @@
 'use client'
 import AdminNavbar from '../admin/navbar/AdminNavbar';
 import Layout from './Layout';
-import '../../styles/navbar/subnavbar.css';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef } from 'react';
 import { toast } from "sonner";

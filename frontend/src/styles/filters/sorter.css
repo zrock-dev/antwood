@@ -1,0 +1,46 @@
+.sorter-main-container {
+	position: relative;
+
+	cursor: pointer;
+}
+
+.sorter-title {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+
+	text-transform: capitalize;
+}
+
+.sorter-options-container {
+	position: absolute;
+	top: 200%;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+
+	z-index: 500;
+	min-width: 210px;
+
+    background-color: white;
+    border: 1px solid #999;
+}
+
+.sorter-option {
+	padding: 15px 20px;
+	width: 100%;
+
+	text-align: left;
+    background-color: transparent;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+.sorter-option:hover {
+    background-color: #eee;
+}
+
+.sorter-option.selected {
+	font-weight: 900;
+    background-color: #eee;
+}

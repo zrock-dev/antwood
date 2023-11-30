@@ -1,13 +1,18 @@
 "use client"
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import Modal from "@/components/Modal";
 import "@/styles/message.css";
 import { verifyOrderStatus } from "@/requests/OrderRequest";
+import { CartContext } from "@/context/CartContext";
 
-
-const PaymentMessage = ({resetCartState}) => {
+const PaymentMessage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [badRequest , setBadRequest] = useState(false);
+
+  const firstUpdate = useRef(true);
+
+
+	const { resetCartState } = useContext(CartContext);
 
   useEffect(() => {
     let timer;
@@ -30,14 +35,15 @@ const PaymentMessage = ({resetCartState}) => {
     const clientSecret = params.get("payment_intent_client_secret");
     const redirectStatus = params.get("redirect_status");
 
-    if (paymentIntent && clientSecret && redirectStatus) {
+    if (paymentIntent && clientSecret && redirectStatus && firstUpdate.current) {
       (async () => {
+        firstUpdate.current = false;
         const data = await verifyOrderStatus(paymentIntent, redirectStatus);
         if (data.status === 200 ) {
-             setBadRequest(false);
-             resetCartState();
+            resetCartState(); 
+            setBadRequest(false);
              setModalOpen(true);
-        }else if (data.status === 400) {
+        }else if (data.status ===400) {
           setBadRequest(true);
            setModalOpen(true);
         }
@@ -45,7 +51,7 @@ const PaymentMessage = ({resetCartState}) => {
           window.history.replaceState({}, document.title, newUrl);
       })();
     }
-  });
+  },[]);
 
   return (
     <Modal isModalOpen={isModalOpen} setModalOpen={setModalOpen}>

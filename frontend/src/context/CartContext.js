@@ -1,10 +1,9 @@
 "use client";
-import { stringToJson } from "@/utils/Parser";
+import { stringToJson, stringToArray } from "@/utils/Parser";
 import { getItem, saveItem } from "@/utils/StorageManagement";
 import { createContext, useEffect, useState, useRef } from "react";
 import { getSneakerQuantities } from "@/requests/SneakersRequest";
 import { packCurrentQuantityQuery } from "@/utils/Packer";
-
 export const CartContext = createContext();
 
 export const EMPTY_CART = {
@@ -18,11 +17,13 @@ export const EMPTY_CART = {
 
 const CartProvider = ({ children }) => {
   const [cartState, setCartState] = useState(null);
+  const [removedProducts, setRemovedProducts] = useState(false);
   const firstUpdate = useRef(true);
 
   const updateProducts = (products) => {
     const subTotal = calculateSubTotal(products);
     const totalItems = calculateTotalItems(products);
+
     setCartState({
       ...cartState,
       products,
@@ -149,6 +150,7 @@ const CartProvider = ({ children }) => {
     let dataResult = await getSneakerQuantities(dataRequest);
 
     let availableProducts = [];
+    let removedResult = []
     for (let i = 0; i < cartState.products.length; i++) {
       if (dataResult[i].quantity > 0) {
         cartState.products[i].quantity = dataResult[i].quantity;
@@ -158,12 +160,19 @@ const CartProvider = ({ children }) => {
         let amount = cartState.products[i].amount;
         cartState.products[i].subTotal = dataResult[i].price * amount;
         availableProducts.push(cartState.products[i]);
+      }else{
+        if (!dataResult[i].price) cartState.products[i].price = null;
+        removedResult.push(cartState.products[i]);
       }
     }
-
-    
-
-
+    if (removedResult.length > 0) {
+      let removedProducts = getItem("removedProducts");
+      if (removedProducts && removedProducts !== "undefined") {
+        removedResult.concat(stringToArray(removedProducts))
+      }
+      setRemovedProducts(true);
+      saveItem("removedProducts", JSON.stringify([...removedResult ]));
+    }
     updateProducts(availableProducts);
   };
 
@@ -182,6 +191,7 @@ const CartProvider = ({ children }) => {
         resetCartState,
         calculateSubTotal,
         calculateTotalItems,
+        removedProducts
       }}
     >
       {children}

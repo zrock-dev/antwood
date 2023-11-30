@@ -24,11 +24,24 @@ export const emptyFilters = {
 	tags: []
 };
 
+export const defaultSorter = {
+	sortField: 'lastDate',
+	sortOrder: 'asc'
+};
+
 const ProductResultsProvider = ({ children }) => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [filterOptions, setFilterOptions] = useState(null);
 	const [filters, setFilters] = useState(null);
+	const [sorter, setSorter] = useState(null);
+
+	const setSort = (sortField, sortOrder) => {
+		setSorter({
+			sortField,
+			sortOrder
+		});
+	};
 
 	const setBrand = (brand) => {
 		setFilters((prev) => ({
@@ -144,6 +157,26 @@ const ProductResultsProvider = ({ children }) => {
 		}
 	}, [filters]);
 
+	useEffect(() => {
+		const sorterSaved = getItem('sorter');
+		if (sorterSaved) {
+			setSorter(stringToJson(sorterSaved));
+		} else {
+			setSorter(defaultSorter);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (sorter) {
+			saveItem(
+				'sorter',
+				JSON.stringify({
+					...sorter
+				})
+			);
+		}
+	}, [sorter]);
+
 	return (
 		<ProductResultsContext.Provider
 			value={{
@@ -156,7 +189,9 @@ const ProductResultsProvider = ({ children }) => {
 				addTag,
 				isEmptyFilters,
 				clearFiltersAndRedirect,
-				clearFilters
+				clearFilters,
+				sorter,
+				setSort
 			}}
 		>
 			{children}
