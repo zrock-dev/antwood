@@ -42,10 +42,11 @@ const ProductReview = ({ product }) => {
 
     return <div className="product-details-main-container">
         <div className={"review_form_ctn"}>
-            <ReviewForm
+        <ReviewForm
                 product={product}
                 setReviews={setReviews}
             />
+            
             <div
                 className={"review_ctn"}>
                 {reviews.map((review) => (
