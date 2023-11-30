@@ -37,6 +37,7 @@ const AdminPanelColorsForm = ({
   const [imageAdded, setImageAdded] = useState([]);
   const [colorSelected, setColorSelected] = useState(COLOR);
   const [deleteModal, setDeleteModal] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const toggleSizeDropdown = () => {
     setOpenSizeDropdown(!openSizeDropdown);
@@ -112,17 +113,21 @@ const AdminPanelColorsForm = ({
     if (!validateSneakerColor()) {
       return;
     }
+    setIsProcessing(true);
     const data =  onSubmitSneakerColor();
     toast.promise(updateSneakerColorById(data, colorSelected._id), {
       loading: "Updating Color",
       success: (result) => {
         setDeletedImages([]);
         setImageAdded([]);
+         setIsProcessing(false);
         onSelectColor(colorSelected)
            return "Color updated successfully";
       },
-      error: "Error when updating color."
-      
+      error: ()=>{
+         setIsProcessing(false);
+    return  "Error when updating color."
+      }
     });
   }
   const onDeleteUploadedImage = (i) => {
@@ -167,10 +172,13 @@ const validateSneakerColor = () => {
   };
 
   const uploadSneakerColor = async () => {
+    
     if (!validateSneakerColor()) {
       return;
     }
+    setIsProcessing(true);
     const data =  onSubmitSneakerColor();
+    
     toast.promise(insertSneakerColor(data, sneaker._id), {
       loading: "Adding Color",
       success: (result) => {
@@ -179,9 +187,11 @@ const validateSneakerColor = () => {
         colorSelected._id = result.id
         onSelectColor(colorSelected)
         setSneakerColors([...sneakerColors, colorSelected]);
+        setIsProcessing(false);
         return "Color added successfully";
       },
       error: (w) => {
+         setIsProcessing(false);
         return "Error when adding color.";
       },
     });
@@ -236,7 +246,9 @@ const validateSneakerColor = () => {
           imageAdded={imageAdded}
         />
 
-        <div className="admin-panel-colors-form-btns">
+        <div
+          className={`admin-panel-colors-form-btns ${isProcessing ? "admin-panel-disabled" : ""}`}
+        >
           {colorSelected._id ? (
             <>
               <Button btnStyle="third_btn" onClick={updateSneakerColor}>

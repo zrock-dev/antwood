@@ -117,7 +117,20 @@ const SizeSelector = ({
   };
 
   const onEditSize = () => {
-    if (!validateInput()) return;
+     const { value, quantity } = currSize;
+
+     if (!value || !quantity) {
+       displayMessage("Quantity and Size should be greater than 0");
+       return false;
+     }
+
+
+     if (form.sizes.some((s) => s.value === value && form.sizes[indexToEdit].value !== value)) {
+       displayMessage("Size already exists");
+       return false;
+     }
+
+     setSizeMessage("");
     setForm({
       ...form,
       sizes: form.sizes.map((s, i) => {
@@ -138,6 +151,7 @@ const SizeSelector = ({
   const handleOnKeyDown = (e) => {
     if (e.key === "Enter") {
       if (isEditing) {
+        cancelEdit();
         onEditSize();
       } else {
         onAddSize();

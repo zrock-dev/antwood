@@ -9,7 +9,9 @@ import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
 import SubNavbar from '@/components/navbar/SubNavbar';
 
-const ProductFilter = ({ style = 'products-container width-100' }) => {
+const ProductFilter = ({
+	style = 'products-container width-100'
+}) => {
 	const [rendererState, setRendererState] = useState({
 		products: [],
 		hasMore: true,

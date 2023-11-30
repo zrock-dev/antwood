@@ -11,6 +11,7 @@ import {
 import Modal from "../Modal";
 
 import DeleteSneakerConfirmation from "../admin/confirmations/DeleteSneakerConfirmation";
+import { toast } from "sonner";
 export const DEFAULT_FAIL_FORM = {
   name: "",
   description: "",
@@ -22,6 +23,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
   const [formError, setFormError] = useState(DEFAULT_FAIL_FORM);
   const [reset, setReset] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -100,7 +102,19 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
 
   const handleSubmit = () => {
     if (validateSneakerForm(form, setFormError)) {
-      saveSneaker();
+          setIsProcessing(true);
+      toast.promise(saveSneaker(), {
+        loading: "Saving...",
+        success: ()=> {
+          setIsProcessing(false);
+       return    form._id? "Sneaker updated successfully" : "Sneaker created successfully";
+        },
+        error: (e)=>{
+          setIsProcessing(false);
+
+        return  "Wait a moment and try again";
+        },
+      })
     } else {
       setTimeout(() => {
         setFormError(DEFAULT_FAIL_FORM);
@@ -181,7 +195,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
           tagError={formError.tags}
           addTagError={addTagError}
         />
-        <div className="admin-panel-form-btns">
+        <div className={`admin-panel-form-btns ${isProcessing? "disabled" : ""}`}>
           {form._id === "" ? (
             <Button btnStyle="third_btn" onClick={handleReset}>
               CANCEL

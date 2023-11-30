@@ -22,9 +22,9 @@ const Navbar = () => {
 	useEffect(() => {
 		if (navbar && navbar.current) {
 			window.addEventListener('scroll', () => {
-				if (window.scrollY > 50) {
+				if (navbar && navbar.current && window.scrollY > 50) {
 					navbar.current.classList.add('fixed');
-				} else {
+				} else if (navbar && navbar.current) {
 					navbar.current.classList.remove('fixed');
 				}
 			});

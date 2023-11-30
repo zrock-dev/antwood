@@ -1,0 +1,76 @@
+name: 'Backend Account Management Workflow'
+run-name: ${{ github.actor }} is executing the workflow ${{ github.workflow }}.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - develop
+    paths:
+      - 'backend/shoppingCardManagement/**'
+  push:
+    paths:
+      - 'backend/shoppingCardManagement/**'
+    branches:
+      - develop
+
+jobs:
+  build:
+    name: Build
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ vars.GO_VERSION }}
+
+      - name: Building
+        run: cd backend/shoppingCardManagement && go build -v .
+
+  test:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ vars.GO_VERSION }}
+
+      - name: Running tests
+        run: cd backend/shoppingCardManagement/test && go test -v .
+
+  push_image:
+    if: ${{ github.event_name == 'push' }}
+    name: Publish to DockerHub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set short git commit SHA
+        id: short_sha
+        run: |
+          echo 'COMMIT_SHORT_SHA='"${GITHUB_SHA::7}"'' >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.0.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build-Push
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: backend/shoppingCardManagement/
+          file: backend/shoppingCardManagement/Dockerfile.prod
+          push: true
+          tags: solestyleimages/shopping_cart_management_service:${{ env.COMMIT_SHORT_SHA }}, solestyleimages/shopping_cart_management_service:latest
+          labels: ${{ steps.meta.outputs.labels }}
+

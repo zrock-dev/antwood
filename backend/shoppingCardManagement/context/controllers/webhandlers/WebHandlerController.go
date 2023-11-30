@@ -84,7 +84,7 @@ func HandleOnIntentSuccess(event *stripe.Event) error {
 		return err
 	}
 
-	req, err := http.NewRequest("PUT", "http://localhost/sneakers/quantities", bytes.NewBuffer(orderJSON))
+	req, err := http.NewRequest("PUT", "http://product_management:4000/sneakers/quantities", bytes.NewBuffer(orderJSON))
 	if err != nil {
 		log.Println("Error when creating request:", err)
 		return err
