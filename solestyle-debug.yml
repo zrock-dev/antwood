@@ -1,0 +1,52 @@
+version: "1.0"
+
+services:
+
+  web:
+    image: nginx:1.25-alpine3.18
+    volumes:
+      - ./utils/nginx/:/etc/nginx/conf.d/
+    ports:
+      - "80:80"
+      - "5555:5555"
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: "/config/swagger.json"
+    volumes:
+      - ./utils/swagger/swagger.json:/config/swagger.json
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/frontend
+    volumes:
+      - $PWD/frontend:/home/node/app/
+
+  product_management:
+    build:
+      context: backend/product_management
+      dockerfile: Dockerfile.dev
+    image: solestyle_dev/product_management_service
+    environment:
+      DOTENV_KEY: ${DOTENV_PRODUCT_MANAGEMENT_KEY}
+
+  account_management:
+    build:
+      context: backend/account_management
+      dockerfile: Dockerfile.debug
+    image: solestyle_dev/account_management_service:debug
+    environment:
+      DOTENV_KEY: ${DOTENV_ACCOUNT_MANAGEMENT_KEY}
+    security_opt:
+      - "apparmor=unconfined"
+    cap_add:
+      - SYS_PTRACE
+    ports:
+      - "9000:9000"
+
+  shopping_cart_management:
+    image: solestyleimages/shopping_cart_management
+

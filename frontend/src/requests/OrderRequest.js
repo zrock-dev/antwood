@@ -8,8 +8,8 @@ const axiosConfig = {
   },
 };
 
-export const getUserOrders = async (email) => {
-  const response = await axios.get(`${API}/orders/${email}`, axiosConfig);
+export const getUserOrders = async (email,page) => {
+  const response = await axios.get(`${API}/orders/${email}?page=${page}&pageSize=8`, axiosConfig);
   return response.data;
 };
 

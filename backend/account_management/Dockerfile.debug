@@ -1,0 +1,27 @@
+FROM golang:1.21.4-alpine3.18 AS base
+
+
+FROM base AS deps
+WORKDIR /service
+COPY go.* .
+RUN go mod download
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+
+FROM base as builder
+COPY --from=deps $GOPATH $GOPATH 
+WORKDIR /service
+COPY . . 
+RUN CGO_ENABLED=0 go build -gcflags="all=-N -l" -o bin_service 
+
+
+FROM base AS runner 
+WORKDIR /service
+COPY --from=builder /service/bin_service .
+COPY --from=builder /service/public/ public/
+COPY --from=builder /service/.env.vault .
+COPY --from=deps $GOPATH/bin/dlv /go/bin/dlv
+
+# ENTRYPOINT ["./account_management"]
+ENTRYPOINT ["/go/bin/dlv", "--listen=:9000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "./bin_service"]
+

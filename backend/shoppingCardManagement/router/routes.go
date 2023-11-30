@@ -12,6 +12,8 @@ func PaymentRoutes(app *fiber.App) {
 	app.Post("/api/payment/webhook", webhandlers.HandleWebhook)
 	app.Post("/api/payment/create-payment-intent/:email", payment.CreatePaymentIntent)
 	app.Put("/api/payment/orders/:paymentintentid/:status", payment.HandlePaymentStatus)
-	app.Get("/api/payment/orders/:email", orders.GetOrdersByUserEmail)
+
+
+	app.Get("/api/payment/orders/:email", orders.GetOrdersPageByUserEmail)
 	app.Get("/api/payment/orders/cancomment/:email/:sneaker", orders.UserAlreadyPurchaseSneaker)
 }

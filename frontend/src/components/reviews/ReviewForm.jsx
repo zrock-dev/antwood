@@ -49,7 +49,6 @@ function ReviewForm({ product, setReviews }) {
         return
       }
     } catch (error) {
-      console.log("error", error);
       location.replace("/");
     }finally{
       reviewHandle.resetReview();
@@ -66,7 +65,6 @@ function ReviewForm({ product, setReviews }) {
     reviewHandle.resetReview();
     setReviews((reviews) => [review, ...reviews]);
     }catch(error){
-      console.log("error", error);
       location.replace("/");
     }
 
