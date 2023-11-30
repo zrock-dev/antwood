@@ -3,12 +3,15 @@ import '../../styles/elemens/customizable.css';
 import '../../styles/elemens/animations.css';
 import '../../styles/elemens/loader.css';
 import '../../styles/navbar/navbar.css';
+import ProductResultsProvider from '@/context/ProductResultsContext';
 
 const Layout = ({ children }) => {
 	return (
 		<div>
-			<div id="overlay"></div>
-			{children}
+			<ProductResultsProvider>
+				<div id="overlay"></div>
+				{children}
+			</ProductResultsProvider>
 		</div>
 	);
 };
