@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import authStyle from "@/styles/auth/auth.module.css";
-import Image from "next/image";
 import VerificationCode from "./VerificationCode";
 import Button from "../Button";
 import {
@@ -12,6 +11,7 @@ import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
 import { toast } from "sonner";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 function AuthFormWrapper({ isModalOpen }) {
   const [form, setForm] = useState(defaultForm);
@@ -20,7 +20,7 @@ function AuthFormWrapper({ isModalOpen }) {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const { onSignin, onSignup, verifyUserExists } = useAuthHandler();
   const [verificationCode, setVerificationCode] = useState("");
- 
+
 
   const handleAuth = () => {
     resetForm();
@@ -47,7 +47,7 @@ function AuthFormWrapper({ isModalOpen }) {
 
   const handleSignIn = async () => {
     if (!hasAccount) {
-      if (validateSigninForm(form, setError)) onSignin(form, "solesstyle");
+      if (validateSigninForm(form, setError)) onSignin(form, "solestyle");
     } else if (validateSignupForm(form, setError)) {
       let exist = await verifyUserExists(form.email);
       if (!exist) {
@@ -75,19 +75,20 @@ function AuthFormWrapper({ isModalOpen }) {
 
 
   const sendCodeToVerifyAccount = async () => {
-      toast.promise(getCodeToVerifyAccount(form.email), 
+    toast.promise(getCodeToVerifyAccount(form.email),
       {
         loading: "Sending code",
-      success: (data) => {
-        if (!data.code) {
-          setShowVerificationCode(false);
-          throw  new Error(data.message);
-        }
-        setVerificationCode(data.code)
-        toast.info("If not received, verify email or check spam.");
-        return "Code sent";
-      },
-      error: "Incorrect email"})
+        success: (data) => {
+          if (!data.code) {
+            setShowVerificationCode(false);
+            throw new Error(data.message);
+          }
+          setVerificationCode(data.code)
+          toast.info("If not received, verify email or check spam.");
+          return "Code sent";
+        },
+        error: "Incorrect email"
+      })
   }
 
   return (
@@ -96,12 +97,9 @@ function AuthFormWrapper({ isModalOpen }) {
         <h3>{hasAccount ? "Sign Up" : "Sign In"}</h3>
         <p className={authStyle.subtitle}>SoleStyle*</p>
       </div>
-      <div className={authStyle.three_party}>
-        <div className={authStyle.google_ctn}>
-          <Image src="/google.webp" width={40} height={18} alt="google" />
-          {hasAccount ? "Sign Up with Google" : "Sign In with Google"}
-        </div>
-      </div>
+      <GoogleSignInButton
+          hasAccount={hasAccount}
+      />
       <div className={authStyle.delimiter}>o</div>
       <form className={authStyle.form_inputs}>
         <div>
