@@ -107,10 +107,12 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 
 		match := matchForSearch(searchInput, isForAdmin)
 
-		pipeline := mongo.Pipeline{
-			bson.D{
-				{Key: "$match", Value: match},
-			},
+		pipeline := mongo.Pipeline{}
+
+		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: match},
+		},
 			bson.D{
 				{Key: "$lookup", Value: bson.D{
 					{Key: "from", Value: "sneakerColors"},
@@ -135,10 +137,7 @@ func SendSneakersSearchedByPagination(c *fiber.Ctx) error {
 					{Key: "types.sizes", Value: 0},
 					{Key: "types.quantity", Value: 0},
 				}},
-			},
-		}
-
-		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+			})
 
 		return sendSneakersUsingPipeline(pipeline, c)
 	}

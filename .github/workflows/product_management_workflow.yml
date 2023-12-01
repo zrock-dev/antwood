@@ -73,3 +73,17 @@ jobs:
           push: true
           tags: solestyleimages/product_management_service:${{ env.COMMIT_SHORT_SHA }}, solestyleimages/product_management_service:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+  develop_to_develop:
+    needs: [push_image]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute CI/CD deployment script
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ vars.DEV_HOST }}
+          username: ${{ secrets.QA_USERNAME }}
+          key: ${{ secrets.DEV_KEY }}
+          script: ./scripts/deployment/service/product_management/CI_CD_automation.bash
+

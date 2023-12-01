@@ -3,6 +3,7 @@ package responses
 import (
 	"context"
 	"product_management/app/database"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -16,7 +17,7 @@ type filters struct {
 	Colors   []string  `json:"colors"`
 	MaxPrice float32   `json:"maxPrice"`
 	MinPrice float32   `json:"minPrice"`
-	Sizes    []float32 `json:"sizes"`
+	Sizes    []float64 `json:"sizes"`
 	Tags     []string  `json:"tags"`
 }
 
@@ -76,7 +77,17 @@ func SendSneakersFiltersOptions(c *fiber.Ctx) error {
 		}
 	}
 
+	filters = sortFilters(sortFilters(filters))
 	return c.JSON(filters)
+}
+
+func sortFilters(filters filters) filters {
+	sort.Strings(filters.Brands)
+	sort.Strings(filters.Colors)
+	sort.Float64s(filters.Sizes)
+	sort.Strings(filters.Tags)
+
+	return filters
 }
 
 func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32, float32) {
@@ -103,6 +114,11 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 	if brand != "" || (tags[0] != "" && len(tags) > 0) || color != "" ||
 		(minPrice > 0 && maxPrice > 0) || size > 0 {
 		pipeline := mongo.Pipeline{}
+		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: bson.D{{Key: "colors.0", Value: bson.D{
+				{Key: "$exists", Value: true}}}}},
+		})
 		pipeline = getMatchFilters(pipeline, brand, tags, color)
 		pipeline = getPriceFilter(pipeline, minPrice, maxPrice)
 		pipeline = append(pipeline, bson.D{
@@ -132,8 +148,6 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 					{Key: "types.quantity", Value: 0},
 				}},
 			})
-
-		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
 
 		return sendSneakersUsingPipeline(pipeline, c)
 	}

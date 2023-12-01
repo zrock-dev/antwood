@@ -9,9 +9,7 @@ import '../../../styles/products/product_card.css';
 import '../../../styles/products/products.css';
 import SubNavbar from '@/components/navbar/SubNavbar';
 
-const ProductFilter = ({
-	style = 'products-container width-100'
-}) => {
+const ProductFilter = ({ style = 'products-container width-100' }) => {
 	const [rendererState, setRendererState] = useState({
 		products: [],
 		hasMore: true,
@@ -88,23 +86,25 @@ const ProductFilter = ({
 	}, [rendererState.products]);
 
 	return (
-		<div className="layout-filter">
-			<SubNavbar />
+		<div className="layout-filter-horizontal">
 			<FilterRenderer />
-			<div className="products-main-container">
-				<div className={style}>
-					{rendererState.products.map((product) => (
-						<ProductCard key={product._id} product={product} />
-					))}
-				</div>
-				{!rendererState.hasMore && rendererState.products.length < 1 && (
-					<NoProductsFound redirection={'/products'} />
-				)}
-				{rendererState.hasMore && (
-					<div ref={lastProduct} className="loader-container">
-						<span className="loader"></span>
+			<div className="layout-filter-vertical">
+				<SubNavbar />
+				<div className="products-main-container">
+					<div className={style}>
+						{rendererState.products.map((product) => (
+							<ProductCard key={product._id} product={product} />
+						))}
 					</div>
-				)}
+					{!rendererState.hasMore && rendererState.products.length < 1 && (
+						<NoProductsFound redirection={'/products'} />
+					)}
+					{rendererState.hasMore && (
+						<div ref={lastProduct} className="loader-container">
+							<span className="loader"></span>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

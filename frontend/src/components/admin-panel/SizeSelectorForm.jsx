@@ -172,20 +172,28 @@ const SizeSelector = ({
           <span>Sizes</span>
         ) : (
           <div className="admin-panel-colors-form-droopdown-inputs">
-            <input
-              type="number"
-              value={currSize.value}
-              name="value"
-              onChange={onHandleSizeChange}
-              onKeyDown={handleOnKeyDown}
-            />
-            <input
-              type="number"
-              value={currSize.quantity}
-              name="quantity"
-              onChange={onHandleSizeChange}
-              onKeyDown={handleOnKeyDown}
-            />
+            <div>
+              <span>Size</span>
+              <input
+                type="number"
+                value={currSize.value}
+                name="value"
+                onChange={onHandleSizeChange}
+                onKeyDown={handleOnKeyDown}
+                placeholder="Size"
+              />
+            </div>
+            <div>
+              <span>Quantity</span>
+              <input
+                type="number"
+                value={currSize.quantity}
+                name="quantity"
+                onChange={onHandleSizeChange}
+                onKeyDown={handleOnKeyDown}
+                placeholder="Quantity"
+              />
+            </div>
             {!isEditing ? (
               <i className="fa-solid fa-plus" onClick={onAddSize}></i>
             ) : (

@@ -122,16 +122,27 @@ func addSortToPipeline(pipeline mongo.Pipeline, field string, order string) mong
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
 	sortField, sortOrder := getSortValues(c)
+	forAdmin := c.Query("forAdmin", "false")
 
-	pipeline := mongo.Pipeline{
-		bson.D{
-			{Key: "$lookup", Value: bson.D{
-				{Key: "from", Value: "sneakerColors"},
-				{Key: "localField", Value: "colors.0._id"},
-				{Key: "foreignField", Value: "_id"},
-				{Key: "as", Value: "types"},
-			}},
-		},
+	pipeline := mongo.Pipeline{}
+
+	pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+
+	if forAdmin == "false" {
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: bson.D{{Key: "colors.0", Value: bson.D{
+				{Key: "$exists", Value: true}}}}},
+		})
+	}
+
+	pipeline = append(pipeline, bson.D{
+		{Key: "$lookup", Value: bson.D{
+			{Key: "from", Value: "sneakerColors"},
+			{Key: "localField", Value: "colors.0._id"},
+			{Key: "foreignField", Value: "_id"},
+			{Key: "as", Value: "types"},
+		}},
+	},
 		bson.D{
 			{Key: "$skip", Value: skip},
 		},
@@ -148,10 +159,7 @@ func SendSneakersByPagination(c *fiber.Ctx) error {
 				{Key: "types.sizes", Value: 0},
 				{Key: "types.quantity", Value: 0},
 			}},
-		},
-	}
-
-	pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+		})
 
 	return sendSneakersUsingPipeline(pipeline, c)
 }

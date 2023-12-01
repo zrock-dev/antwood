@@ -85,7 +85,9 @@ const CheckoutPageRenderer = () => {
   useEffect(() => {
     if (isAuthenticated) {
       setEmail(user?.email);
+      if(user?.email){
       setEmailSaved(true);
+      }
     }else{
       setEmail("");
       setEmailSaved(false);
@@ -168,7 +170,7 @@ const CheckoutPageRenderer = () => {
                   <span>{`$${cartState?.subTotal}`}</span>
                 </li>
                 <li>
-                  <span>Sales Tax</span> <span>${tax}</span>
+                  <span>Sales Tax</span> <span>${cartState?.extra}</span>
                 </li>
                 <li>
                   <span>Total Price</span> <span>${cartState?.total}</span>

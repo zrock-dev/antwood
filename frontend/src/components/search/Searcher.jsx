@@ -31,8 +31,8 @@ const Searcher = ({
 	const searchContainer = useRef();
 
 	const isValidInput = (inputToValid) => {
-		const regex = /^[a-zA-Z0-9çÇ ]*$/;
-		return regex.test(inputToValid);
+		const regex = /^[a-zA-Z0-9çÇ.\- ]+$/;
+		return regex.test(inputToValid) && !inputToValid.includes("..") && !inputToValid.includes("  ");
 	};
 
 	const handleKeyAcctions = (event) => {

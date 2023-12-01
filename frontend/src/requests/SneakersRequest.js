@@ -20,6 +20,17 @@ export const getAllProductsByPagination = async (page, size = 4, sorter) => {
 	};
 };
 
+export const getAllProductsByPaginationForAdmin = async (
+	page,
+	size = 4,
+	sorter
+) => {
+	const response = await axios.get(
+		`/sneakers?page=${page}&pageSize=${size}&forAdmin=true`
+	);
+	return response.data;
+};
+
 export const getSneakerColorById = async (id) => {
 	const response = await axios.get(`/sneakercolor/${id}`);
 	return response.data;
