@@ -28,7 +28,7 @@ func (e ProviderGoogle) Register(ctx *fiber.Ctx) (string, models.User, error) {
 		log.Error(err)
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			user = models.User{
-				Id:           primitive.ObjectID{},
+				Id:           primitive.NewObjectID(),
 				Username:     fmt.Sprintf("%s %s", userData.GivenName, userData.FamilyName),
 				Email:        userData.Email,
 				Role:         "user",
