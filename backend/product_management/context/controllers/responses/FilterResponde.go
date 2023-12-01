@@ -3,6 +3,7 @@ package responses
 import (
 	"context"
 	"product_management/app/database"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -16,7 +17,7 @@ type filters struct {
 	Colors   []string  `json:"colors"`
 	MaxPrice float32   `json:"maxPrice"`
 	MinPrice float32   `json:"minPrice"`
-	Sizes    []float32 `json:"sizes"`
+	Sizes    []float64 `json:"sizes"`
 	Tags     []string  `json:"tags"`
 }
 
@@ -76,7 +77,17 @@ func SendSneakersFiltersOptions(c *fiber.Ctx) error {
 		}
 	}
 
+	filters = sortFilters(sortFilters(filters))
 	return c.JSON(filters)
+}
+
+func sortFilters(filters filters) filters {
+	sort.Strings(filters.Brands)
+	sort.Strings(filters.Colors)
+	sort.Float64s(filters.Sizes)
+	sort.Strings(filters.Tags)
+
+	return filters
 }
 
 func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32, float32) {
