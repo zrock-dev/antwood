@@ -54,9 +54,6 @@ const ReceiptModalRenderer = ({
               <h3>Receipt</h3>
               <div className="receipt-details">
                 <p>
-                  <b>Order Id : </b> {order?.id}
-                </p>
-                <p>
                   <b>Date : </b>
                   {dateParser(order?.date)}
                 </p>
