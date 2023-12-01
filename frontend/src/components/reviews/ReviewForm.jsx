@@ -39,7 +39,7 @@ function ReviewForm({ product, setReviews }) {
     try {
       const validation = await userCanReview(currentUser.email,product._id)
       if(!validation){
-        toast.info("you do not purchase this sneaker")
+        toast.info("purchase required to leave comment")
         return
       }
       

@@ -25,8 +25,8 @@ export const emptyFilters = {
 };
 
 export const defaultSorter = {
-	sortField: 'lastDate',
-	sortOrder: 'asc'
+	sortField: 'salesQuantity',
+	sortOrder: 'desc'
 };
 
 const ProductResultsProvider = ({ children }) => {

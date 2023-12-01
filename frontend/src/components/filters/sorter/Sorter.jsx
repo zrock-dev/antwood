@@ -39,12 +39,23 @@ const Sorter = () => {
 		>
 			<span className="sorter-title">
 				Sort By{''}
-				{sorter && (
-					<b>
-						{sorter.sortField === 'lastDate' ? 'Date' : sorter.sortField}{' '}
-						{sorter.sortOrder === 'asc' ? 'Ascending' : 'Descending'}{' '}
-					</b>
-				)}
+				{sorter &&
+					(sorter.sortField === 'lastDate' && sorter.sortOrder === 'asc' ? (
+						<b>Oldest to Newest</b>
+					) : sorter.sortField === 'lastDate' && sorter.sortOrder === 'desc' ? (
+						<b>Newest to Oldest</b>
+					) : sorter.sortField === 'salesQuantity' &&
+					  sorter.sortOrder === 'asc' ? (
+						<b>Least to Most Sold</b>
+					) : sorter.sortField === 'salesQuantity' &&
+					  sorter.sortOrder === 'desc' ? (
+						<b>Most to least Sold</b>
+					) : (
+						<b>
+							{sorter.sortField}{' '}
+							{sorter.sortOrder === 'asc' ? 'Ascending' : 'Descending'}{' '}
+						</b>
+					))}
 				<SortIcon />
 			</span>
 			{isOpen && (
@@ -102,7 +113,7 @@ const Sorter = () => {
 						}`}
 						onClick={() => setSort('lastDate', 'asc')}
 					>
-						Date Ascending
+						Oldest to Newest
 					</button>
 					<button
 						className={`sorter-option ${
@@ -113,7 +124,29 @@ const Sorter = () => {
 						}`}
 						onClick={() => setSort('lastDate', 'desc')}
 					>
-						Date Descending
+						Newest to Oldest
+					</button>
+					<button
+						className={`sorter-option ${
+							sorter &&
+							sorter.sortField === 'salesQuantity' &&
+							sorter.sortOrder === 'desc' &&
+							'selected'
+						}`}
+						onClick={() => setSort('salesQuantity', 'desc')}
+					>
+						Most to least Sold
+					</button>
+					<button
+						className={`sorter-option ${
+							sorter &&
+							sorter.sortField === 'salesQuantity' &&
+							sorter.sortOrder === 'asc' &&
+							'selected'
+						}`}
+						onClick={() => setSort('salesQuantity', 'asc')}
+					>
+						Least to Most Sold
 					</button>
 				</div>
 			)}

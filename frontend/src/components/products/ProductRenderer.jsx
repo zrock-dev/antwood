@@ -11,7 +11,8 @@ const ProductRenderer = ({
 	fetchMethod,
 	ProductCardView = ProductCard,
 	redirection = '/products',
-	style = 'products-container'
+	style = 'products-container',
+	defaultSorter
 }) => {
 	const [rendererState, setRendererState] = useState({
 		products: [],
@@ -23,7 +24,8 @@ const ProductRenderer = ({
 	const lastProduct = useRef(null);
 
 	const fetchMoreProducts = async () => {
-		const data = await fetchMethod(rendererState.page, sorter);
+		const sort = defaultSorter ? defaultSorter : sorter;
+		const data = await fetchMethod(rendererState.page, sort);
 		if (data.sneakers.length === 0) {
 			setRendererState({
 				...rendererState,
