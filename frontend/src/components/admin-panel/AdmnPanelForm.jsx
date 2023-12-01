@@ -7,6 +7,7 @@ import {
   validateSneakerForm,
   validateName,
   validatePrice,
+  validateDescription,
 } from "@/utils/SneakerFormValidation";
 import Modal from "../Modal";
 
@@ -30,17 +31,23 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
     let name = e.target.name;
   
     if (value === "") {
-        setForm({
-          ...form,
-          [name]: name === "price" ? 0 : "",
-        });
-      return;
+         
+       if (form[name].length === 1) {
+         setForm({
+           ...form,
+           [name]: value  === "price" ? 0 : "",
+         });
+         return;
+       }
+
+      if (name === "price") return
+   
     }
 
 
-    if (name === "description") {
+    if (name === "description" ) {
       const lines = value.split("\n");
-      if (lines.length > 10 || value.length > 450) {
+      if (lines.length > 10 || value.length > 450 || !validateDescription(value)) {
         return;
       }
     }
@@ -52,7 +59,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
       }
     }
 
-    if (name == "name" && (value.length > 60 || !validateName(value))) {
+    if (name == "name" && (value.length > 70 || !validateName(value))) {
       return;
     }
 
@@ -195,10 +202,12 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
           tagError={formError.tags}
           addTagError={addTagError}
         />
-        <div className={`admin-panel-form-btns ${isProcessing? "disabled" : ""}`}>
+        <div
+          className={`admin-panel-form-btns ${isProcessing ? "disabled" : ""}`}
+        >
           {form._id === "" ? (
             <Button btnStyle="third_btn" onClick={handleReset}>
-              CANCEL
+              CLEAR ALL
             </Button>
           ) : (
             <Button
@@ -210,7 +219,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
           )}
 
           <Button btnStyle="main_btn" onClick={handleSubmit}>
-            {form._id === "" ? "ADD NEW SNENAKER" : "UPDATE SNEAKER"}
+            {form._id === "" ? "ADD NEW SNEAKER" : "UPDATE SNEAKER"}
           </Button>
         </div>
       </form>

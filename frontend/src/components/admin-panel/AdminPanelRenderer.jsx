@@ -7,6 +7,7 @@ import AdminPanelColorsForm from "./AdminPanelColorsForm";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getSneakerById } from "@/requests/SneakersRequest";
+import { useRouter } from "next/navigation";
 const SNEAKER_DATA = {
   _id: "",
   name: "",
@@ -20,6 +21,7 @@ const AdminPanelRenderer = ({ id }) => {
   const [form, setForm] = useState(SNEAKER_DATA);
   const [sneakerColors, setSneakerColors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const resetForm = () => {
     if (id) {
       setFormValue();
@@ -38,10 +40,7 @@ const AdminPanelRenderer = ({ id }) => {
     } else {
       try {
         const res = await createSneaker(form);
-        setForm({
-          ...form,
-          _id: res.id,
-        });
+        router.replace(`/admin/product/${res.id}`);
       } catch (err) {
         toast.error("Wait a moment and try again");
       } 

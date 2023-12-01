@@ -88,7 +88,7 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
         <div className={colorPickerStyle.color_picker_ctn}>
           <div ref={popupBtnRef}>
             <Button btnStyle="third_btn" onClick={togglePopup}>
-              New Color <i className="fa-solid fa-plus"></i>
+              NEW COLOR <i className="fa-solid fa-plus"></i>
             </Button>
           </div>
           {colors.map((c) => (
