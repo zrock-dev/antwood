@@ -1,5 +1,5 @@
 import React from "react";
-import { AddressElement } from "@stripe/react-stripe-js";
+import { AddressElement, useElements } from "@stripe/react-stripe-js";
 import Button from "../Button";
 import {useState} from "react";
 const AddressForm = ({
@@ -10,13 +10,23 @@ const AddressForm = ({
 }) => {
   const [isCompletedAddress, setIsCompletedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const elements = useElements();
 
   const handleOnChaneg = (e) => {
     setAddress(e.value);
     setIsCompletedAddress(e.complete);
   };
 
-  const handleOnSubmit = () => {
+  const handleOnSubmit =async () => {
+
+    const result = await elements.submit();
+
+    if (result.error) {
+      console.log(result.error?.message);
+      return;
+    }
+
+
     const alphabeticRegex = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/;
 
     if (
@@ -30,18 +40,26 @@ const AddressForm = ({
       return;
     }
 
-    if (
-      !alphabeticRegex.test(address.name) ||
-      !alphabeticRegex.test(address.address.city)) {
-      setErrorMessage("the name and City fields must be contain only alphabetic characters and spaces");
+   if (address.name || address.address.city) {
+      if (!alphabeticRegex.test(address.name) && !alphabeticRegex.test(address.address.city)) {
+        setErrorMessage("The name and city fields must contain only alphabetic characters and spaces");
+        return;
+      }
+
+    if (!alphabeticRegex.test(address.name)){
+      setErrorMessage("The name field must contain only alphabetic characters and spaces");
       return;
     }
+     if (!alphabeticRegex.test(address.address.city)) {
+      setErrorMessage("The city field must contain only alphabetic characters and spaces");
+      return;
+    }
+   }
+
 
     if (isCompletedAddress) {
       setAddresConfirmed(true);
       setErrorMessage("");
-    } else {
-      setErrorMessage("Please enter a valid address fields, just line 2 is optional");
     }
   };
 
@@ -62,6 +80,7 @@ const AddressForm = ({
       <div className={addresConfirmed ? "checkout-disabled-addresss" : ""}>
         <AddressElement
           options={{
+            allowedCountries: ["US","ES","MX","CO","CL","AU","AR","BO"],
             mode: "shipping",
           }}
           onChange={handleOnChaneg}
