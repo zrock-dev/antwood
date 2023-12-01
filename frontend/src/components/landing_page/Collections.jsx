@@ -2,15 +2,21 @@
 import { useContext } from 'react';
 import '../../styles/landing_page/collections.css';
 import { ProductResultsContext } from '@/context/ProductResultsContext';
+import { useRouter } from 'next/navigation';
 
 const Collections = () => {
-	const { addTag } = useContext(ProductResultsContext);
+	const router = useRouter();
+	const { filters, addTag } = useContext(ProductResultsContext);
 
 	return (
 		<div className="landing-collections-main-container">
 			<button
 				className="langin-collection-container"
-				onClick={() => addTag('men')}
+				onClick={
+					filters && filters.tags.includes('men')
+						? () => router.push('/products/filter')
+						: () => addTag('men')
+				}
 			>
 				<img
 					className="langin-collection-image"
@@ -21,7 +27,11 @@ const Collections = () => {
 			</button>
 			<button
 				className="langin-collection-container"
-				onClick={() => addTag('women')}
+				onClick={
+					filters && filters.tags.includes('women')
+						? () => router.push('/products/filter')
+						: () => addTag('women')
+				}
 			>
 				<img
 					className="langin-collection-image"
@@ -32,7 +42,11 @@ const Collections = () => {
 			</button>
 			<button
 				className="langin-collection-container"
-				onClick={() => addTag('kids')}
+				onClick={
+					filters && filters.tags.includes('kids')
+						? () => router.push('/products/filter')
+						: () => addTag('kids')
+				}
 			>
 				<img
 					className="langin-collection-image"
