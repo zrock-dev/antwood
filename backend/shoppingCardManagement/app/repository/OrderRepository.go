@@ -12,7 +12,7 @@ import (
 )
 
 func GetOrderPageByUserEmail(email string, skip int, pageSize int) ([]*models.Order, error) {
-    options := options.Find().SetSkip(int64((skip-1)*pageSize)).SetLimit(int64(pageSize))
+    options := options.Find().SetSkip(int64((skip-1)*pageSize)).SetLimit(int64(pageSize)).SetSort(bson.D{{Key: "date", Value: -1}})
     var orders []*models.Order
   
     cursor, err := database.OrdersCollection.Find(context.TODO(), bson.M{"email": email}, options)

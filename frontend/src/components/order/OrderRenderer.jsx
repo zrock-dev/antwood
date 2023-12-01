@@ -41,7 +41,7 @@ const OrderRenderer = () => {
       <div className="orders-ctn">
         <div className={`orders ${loading ? "receipt-loading" : ""}`}>
           {orders &&
-            orders.map((order) => {
+            orders.map((order, index) => {
               return (
                 <div
                   className={`order ${loading ? "receipt-loading-order" : ""}`}
@@ -49,7 +49,6 @@ const OrderRenderer = () => {
                   onClick={() => showOrderDetails(order)}
                 >
                   <div>
-                    <p>Order Id : {order.id}</p>
                     <p>Date : {dateParser(order.date)}</p>
                   </div>
                   <div className="order-products-ctn">
