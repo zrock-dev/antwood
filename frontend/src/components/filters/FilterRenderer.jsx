@@ -10,6 +10,7 @@ import OthersSection from './sections/OthersSection';
 import SizeSection from './sections/SizeSection';
 import ColorSection from './sections/ColorSection';
 import PriceSection from './sections/PriceSection';
+import PriceRange from './sections/PriceRange';
 
 const FilterRenderer = () => {
 	const {
@@ -56,7 +57,7 @@ const FilterRenderer = () => {
 						isOpen={filters.color !== ''}
 					/>
 					<span className="horizontal-separator margin-20px"></span>
-					<PriceSection
+					{/* <PriceSection
 						minPrice={filterOptions.minPrice}
 						maxPrice={filterOptions.maxPrice}
 						currentMaxPrice={
@@ -68,7 +69,8 @@ const FilterRenderer = () => {
 							filters.maxPrice > 0 &&
 							filters.maxPrice !== filterOptions.maxPrice
 						}
-					/>
+					/> */}
+					<PriceRange />
 				</div>
 			) : (
 				<div className="loader-container">
