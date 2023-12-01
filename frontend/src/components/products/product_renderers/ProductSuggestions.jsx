@@ -2,6 +2,7 @@
 import { getAllProductsByPagination } from '@/requests/SneakersRequest';
 import ProductRenderer from '../ProductRenderer';
 import PaymentMessage from '@/components/PaymentMessage';
+import { defaultSorter } from '@/context/ProductResultsContext';
 
 const ProductSuggestions = () => {
 	return (
@@ -12,6 +13,7 @@ const ProductSuggestions = () => {
 					getAllProductsByPagination(page, 4, sorter)
 				}
 				style="products-container margin-top-25"
+				defaultSorter={defaultSorter}
 			/>
 			;
 		</div>
