@@ -29,3 +29,10 @@ export const getPaymentIntent = async (email, body) => {
   );
   return response.data;
 };
+
+
+
+export const getTaxes = async(amount,code) =>{   const response = await axios.get(
+  `${API}/orders/taxes/${amount}/${code}`,
+  axiosConfig
+); return response.data; }
