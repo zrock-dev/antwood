@@ -1,6 +1,6 @@
 
 .checkout-page {
-  height: 93vh;
+  min-height: 93vh;
   display: flex;
   flex-direction: column;
 }

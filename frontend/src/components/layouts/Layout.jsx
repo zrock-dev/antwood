@@ -8,7 +8,7 @@ import ProductResultsProvider from '@/context/ProductResultsContext';
 
 const Layout = ({ children }) => {
 	return (
-		<div>
+		<div className='main-layout-ctn'>
 			<ProductResultsProvider>
 				<div id="overlay"></div>
 				{children}
