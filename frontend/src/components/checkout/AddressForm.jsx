@@ -17,6 +17,8 @@ const AddressForm = ({
   };
 
   const handleOnSubmit = () => {
+    const alphabeticRegex = /^[A-Za-zñÑ\s]+$/;
+
     if (
       address.address.line1.length > 100 ||
       address.address.line2?.length > 100 ||
@@ -25,6 +27,13 @@ const AddressForm = ({
       address.name.length > 100
     ) {
       setErrorMessage("the fields must be less than 100 characters and corrects");
+      return;
+    }
+
+    if (
+      !alphabeticRegex.test(address.name) ||
+      !alphabeticRegex.test(address.address.city)) {
+      setErrorMessage("the name and City fields must be contain only alphabetic characters and spaces");
       return;
     }
 
