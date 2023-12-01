@@ -6,13 +6,11 @@ import React, { useState, useEffect, useRef } from 'react';
 const PriceRange = () => {
 	const sliderOneRef = useRef(null);
 	const sliderTwoRef = useRef(null);
-	const displayValOneRef = useRef(null);
-	const displayValTwoRef = useRef(null);
 	const sliderTrackRef = useRef(null);
 
 	const [sliderOne, setSliderOne] = useState(30);
 	const [sliderTwo, setSliderTwo] = useState(70);
-	const minGap = 0;
+	const minGap = 1;
 	const sliderMaxValue = 100;
 
 	useEffect(() => {
@@ -21,18 +19,16 @@ const PriceRange = () => {
 	}, [sliderOne, sliderTwo]);
 
 	const slideOne = () => {
-		if (parseInt(sliderTwo) - parseInt(sliderOne) <= minGap) {
-			setSliderOne(parseInt(sliderTwo) - minGap);
+		if (sliderTwo - sliderOne <= minGap) {
+			setSliderOne(sliderTwo - minGap);
 		}
-		displayValOneRef.current.textContent = sliderOne;
 		fillColor();
 	};
 
 	const slideTwo = () => {
-		if (parseInt(sliderTwo) - parseInt(sliderOne) <= minGap) {
-			setSliderTwo(parseInt(sliderOne) + minGap);
+		if (sliderTwo - sliderOne <= minGap) {
+			setSliderTwo(sliderOne + minGap);
 		}
-		displayValTwoRef.current.textContent = sliderTwo;
 		fillColor();
 	};
 
@@ -54,7 +50,7 @@ const PriceRange = () => {
 						max="100"
 						value={sliderOne}
 						ref={sliderOneRef}
-						onChange={() => setSliderOne(parseInt(sliderOneRef.current.value))}
+						onChange={(e) => setSliderOne(e.target.value)}
 					/>
 					<input
 						type="range"
@@ -62,12 +58,12 @@ const PriceRange = () => {
 						max="100"
 						value={sliderTwo}
 						ref={sliderTwoRef}
-						onChange={() => setSliderTwo(parseInt(sliderTwoRef.current.value))}
+						onChange={(e) => setSliderTwo(e.target.value)}
 					/>
 				</div>
 				<div className="values">
-					<span ref={displayValOneRef}>0</span>
-					<span ref={displayValTwoRef}>100</span>
+					<span>{sliderOne}</span>
+					<span>{sliderTwo}</span>
 				</div>
 			</div>
 		</div>
