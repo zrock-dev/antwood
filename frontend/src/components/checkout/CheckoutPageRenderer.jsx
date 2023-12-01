@@ -85,7 +85,9 @@ const CheckoutPageRenderer = () => {
   useEffect(() => {
     if (isAuthenticated) {
       setEmail(user?.email);
+      if(user?.email){
       setEmailSaved(true);
+      }
     }else{
       setEmail("");
       setEmailSaved(false);
