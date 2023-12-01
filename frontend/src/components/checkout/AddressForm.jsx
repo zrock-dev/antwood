@@ -17,7 +17,7 @@ const AddressForm = ({
   };
 
   const handleOnSubmit = () => {
-    const alphabeticRegex = /^[A-Za-zñÑ\s]+$/;
+    const alphabeticRegex = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/;
 
     if (
       address.address.line1.length > 100 ||
