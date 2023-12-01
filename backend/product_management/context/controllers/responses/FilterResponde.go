@@ -104,6 +104,10 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 		(minPrice > 0 && maxPrice > 0) || size > 0 {
 		pipeline := mongo.Pipeline{}
 		pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: bson.D{{Key: "colors.0", Value: bson.D{
+				{Key: "$exists", Value: true}}}}},
+		})
 		pipeline = getMatchFilters(pipeline, brand, tags, color)
 		pipeline = getPriceFilter(pipeline, minPrice, maxPrice)
 		pipeline = append(pipeline, bson.D{

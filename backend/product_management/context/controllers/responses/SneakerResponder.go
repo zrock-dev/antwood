@@ -122,10 +122,18 @@ func addSortToPipeline(pipeline mongo.Pipeline, field string, order string) mong
 func SendSneakersByPagination(c *fiber.Ctx) error {
 	skip, limit := getPaginationValues(c)
 	sortField, sortOrder := getSortValues(c)
+	forAdmin := c.Query("forAdmin", "false")
 
 	pipeline := mongo.Pipeline{}
 
 	pipeline = addSortToPipeline(pipeline, sortField, sortOrder)
+
+	if forAdmin == "false" {
+		pipeline = append(pipeline, bson.D{
+			{Key: "$match", Value: bson.D{{Key: "colors.0", Value: bson.D{
+				{Key: "$exists", Value: true}}}}},
+		})
+	}
 
 	pipeline = append(pipeline, bson.D{
 		{Key: "$lookup", Value: bson.D{
