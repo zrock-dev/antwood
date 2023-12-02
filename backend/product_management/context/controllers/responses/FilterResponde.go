@@ -124,7 +124,7 @@ func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
 		pipeline = append(pipeline, bson.D{
 			{Key: "$lookup", Value: bson.D{
 				{Key: "from", Value: "sneakerColors"},
-				{Key: "localField", Value: "colors.0._id"},
+				{Key: "localField", Value: "colors._id"},
 				{Key: "foreignField", Value: "_id"},
 				{Key: "as", Value: "types"},
 			}},
