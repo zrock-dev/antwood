@@ -125,7 +125,7 @@ const ReceiptModalRenderer = ({
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>$100</td>
+                <td>${order?.extra}</td>
               </tr>
               <tr className="receipt-total-row">
                 <td className="receipt-details-column">Total</td>
