@@ -9,3 +9,8 @@ README.md
 .gitignore
 
 next.config.js
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

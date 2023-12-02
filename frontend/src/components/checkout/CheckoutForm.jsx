@@ -11,6 +11,8 @@ import { useAuth } from "@/context/AuthContext";
 import { confirmAvailableSizes } from "@/requests/SneakersRequest";
 import { useRouter } from "next/navigation";
 
+
+  const REDIRECTION_URL = process.env.NEXT_PUBLIC_HOSTNAME;
 export default function CheckoutForm({ clientSecret }) {
   const { products } = useContext(CartContext);
   const stripe = useStripe();
@@ -49,7 +51,7 @@ export default function CheckoutForm({ clientSecret }) {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `https://test-solestyle.westus3.cloudapp.azure.com/${
+        return_url: `${REDIRECTION_URL}/${
           isAuthenticated ? "/profile/order" : ""
         }`,
       },

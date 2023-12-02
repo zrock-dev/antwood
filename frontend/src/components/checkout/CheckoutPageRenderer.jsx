@@ -16,9 +16,10 @@ import { toast } from "sonner";
 import { getPaymentIntent } from "@/requests/OrderRequest";
 import { useRouter } from "next/navigation";
 
-const stripePromise = loadStripe(
-  "pk_test_51OCWLLAx0MjRmRXcn4ofEveLqem47L1fcirumWu8Aa1zxyPWwKF6Z4YaR9r3ulMQECx98r2wE0A2uG1gTUzHDTuZ005KwB00DQ"
-);
+const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+
+const stripePromise = loadStripe(STRIPE_KEY);
+
 
 
 const CheckoutPageRenderer = () => {
