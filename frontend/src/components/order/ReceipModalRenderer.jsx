@@ -150,10 +150,8 @@ const ReceiptModalRenderer = ({
                   {"  ,   "}
                   {order?.shipping.address.postal_code}
                 </p>
-                <p>
-                  {order?.shipping.address.city}
-                  {","} {order?.shipping.address.state}
-                </p>
+                <p>{order?.shipping.address.city}</p>
+                <p>{order?.shipping.address.state}</p>
                 <p>{order?.shipping.address.line1}</p>
                 <p>{order?.shipping.address.line2}</p>
               </div>
