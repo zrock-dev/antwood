@@ -10,7 +10,7 @@ const DeleteSneakerColorConfirmation = ({ id, sneakerColorName, closeConfirmatio
       loading: 'Deleting sneaker color...',
       success: ()=>{
         closeConfirmation();
-        location.reload();
+        router.refresh();
         return 'Sneaker color deleted successfully'
       },
       error: 'Error when deleting sneaker color',
