@@ -31,7 +31,7 @@ function useReviewForm() {
     const { name, value } = textarea;
 
     const lines = value.split("\n");
-    if (lines.length > 6) {
+    if (lines.length > 6 || textSize() >= maxChars) {
       return
     }
     setReview({ ...review, [name]: value });
