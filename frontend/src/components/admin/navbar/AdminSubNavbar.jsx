@@ -6,7 +6,7 @@ const AdminSubNavbar = () => {
 		<div className="subnavbar-main-container">
 			<b>ALL</b>
 			<Link href={'/admin/product'} className="general-button auto narrow">
-				Add new sneaker
+				Add New Sneaker
 				<Plus />
 			</Link>
 		</div>

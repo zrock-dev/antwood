@@ -2,6 +2,7 @@ package requests
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,7 @@ func InsertSneaker(c *fiber.Ctx) error {
 	}
 
 	newSneaker.LastDate = primitive.NewDateTimeFromTime(time.Now())
-
+	newSneaker.Brand = strings.ToLower(newSneaker.Brand)
 	insertResult, err := database.SneakerCollection.
 		InsertOne(context.TODO(), newSneaker)
 	if err != nil {
@@ -47,7 +48,7 @@ func UpdateSneakerById(c *fiber.Ctx) error {
 	if err := c.BodyParser(&updatedSneaker); err != nil {
 		return c.Status(400).SendString("Invalid update data")
 	}
-
+	updatedSneaker.Brand = strings.ToLower(updatedSneaker.Brand)
 	update := validateSneakerUpdateData(updatedSneaker)
 	wasUpdated, message := updateSneakerById(sneakerID, bson.M{"$set": update})
 	if !wasUpdated {
@@ -132,8 +133,8 @@ func DeleteSneakerById(c *fiber.Ctx) error {
 	}
 
 	for _, color := range sneaker.Colors {
-		wasDeleted , message := repository.DeleteShoeColorWithCloudDeps(color.ID)
-		if !wasDeleted{
+		wasDeleted, message := repository.DeleteShoeColorWithCloudDeps(color.ID)
+		if !wasDeleted {
 			return c.Status(500).SendString(message)
 		}
 	}
@@ -150,7 +151,6 @@ func DeleteSneakerById(c *fiber.Ctx) error {
 
 	return c.SendString("Sneaker successfully deleted")
 }
-
 
 func RemoveSneakerColor(c *fiber.Ctx) error {
 	sneakerID := c.Params("id")
@@ -170,7 +170,7 @@ func RemoveSneakerColor(c *fiber.Ctx) error {
 }
 
 func removeColorFromSneaker(sneakerID string, idColor primitive.ObjectID) (bool, string) {
-	wasRemoved, _ := updateSneakerById(sneakerID,bson.M{
+	wasRemoved, _ := updateSneakerById(sneakerID, bson.M{
 		"$pull": bson.M{
 			"colors": bson.M{"_id": idColor},
 		},
@@ -185,7 +185,7 @@ func UpdateSneakerQuantities(c *fiber.Ctx) error {
 	type SneakersQuantities struct {
 		SneakerId      string  `json:"sneakerId,omitempty"`
 		SneakerColorId string  `json:"sneakerColorId,omitempty"`
-		Size           float32 `json:"size,omitempty"`
+		Size           float64 `json:"size,omitempty"`
 		Amount         int     `json:"amount,omitempty"`
 	}
 
@@ -256,7 +256,7 @@ func ConfirmAvailableSneakersQuantities(c *fiber.Ctx) error {
 	type SneakersQuantities struct {
 		SneakerId      string  `json:"sneakerId,omitempty"`
 		SneakerColorId string  `json:"sneakerColorId,omitempty"`
-		Size           float32 `json:"size,omitempty"`
+		Size           float64 `json:"size,omitempty"`
 		Amount         int     `json:"amount,omitempty"`
 	}
 
