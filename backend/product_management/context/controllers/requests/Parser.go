@@ -11,13 +11,13 @@ import (
 
 func ParseValidSneakerColor(form *multipart.Form) (models.SneakerColor, string, []string) {
 	newSneakerColor := models.SneakerColor{
-		ID:       primitive.NewObjectID(),
-		Images:   []models.ImageData{},
-		Sizes:    []models.SizeData{},
+		ID:     primitive.NewObjectID(),
+		Images: []models.ImageData{},
+		Sizes:  []models.SizeData{},
 	}
 
 	brand := form.Value["brand"][0]
-	sizes := parseSizes(form.Value["sizes[]"],form.Value["values[]"])
+	sizes := parseSizes(form.Value["sizes[]"], form.Value["values[]"])
 
 	uploadedImages := parseImages(form.File["images[]"], brand)
 	deletedImages := form.Value["deleted_images[]"]
@@ -34,7 +34,7 @@ func parseImages(files []*multipart.FileHeader, brand string) []models.ImageData
 		if result == nil {
 			return []models.ImageData{}
 		}
-		
+
 		images = append(images, models.ImageData{
 			URL: result.SecureURL,
 			ID:  result.PublicID,
@@ -43,10 +43,10 @@ func parseImages(files []*multipart.FileHeader, brand string) []models.ImageData
 	return images
 }
 
-func parseSizes(sizeStrings []string,valuesString []string) []models.SizeData {
+func parseSizes(sizeStrings []string, valuesString []string) []models.SizeData {
 	var sizes []models.SizeData
 	for index, sizeStr := range sizeStrings {
-		size, err := strconv.ParseFloat(sizeStr, 32)
+		size, err := strconv.ParseFloat(sizeStr, 64)
 		if err != nil {
 			return []models.SizeData{}
 		}
@@ -55,8 +55,9 @@ func parseSizes(sizeStrings []string,valuesString []string) []models.SizeData {
 		if err != nil {
 			return []models.SizeData{}
 		}
+
 		sizeData := models.SizeData{
-			Value:    float32(size),
+			Value:    size,
 			Quantity: quantity,
 		}
 		sizes = append(sizes, sizeData)

@@ -58,6 +58,12 @@ export const validateSneakerForm = (form, setError) => {
     isFormValid = false;
   }
 
+  if (!validateLengthWords(description)) {
+    errors.description =
+      "* Description should not contain words with more than 30 letters";
+    isFormValid = false;
+  }
+
   if (!validatePrice(price)) {
     errors.price =
       "* Price should be a valid number greater than 0";

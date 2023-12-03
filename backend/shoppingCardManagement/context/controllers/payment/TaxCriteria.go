@@ -1,6 +1,6 @@
 package controllers
 
-func GetTaxAmount(code string, amount float32) float32 {
+func GetTaxAmount(code string, amount float64) float64 {
 	switch code {
 	case "VAT":
 		return amount * 0.1

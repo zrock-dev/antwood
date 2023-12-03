@@ -15,8 +15,8 @@ import (
 type filters struct {
 	Brands   []string  `json:"brands"`
 	Colors   []string  `json:"colors"`
-	MaxPrice float32   `json:"maxPrice"`
-	MinPrice float32   `json:"minPrice"`
+	MaxPrice float64   `json:"maxPrice"`
+	MinPrice float64   `json:"minPrice"`
 	Sizes    []float64 `json:"sizes"`
 	Tags     []string  `json:"tags"`
 }
@@ -90,7 +90,7 @@ func sortFilters(filters filters) filters {
 	return filters
 }
 
-func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32, float32) {
+func getFilterOptions(c *fiber.Ctx) (string, string, []string, float64, float64, float64) {
 	brand := c.Query("brand", "")
 	color := c.Query("color", "")
 
@@ -103,7 +103,7 @@ func getFilterOptions(c *fiber.Ctx) (string, string, []string, float32, float32,
 	size, _ := strconv.ParseFloat(sizeEntry, 32)
 
 	tags := strings.Split(tagsEntry, ",")
-	return brand, color, tags, float32(minPrice), float32(maxPrice), float32(size)
+	return brand, color, tags, float64(minPrice), float64(maxPrice), float64(size)
 }
 
 func SendSneakersFilteredByPagination(c *fiber.Ctx) error {
@@ -180,7 +180,7 @@ func getMatchFilters(pipeline mongo.Pipeline, brand string, tags []string, color
 	return pipeline
 }
 
-func getPriceFilter(pipeline mongo.Pipeline, minPrice float32, maxPrice float32) mongo.Pipeline {
+func getPriceFilter(pipeline mongo.Pipeline, minPrice float64, maxPrice float64) mongo.Pipeline {
 	if minPrice > 0 && maxPrice > 0 {
 		pipeline = append(pipeline, bson.D{
 			{Key: "$match", Value: bson.D{
@@ -195,14 +195,14 @@ func getPriceFilter(pipeline mongo.Pipeline, minPrice float32, maxPrice float32)
 	return pipeline
 }
 
-func getSizeFilter(pipeline mongo.Pipeline, size float32) mongo.Pipeline {
+func getSizeFilter(pipeline mongo.Pipeline, size float64) mongo.Pipeline {
 	if size > 0 {
 		pipeline = append(pipeline, bson.D{
 			{Key: "$match", Value: bson.D{
 				{Key: "types.sizes", Value: bson.D{
 					{Key: "$elemMatch", Value: bson.D{
 						{Key: "value", Value: bson.D{
-							{Key: "$in", Value: []float32{size}},
+							{Key: "$in", Value: []float64{size}},
 						}},
 					}},
 				}},

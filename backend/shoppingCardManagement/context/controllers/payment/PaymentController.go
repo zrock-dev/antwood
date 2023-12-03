@@ -67,7 +67,7 @@ func HandleCountryTaxes(c *fiber.Ctx) error {
 	total := c.Params("amount")
 
 	totalParsed, err := strconv.ParseFloat(total, 32)
-	casted := float32(totalParsed)
+	casted := float64(totalParsed)
 	if err != nil {
 		return c.SendString(err.Error())
 	}

@@ -172,7 +172,6 @@ const validateSneakerColor = () => {
   };
 
   const uploadSneakerColor = async () => {
-    
     if (!validateSneakerColor()) {
       return;
     }

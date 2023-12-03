@@ -10,7 +10,7 @@ type ImageData struct {
 }
 
 type SizeData struct {
-	Value    float32 `json:"value" form:"value" bson:"value"`
+	Value    float64 `json:"value" form:"value" bson:"value"`
 	Quantity int     `json:"quantity" form:"quantity" bson:"quantity"`
 }
 

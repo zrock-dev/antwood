@@ -78,7 +78,7 @@ export default function CheckoutForm({ clientSecret }) {
           disabled={isLoading || !stripe || !elements}
           onClick={handleSubmit}
         >
-          <span id="button-text">{isLoading ? "Loading... " : "Pay now"}</span>
+          <span id="button-text">{isLoading ? "Loading... " : "Pay Now"}</span>
         </Button>
       </div>
       {message && <div id="payment-message">{message}</div>}
