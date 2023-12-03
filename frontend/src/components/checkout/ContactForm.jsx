@@ -34,6 +34,7 @@ const ContactForm  = ({emailSaved , email, setEmail,  setEmailSaved})=>{
           value={email}
           placeholder="Email"
           onChange={handleOnChange}
+          maxLength={50}
         />
         }
         <span className="checkout-email-error">{emailErrorMessage}</span>
