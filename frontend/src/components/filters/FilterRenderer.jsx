@@ -69,8 +69,8 @@ const FilterRenderer = () => {
 						isOpen={
 							filters.minPrice > 0 &&
 							filters.maxPrice > 0 &&
-							filters.minPrice !== filterOptions.maxPrice &&
-							filters.maxPrice !== filterOptions.maxPrice
+							(filters.minPrice !== filterOptions.maxPrice ||
+							filters.maxPrice !== filterOptions.maxPrice)
 						}
 					/>
 				</div>

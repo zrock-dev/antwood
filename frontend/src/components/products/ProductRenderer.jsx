@@ -19,7 +19,7 @@ const ProductRenderer = ({
 		hasMore: true,
 		page: 1
 	});
-	const { sorter } = useContext(ProductResultsContext);
+	const { sorter, clearFiltersAndRedirect } = useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
@@ -75,7 +75,9 @@ const ProductRenderer = ({
 				))}
 			</div>
 			{rendererState.products.length < 1 && !rendererState.hasMore && (
-				<NoProductsFound redirection={redirection} />
+				<NoProductsFound
+					redirection={() => clearFiltersAndRedirect(redirection)}
+				/>
 			)}
 			{rendererState.hasMore && (
 				<div ref={lastProduct} className="loader-container">

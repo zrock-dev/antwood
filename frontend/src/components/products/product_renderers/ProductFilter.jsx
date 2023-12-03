@@ -15,7 +15,8 @@ const ProductFilter = ({ style = 'products-container width-100' }) => {
 		hasMore: true,
 		page: 1
 	});
-	const { sorter, filters, isEmptyFilters } = useContext(ProductResultsContext);
+	const { sorter, filters, isEmptyFilters, clearFiltersAndRedirect } =
+		useContext(ProductResultsContext);
 
 	const lastProduct = useRef(null);
 
@@ -43,19 +44,24 @@ const ProductFilter = ({ style = 'products-container width-100' }) => {
 	};
 
 	useEffect(() => {
-		if (isEmptyFilters()) {
-			setRendererState({
-				products: [],
-				hasMore: false,
-				page: 1
-			});
-		} else {
-			setRendererState({
-				products: [],
-				hasMore: true,
-				page: 1
-			});
-		}
+		// if (isEmptyFilters()) {
+		// 	setRendererState({
+		// 		products: [],
+		// 		hasMore: false,
+		// 		page: 1
+		// 	});
+		// } else {
+		// 	setRendererState({
+		// 		products: [],
+		// 		hasMore: true,
+		// 		page: 1
+		// 	});
+		// }
+		setRendererState({
+			products: [],
+			hasMore: true,
+			page: 1
+		});
 	}, [filters]);
 
 	useEffect(() => {
@@ -97,7 +103,9 @@ const ProductFilter = ({ style = 'products-container width-100' }) => {
 						))}
 					</div>
 					{!rendererState.hasMore && rendererState.products.length < 1 && (
-						<NoProductsFound redirection={'/products'} />
+						<NoProductsFound
+							redirection={() => clearFiltersAndRedirect('/products')}
+						/>
 					)}
 					{rendererState.hasMore && (
 						<div ref={lastProduct} className="loader-container">

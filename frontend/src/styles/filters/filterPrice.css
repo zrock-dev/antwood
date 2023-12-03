@@ -104,3 +104,12 @@
 	position: relative;
 	box-shadow: 0 0 2px white;
 }
+
+.slider-values {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	width: 100%;
+	background-color: red;
+}

@@ -113,7 +113,7 @@ export const getFilterOptions = async () => {
 export const getSneakerFilteredByPagination = async (
 	filters,
 	page,
-	pageSize = 3,
+	pageSize = 6,
 	sorter
 ) => {
 	if (filters && sorter) {
@@ -140,7 +140,7 @@ export const getSneakerFilteredByPagination = async (
 		const queryParams = queryString.stringify(params);
 		const query = queryString.stringify(sorter);
 		const response = await axios.get(
-			`/sneakers/filters/products?${query}&${queryParams}`
+			`/sneakers/filters/products?${queryParams}&${query}`
 		);
 
 		return response.data;

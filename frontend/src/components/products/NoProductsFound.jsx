@@ -1,5 +1,4 @@
 import SearchIcon from '@/icons/SearchIcon';
-import Link from 'next/link';
 import '../../styles/products/noResults.css';
 
 const NoProductsFound = ({ redirection }) => {
@@ -14,9 +13,11 @@ const NoProductsFound = ({ redirection }) => {
 				personality and highlight your essence.
 			</p>
 			<span className="vertical-separator"></span>
-			<Link href={redirection}>
-				<button className="general-button auto">SEE ALL SNEAKERS</button>
-			</Link>
+			<span>
+				<button onClick={redirection} className="general-button auto">
+					SEE ALL SNEAKERS
+				</button>
+			</span>
 		</div>
 	);
 };
