@@ -60,12 +60,17 @@ const ProductResultsProvider = ({ children }) => {
 	};
 
 	const setPriceRange = (minPrice, maxPrice) => {
+		if (
+			minPrice !== filterOptions.minPrice &&
+			maxPrice !== filterOptions.maxPrice
+		) {
+		}
 		setFilters((prev) => ({
 			...prev,
 			minPrice: minPrice,
 			maxPrice: maxPrice
 		}));
-		if (minPrice > 0 && maxPrice > 0 && maxPrice !== filterOptions.maxPrice) {
+		if (minPrice > 0 && maxPrice > 0) {
 			router.push('/products/filter');
 		}
 	};

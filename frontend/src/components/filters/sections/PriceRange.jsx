@@ -1,23 +1,28 @@
 'use client';
+import Section from '@/components/Section';
 import '../../../styles/filters/filterPrice.css';
 
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 
-const PriceRange = ({ min, max }) => {
-	const [minVal, setMinVal] = useState(min);
-	const [maxVal, setMaxVal] = useState(max);
+const PriceRange = ({
+	min,
+	max,
+	currentMin,
+	currentMax,
+	setPriceRange,
+	isOpen = false
+}) => {
+	const [minVal, setMinVal] = useState(currentMin);
+	const [maxVal, setMaxVal] = useState(currentMax);
 	const minValRef = useRef(min);
 	const maxValRef = useRef(max);
 	const range = useRef(null);
 
-	// Convert to percentage
 	const getPercent = useCallback(
 		(value) => Math.round(((value - min) / (max - min)) * 100),
 		[min, max]
 	);
 
-	// Set width of the range to decrease from the left side
 	useEffect(() => {
 		const minPercent = getPercent(minVal);
 		const maxPercent = getPercent(maxValRef.current);
@@ -28,7 +33,6 @@ const PriceRange = ({ min, max }) => {
 		}
 	}, [minVal, getPercent]);
 
-	// Set width of the range to decrease from the right side
 	useEffect(() => {
 		const minPercent = getPercent(minValRef.current);
 		const maxPercent = getPercent(maxVal);
@@ -39,48 +43,49 @@ const PriceRange = ({ min, max }) => {
 	}, [maxVal, getPercent]);
 
 	return (
-		<div className="container">
-			<input
-				type="range"
-				min={min}
-				max={max}
-				value={minVal}
-				onChange={(event) => {
-					const value = Math.min(Number(event.target.value), maxVal - 1);
-					setMinVal(value);
-					minValRef.current = value;
-				}}
-				className="thumb thumb--left"
-				onMouseUp={() => alert(minVal + ' - ' + maxVal)}
-				style={{ zIndex: minVal > max - 100 && '5' }}
-			/>
-			<input
-				type="range"
-				min={min}
-				max={max}
-				value={maxVal}
-				onChange={(event) => {
-					const value = Math.max(Number(event.target.value), minVal + 1);
-					setMaxVal(value);
-					maxValRef.current = value;
-				}}
-				onMouseUp={() => alert(minVal + ' - ' + maxVal)}
-				className="thumb thumb--right"
-			/>
+		<Section
+			style="secction-container space-left-30"
+			title={'Prices'}
+			isOpen={isOpen}
+		>
+			<div className="container margin-top-25">
+				<input
+					type="range"
+					min={min}
+					max={max}
+					value={minVal}
+					onChange={(event) => {
+						const value = Math.min(Number(event.target.value), maxVal - 1);
+						setMinVal(value);
+						minValRef.current = value;
+					}}
+					className="thumb thumb--left"
+					onMouseUp={() => setPriceRange(minVal, maxVal)}
+					style={{ zIndex: minVal > max - 100 && '5' }}
+				/>
+				<input
+					type="range"
+					min={min}
+					max={max}
+					value={maxVal}
+					onChange={(event) => {
+						const value = Math.max(Number(event.target.value), minVal + 1);
+						setMaxVal(value);
+						maxValRef.current = value;
+					}}
+					onMouseUp={() => setPriceRange(minVal, maxVal)}
+					className="thumb thumb--right"
+				/>
 
-			<div className="slider">
-				<div className="slider__track" />
-				<div ref={range} className="slider__range" />
-				<div className="slider__left-value">{minVal}$</div>
-				<div className="slider__right-value">{maxVal}$</div>
+				<div className="slider">
+					<div className="slider__track" />
+					<div ref={range} className="slider__range" />
+					<div className="slider__left-value">{minVal}$</div>
+					<div className="slider__right-value">{maxVal}$</div>
+				</div>
 			</div>
-		</div>
+		</Section>
 	);
-};
-
-PriceRange.propTypes = {
-	min: PropTypes.number.isRequired,
-	max: PropTypes.number.isRequired
 };
 
 export default PriceRange;

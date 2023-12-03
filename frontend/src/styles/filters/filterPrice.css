@@ -1,79 +1,85 @@
 .container {
-	height: 100vh;
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-  }
-  
-  .slider {
+
+	width: 100%;
+	padding: 20px 0;
+
+	& input {
+		width: 100%;
+	}
+}
+
+.slider {
 	position: relative;
-	width: 200px;
-  }
-  
-  .slider__track,
-  .slider__range,
-  .slider__left-value,
-  .slider__right-value {
+	width: 100%;
+}
+
+.slider__track,
+.slider__range,
+.slider__left-value,
+.slider__right-value {
 	position: absolute;
-  }
-  
-  .slider__track,
-  .slider__range {
+}
+
+.slider__track,
+.slider__range {
 	border-radius: 3px;
-	height: 5px;
-  }
-  
-  .slider__track {
-	background-color: #ced4da;
+	height: 4px;
+}
+
+.slider__track {
+	background-color: #000;
 	width: 100%;
 	z-index: 1;
-  }
-  
-  .slider__range {
+}
+
+.slider__range {
 	background-color: #000000;
 	z-index: 2;
-  }
-  
-  .slider__left-value,
-  .slider__right-value {
+}
+
+.slider__left-value,
+.slider__right-value {
 	color: #000;
 	font-size: 16px;
+	font-weight: 300;
 	margin-top: 20px;
-  }
-  
-  .slider__left-value {
+}
+
+.slider__left-value {
 	left: 6px;
-  }
-  
-  .slider__right-value {
+}
+
+.slider__right-value {
 	right: -4px;
-  }
-  
-  /* Removing the default appearance */
-  .thumb,
-  .thumb::-webkit-slider-thumb {
+}
+
+.thumb,
+.thumb::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	-webkit-tap-highlight-color: transparent;
-  }
-  
-  .thumb {
+}
+
+.thumb {
 	pointer-events: none;
 	position: absolute;
 	height: 0;
-	width: 200px;
+	width: 100%;
 	outline: none;
-  }
-  
-  .thumb--left {
+}
+
+.thumb--left {
 	z-index: 3;
-  }
-  
-  .thumb--right {
+}
+
+.thumb--right {
 	z-index: 4;
-  }
-  
-  /* For Chrome browsers */
-  .thumb::-webkit-slider-thumb {
+}
+
+.thumb::-webkit-slider-thumb {
 	background-color: #000;
 	border: none;
 	border-radius: 50%;
@@ -83,10 +89,10 @@
 	margin-top: 4px;
 	pointer-events: all;
 	position: relative;
-  }
-  
-  /* For Firefox browsers */
-  .thumb::-moz-range-thumb {
+	box-shadow: 0 0 2px white;
+}
+
+.thumb::-moz-range-thumb {
 	background-color: #000;
 	border: none;
 	border-radius: 50%;
@@ -96,5 +102,5 @@
 	margin-top: 4px;
 	pointer-events: all;
 	position: relative;
-  }
-  
+	box-shadow: 0 0 2px white;
+}
