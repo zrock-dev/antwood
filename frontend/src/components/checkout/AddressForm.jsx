@@ -36,7 +36,7 @@ const AddressForm = ({
       address.address.postal_code.length > 20 ||
       address.name.length > 100
     ) {
-      setErrorMessage("the fields must be less than 100 characters and corrects");
+      setErrorMessage("the fields must be less than 100 characters");
       return;
     }
 
