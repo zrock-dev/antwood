@@ -12,6 +12,12 @@
 }
 .admin-panel-form-ctn{
     padding: 60px;
+  position: relative;
+  }
+
+.admin-panel-back-btn{
+    position: absolute;
+    top: 20px;
 }
 
 .admin-panel-colors-ctn{

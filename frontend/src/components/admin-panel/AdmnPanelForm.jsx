@@ -10,6 +10,7 @@ import {
   validateDescription,
 } from "@/utils/SneakerFormValidation";
 import Modal from "../Modal";
+import {useRouter} from "next/navigation";
 
 import DeleteSneakerConfirmation from "../admin/confirmations/DeleteSneakerConfirmation";
 import { toast } from "sonner";
@@ -25,6 +26,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
   const [reset, setReset] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -230,6 +232,12 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
           closeConfirmation={() => setOpenDeleteModal(false)}
         />
       </Modal>
+      <Button 
+      className="admin-panel-back-btn"
+      onClick={() => router.back() }>
+        <i className="fa-solid fa-arrow-left"></i>
+        &nbsp;&nbsp; GO BACK
+      </Button>
     </div>
   );
 };
