@@ -35,7 +35,7 @@ const AddressForm = ({
       address.address.city.length > 100 ||
       address.name.length > 100
     ) {
-      setErrorMessage("The name,city and lines fields cannot be longer than 100 characters");
+      setErrorMessage("Invalid fields with more than 100 characters");
       return;
     }
 
