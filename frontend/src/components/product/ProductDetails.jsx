@@ -194,7 +194,7 @@ const ProductDetails = ({ product }) => {
 				</DetailSection>
 				<DetailSection
 					title="Colors"
-					description="We have these colors available so you can choose for your collection"
+					description={product.types.length > 1 ? "We have these colors available so you can choose for your collection" : ""}
 				>
 					<div className="secction-item-row">
 						{product.types.map((type, index) => (
