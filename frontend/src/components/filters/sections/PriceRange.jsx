@@ -1,73 +1,86 @@
 'use client';
 import '../../../styles/filters/filterPrice.css';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
-const PriceRange = () => {
-	const sliderOneRef = useRef(null);
-	const sliderTwoRef = useRef(null);
-	const sliderTrackRef = useRef(null);
+const PriceRange = ({ min, max }) => {
+	const [minVal, setMinVal] = useState(min);
+	const [maxVal, setMaxVal] = useState(max);
+	const minValRef = useRef(min);
+	const maxValRef = useRef(max);
+	const range = useRef(null);
 
-	const [sliderOne, setSliderOne] = useState(30);
-	const [sliderTwo, setSliderTwo] = useState(70);
-	const minGap = 1;
-	const sliderMaxValue = 100;
+	// Convert to percentage
+	const getPercent = useCallback(
+		(value) => Math.round(((value - min) / (max - min)) * 100),
+		[min, max]
+	);
 
+	// Set width of the range to decrease from the left side
 	useEffect(() => {
-		slideOne();
-		slideTwo();
-	}, [sliderOne, sliderTwo]);
+		const minPercent = getPercent(minVal);
+		const maxPercent = getPercent(maxValRef.current);
 
-	const slideOne = () => {
-		if (sliderTwo - sliderOne <= minGap) {
-			setSliderOne(sliderTwo - minGap);
+		if (range.current) {
+			range.current.style.left = `${minPercent}%`;
+			range.current.style.width = `${maxPercent - minPercent}%`;
 		}
-		fillColor();
-	};
+	}, [minVal, getPercent]);
 
-	const slideTwo = () => {
-		if (sliderTwo - sliderOne <= minGap) {
-			setSliderTwo(sliderOne + minGap);
+	// Set width of the range to decrease from the right side
+	useEffect(() => {
+		const minPercent = getPercent(minValRef.current);
+		const maxPercent = getPercent(maxVal);
+
+		if (range.current) {
+			range.current.style.width = `${maxPercent - minPercent}%`;
 		}
-		fillColor();
-	};
-
-	const fillColor = () => {
-		const percent1 = (sliderOne / sliderMaxValue) * 100;
-		const percent2 = (sliderTwo / sliderMaxValue) * 100;
-		sliderTrackRef.current.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , 
-            #000 ${percent1}% , #000 ${percent2}%, #dadae5 ${percent2}%)`;
-	};
+	}, [maxVal, getPercent]);
 
 	return (
-		<div className="price-range-main-container">
-			<div className="wrapper">
-				<div className="price-range-container">
-					<div ref={sliderTrackRef} className="slider-track"></div>
-					<input
-						type="range"
-						min="0"
-						max="100"
-						value={sliderOne}
-						ref={sliderOneRef}
-						onChange={(e) => setSliderOne(e.target.value)}
-					/>
-					<input
-						type="range"
-						min="0"
-						max="100"
-						value={sliderTwo}
-						ref={sliderTwoRef}
-						onChange={(e) => setSliderTwo(e.target.value)}
-					/>
-				</div>
-				<div className="values">
-					<span>{sliderOne}</span>
-					<span>{sliderTwo}</span>
-				</div>
+		<div className="container">
+			<input
+				type="range"
+				min={min}
+				max={max}
+				value={minVal}
+				onChange={(event) => {
+					const value = Math.min(Number(event.target.value), maxVal - 1);
+					setMinVal(value);
+					minValRef.current = value;
+				}}
+				className="thumb thumb--left"
+				onMouseUp={() => alert(minVal + ' - ' + maxVal)}
+				style={{ zIndex: minVal > max - 100 && '5' }}
+			/>
+			<input
+				type="range"
+				min={min}
+				max={max}
+				value={maxVal}
+				onChange={(event) => {
+					const value = Math.max(Number(event.target.value), minVal + 1);
+					setMaxVal(value);
+					maxValRef.current = value;
+				}}
+				onMouseUp={() => alert(minVal + ' - ' + maxVal)}
+				className="thumb thumb--right"
+			/>
+
+			<div className="slider">
+				<div className="slider__track" />
+				<div ref={range} className="slider__range" />
+				<div className="slider__left-value">{minVal}$</div>
+				<div className="slider__right-value">{maxVal}$</div>
 			</div>
 		</div>
 	);
+};
+
+PriceRange.propTypes = {
+	min: PropTypes.number.isRequired,
+	max: PropTypes.number.isRequired
 };
 
 export default PriceRange;
