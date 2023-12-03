@@ -1,24 +1,30 @@
-import { useState } from "react";
+import {useState} from "react";
 import Button from "../Button";
-import { isEmailValid } from "@/utils/AuthFormValidations";
-const ContactForm  = ({emailSaved , email, setEmail,  setEmailSaved})=>{
+import {isEmailValid} from "@/utils/AuthFormValidations";
+import EmailVerificationDialog from "@/components/auth/EmailVerificationDialog";
 
-    const [emailErrorMessage, setEmailErrorMessaje] = useState("")
-    const handleOnChange = (event)=>{
+const ContactForm = ({emailSaved, email, setEmail, setEmailSaved}) => {
+
+    const [emailErrorMessage, setEmailErrorMessage] = useState("")
+    const [startVerification, setStartVerification] = useState(false)
+
+    const handleOnChange = (event) => {
         setEmail(event.target.value)
-        setEmailErrorMessaje("");
+        setEmailErrorMessage("");
     }
-    const onEmailReady = (event)=>{
-        if(email === ""){
-            setEmailErrorMessaje("Email is required")
-            return
+    const onEmailReady = (_event) => {
+        if (email === "") {
+            setEmailErrorMessage("A valid email address is required")
+        } else if (!isEmailValid(email)) {
+            setEmailErrorMessage("Please enter a valid email address")
+        } else {
+            setStartVerification(true)
         }
-        if (!isEmailValid(email)){
-            setEmailErrorMessaje("Email is not valid")
-            return
-        }
-    
+    }
+
+    const handleEmailVerificationSuccess = () => {
         setEmailSaved(true)
+        setStartVerification(false)
     }
 
     return (
@@ -41,11 +47,15 @@ const ContactForm  = ({emailSaved , email, setEmail,  setEmailSaved})=>{
         <div className="checkout-pay-btn-ctn">
         {!emailSaved && (
           <Button onClick={onEmailReady}>Continue</Button>
-        )}
+                )}
+            </div>
+            <EmailVerificationDialog
+                startPoint={startVerification}
+                verificationSuccessHandler={handleEmailVerificationSuccess}
+                email={email}
+            />
         </div>
-      </div>
     );
 }
-
 
 export default ContactForm
