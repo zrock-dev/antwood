@@ -11,7 +11,7 @@ const Footer = () => {
 		<div className="footer-main-container">
 			<div className="footer-social-network-container">
 				<Link
-					href="https://www.facebook.com"
+					href="https://www.facebook.com/solestyle.Inc/"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -19,7 +19,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://twitter.com"
+					href="https://twitter.com/Solestyle_Inc/"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -27,7 +27,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://www.instagram.com"
+					href="https://www.instagram.com/solestyle_ecommerce/"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -35,7 +35,7 @@ const Footer = () => {
 				</Link>
 
 				<Link
-					href="https://www.youtube.com"
+					href="https://www.youtube.com/@solestyle-cw7nz"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
