@@ -14,6 +14,9 @@
 
 .receipt-details div {
   flex-grow: 1;
+  max-width: 45%;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .receipt-details p {
