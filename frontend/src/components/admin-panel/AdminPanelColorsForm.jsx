@@ -90,7 +90,7 @@ const AdminPanelColorsForm = ({
         toast.error("File must be less than 1MB");
         return;
       }
-      if (form.images.length + imageAdded.length + files.length >= 10) {
+      if (form.images.length + imageAdded.length + files.length > 10) {
         toast.error("Cannot add more than 10 images");
         return;
       }
