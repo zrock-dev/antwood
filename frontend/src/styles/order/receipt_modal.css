@@ -14,9 +14,17 @@
 
 .receipt-details div {
   flex-grow: 1;
-  max-width: 45%;
-  overflow-y: auto;
-  overflow-x: auto;
+}
+
+.receipt-details div p {
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .receipt-details p {
@@ -49,9 +57,7 @@
   margin-right: -12px;
 }
 
-
-
-.receipt-table tr th:not(:first-child) ,
+.receipt-table tr th:not(:first-child),
 .receipt-table tr td:not(:first-child) {
   text-align: center;
   width: 100px;
@@ -66,21 +72,20 @@
 .receipt-product-name {
   height: 100px;
   max-height: 100px;
-  width: 200px!important;
-  max-width: 200px!important;
-   overflow: hidden;
-  text-overflow:clip;
+  width: 200px !important;
+  max-width: 200px !important;
+  overflow: hidden;
+  text-overflow: clip;
   width: 200px;
 }
 
-.receipt-details-column-name{
-  width: 200px!important;
-  max-width: 200px!important;
+.receipt-details-column-name {
+  width: 200px !important;
+  max-width: 200px !important;
 }
 
-
 .receipt-product-name-header {
-  width: 200px!important;
+  width: 200px !important;
 }
 
 .receipt-details-column {
@@ -99,7 +104,6 @@
   position: sticky;
 }
 
-
-.receipt-ctn-loader{
-  height: 200px!important;
+.receipt-ctn-loader {
+  height: 200px !important;
 }

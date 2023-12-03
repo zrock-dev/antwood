@@ -59,17 +59,12 @@ const OrderRenderer = () => {
                       <p>Sales Taxes : ${order.extra}</p>
                       <p>Total Price : ${order.total}</p>
                     </div>
-                    <div>
+                    <div className="order-shipping-ctn">
                       <p>Shipping Address</p>
-                      <p>
-                        {order?.shipping.address.country}
-                        {"  ,   "}
-                        {order?.shipping.address.postal_code}
-                      </p>
-                      <p>
-                        {order?.shipping.address.city}
-                        {","} {order?.shipping.address.state}
-                      </p>
+                      <p>{order?.shipping.address.country}</p>
+                      <p>{order?.shipping.address.postal_code}</p>
+                      <p>{order?.shipping.address.city}</p>
+                      <p>{order?.shipping.address.state}</p>
                       <p>{order?.shipping.address.line1}</p>
                       <p>{order?.shipping.address.line2}</p>
                     </div>
