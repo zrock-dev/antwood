@@ -187,6 +187,7 @@ const validateSneakerColor = () => {
         onSelectColor(colorSelected)
         setSneakerColors([...sneakerColors, colorSelected]);
         setIsProcessing(false);
+        
         return "Color added successfully";
       },
       error: (w) => {
@@ -208,7 +209,7 @@ const validateSneakerColor = () => {
   return (
     <div
       className={`admin-panel-colors-ctn ${
-        !editable ? "admin-panel-disabled" : ""
+        !editable || isProcessing? "admin-panel-disabled" : ""
       }`}
     >
       <div className="admin-panel-color-form-title-ctn">

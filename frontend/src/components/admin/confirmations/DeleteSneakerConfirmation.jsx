@@ -12,7 +12,7 @@ const DeleteSneakerConfirmation = ({ id, sneakerName, closeConfirmation }) => {
 			success: ()=>{
 				closeConfirmation();
 				router.replace("/admin");
-				location.reload();
+				router.refresh();
 				return 'Sneaker deleted successfully'
 			},
 			error: 'Error when deleting sneaker',
