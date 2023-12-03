@@ -33,10 +33,14 @@ const AddressForm = ({
       address.address.line1.length > 100 ||
       address.address.line2?.length > 100 ||
       address.address.city.length > 100 ||
-      address.address.postal_code.length > 20 ||
       address.name.length > 100
     ) {
-      setErrorMessage("the fields must be less than 100 characters");
+      setErrorMessage("The name,city and lines fields cannot be longer than 100 characters");
+      return;
+    }
+
+    if(address.address.postal_code.length > 20){
+      setErrorMessage("The zip code field cannot be longer than 20 characters.");
       return;
     }
 
