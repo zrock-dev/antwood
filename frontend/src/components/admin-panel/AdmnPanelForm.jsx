@@ -27,6 +27,8 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
+  const minorthanequal = "≤"
+
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -151,6 +153,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
       <h3 className="admin-panel-form-title">SNEAKER</h3>
       <form className="admin-panel-form">
         <div className="admin-panel-form-item">
+          
           <input
             type="text"
             name="name"
@@ -158,6 +161,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
             value={form.name}
             onChange={handleChange}
           />
+          <small>{form.name.length}/70</small>
           <span>{formError.name}</span>
         </div>
 
@@ -168,6 +172,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
             value={form.description}
             onChange={handleChange}
           ></textarea>
+          <small>{form.description.length}/450</small>
           <span>{formError.description}</span>
         </div>
 
@@ -179,6 +184,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
             value={form.price}
             onChange={handleChange}
           />
+          <small>{minorthanequal}3000</small>
           <span>{formError.price}</span>
           <i className="fa-solid fa-dollar-sign admin-panel-form-price-concurrency"></i>
         </div>

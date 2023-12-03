@@ -47,7 +47,7 @@ function ColorPicker({ className, colors = [], onSelectColor }) {
       return;
     }
 
-    if (colors.length >= 9) {
+    if (colors.length >= 10) {
       onSetMessage("* Maximum 10 colors allowed");
       return;
     }

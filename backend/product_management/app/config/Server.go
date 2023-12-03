@@ -8,7 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-var Server = fiber.New()
+var Server = fiber.New(fiber.Config{
+	BodyLimit: 11 * 1024 * 1024,
+})
 var serverPort = ":4000"
 
 func RunServer() {

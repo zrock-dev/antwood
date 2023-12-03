@@ -90,7 +90,7 @@ const AdminPanelColorsForm = ({
         toast.error("File must be less than 1MB");
         return;
       }
-      if (form.images.length + imageAdded.length + files.length >= 10) {
+      if (form.images.length + imageAdded.length + files.length > 10) {
         toast.error("Cannot add more than 10 images");
         return;
       }
@@ -172,7 +172,6 @@ const validateSneakerColor = () => {
   };
 
   const uploadSneakerColor = async () => {
-    
     if (!validateSneakerColor()) {
       return;
     }
@@ -188,6 +187,7 @@ const validateSneakerColor = () => {
         onSelectColor(colorSelected)
         setSneakerColors([...sneakerColors, colorSelected]);
         setIsProcessing(false);
+        
         return "Color added successfully";
       },
       error: (w) => {
@@ -209,7 +209,7 @@ const validateSneakerColor = () => {
   return (
     <div
       className={`admin-panel-colors-ctn ${
-        !editable ? "admin-panel-disabled" : ""
+        !editable || isProcessing? "admin-panel-disabled" : ""
       }`}
     >
       <div className="admin-panel-color-form-title-ctn">

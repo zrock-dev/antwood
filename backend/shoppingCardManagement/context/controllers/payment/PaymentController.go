@@ -67,7 +67,7 @@ func HandleCountryTaxes(c *fiber.Ctx) error {
 	total := c.Params("amount")
 
 	totalParsed, err := strconv.ParseFloat(total, 32)
-	casted := float32(totalParsed)
+	casted := float64(totalParsed)
 	if err != nil {
 		return c.SendString(err.Error())
 	}
@@ -125,12 +125,6 @@ func HandlePaymentStatus(c *fiber.Ctx) error {
 	}
 
 	if order.Paid == "paid" && status == "succeeded" {
-		log.Println("**************************************************************************************************************")
-		log.Println("**************************************************************************************************************")
-		log.Println("Payment success")
-		log.Println(orderId)
-		log.Println("**************************************************************************************************************")
-		log.Println("**************************************************************************************************************")
 		err = repository.DeleteUnpaidOrderById(orderId)
 
 		if err != nil {

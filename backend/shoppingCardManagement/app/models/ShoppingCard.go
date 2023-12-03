@@ -9,10 +9,10 @@ import (
 type Product struct {
 	SneakerId      primitive.ObjectID `json:"sneakerId,omitempty" bson:"sneakerId,omitempty"`
 	SneakerColorId primitive.ObjectID `json:"sneakerColorId" bson:"sneakerColorId"`
-	Size           float32            `json:"size" bson:"size"`
+	Size           float64            `json:"size" bson:"size"`
 	Amount         int                `json:"amount" bson:"amount"`
-	Subtotal       float32            `json:"subtotal" bson:"subtotal"`
-	Price          float32            `json:"price" bson:"price"`
+	Subtotal       float64            `json:"subtotal" bson:"subtotal"`
+	Price          float64            `json:"price" bson:"price"`
 	Image          string             `json:"image" bson:"image"`
 	Name           string             `json:"name" bson:"name"`
 }
@@ -20,12 +20,12 @@ type Product struct {
 type Order struct {
 	ID            primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Products      []Product          `json:"products,omitempty" bson:"products,omitempty"`
-	Subtotal      float32            `json:"subtotal" bson:"subtotal"`
-	Extra         float32            `json:"extra" bson:"extra"`
-	Total         float32            `json:"total" bson:"total"`
+	Subtotal      float64            `json:"subtotal" bson:"subtotal"`
+	Extra         float64            `json:"extra" bson:"extra"`
+	Total         float64            `json:"total" bson:"total"`
 	TotalItems    int                `json:"totalItems" bson:"totalItems"`
 	TaxPercentaje int                `json:"taxpercentaje" bson:"taxpercentaje"`
-	TaxAmount     float32            `json:"taxamount" bson:"taxamoun"`
+	TaxAmount     float64            `json:"taxamount" bson:"taxamoun"`
 	Paid          string             `json:"paid" bson:"paid"`
 	Email         string             `json:"email" bson:"email"`
 	Shipping      Shipping           `json:"shipping" bson:"shipping"`

@@ -12,18 +12,18 @@ type ColorObject struct {
 }
 
 type Sneaker struct {
-	ID            primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
-	Name          string               `json:"name" form:"name" bson:"name"`
-	Description   string               `json:"description" form:"description" bson:"description"`
-	Price         float32              `json:"price" form:"price" bson:"price"`
-	Brand         string               `json:"brand,omitempty" form:"brand,omitempty" bson:"brand,omitempty"`
-	Colors        []ColorObject        `json:"colors" form:"colors" bson:"colors"`
-	Tags          []string             `json:"tags" form:"tags" bson:"tags"`
-	Reviews       SneakerReview `json:"reviews" form:"reviews" bson:"reviews"`
-	Qualification int                  `json:"qualification" form:"qualification" bson:"qualification"`
-	LastDate      primitive.DateTime   `json:"lastDate" form:"lastDate" bson:"lastDate"`
-	SalesQuantity int                  `json:"salesQuantity" form:"salesQuantity" bson:"salesQuantity"`
-	PromotionCode primitive.ObjectID   `json:"promotionCode" form:"promotionCode" bson:"promotionCode"`
+	ID            primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Name          string             `json:"name" form:"name" bson:"name"`
+	Description   string             `json:"description" form:"description" bson:"description"`
+	Price         float64            `json:"price" form:"price" bson:"price"`
+	Brand         string             `json:"brand,omitempty" form:"brand,omitempty" bson:"brand,omitempty"`
+	Colors        []ColorObject      `json:"colors" form:"colors" bson:"colors"`
+	Tags          []string           `json:"tags" form:"tags" bson:"tags"`
+	Reviews       SneakerReview      `json:"reviews" form:"reviews" bson:"reviews"`
+	Qualification int                `json:"qualification" form:"qualification" bson:"qualification"`
+	LastDate      primitive.DateTime `json:"lastDate" form:"lastDate" bson:"lastDate"`
+	SalesQuantity int                `json:"salesQuantity" form:"salesQuantity" bson:"salesQuantity"`
+	PromotionCode primitive.ObjectID `json:"promotionCode" form:"promotionCode" bson:"promotionCode"`
 }
 
 func DefaultSneaker() *Sneaker {

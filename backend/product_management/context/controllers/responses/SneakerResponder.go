@@ -276,11 +276,11 @@ func SendSneakerQuantities(c *fiber.Ctx) error {
 	type SneakersTypes struct {
 		SneakerId      string  `json:"sneakerId,omitempty"`
 		SneakerColorId string  `json:"sneakerColorId,omitempty"`
-		Size           float32 `json:"size,omitempty"`
+		Size           float64 `json:"size,omitempty"`
 		Quantity       int     `json:"quantity"`
 		Image          string  `json:"image,omitempty"`
 		Name           string  `json:"name,omitempty"`
-		Price          float32 `json:"price,omitempty"`
+		Price          float64 `json:"price,omitempty"`
 	}
 	var sneakers []SneakersTypes
 	if err := c.BodyParser(&sneakers); err != nil {
@@ -298,7 +298,7 @@ func SendSneakerQuantities(c *fiber.Ctx) error {
 	return c.JSON(sneakers)
 }
 
-func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float32) (int, string, float32, string) {
+func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float64) (int, string, float64, string) {
 	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
 	for _, sneakerType := range sneakerWithColor.Types {
 		for _, sneakerSize := range sneakerType.Sizes {
@@ -311,7 +311,7 @@ func GetUpdatedQuantity(sneakerId string, sneakerColorId string, size float32) (
 	return 0, "Sneaker not found", 0, ""
 }
 
-func GetQuantityBySize(sneakerId string, sneakerColorId string, size float32) int {
+func GetQuantityBySize(sneakerId string, sneakerColorId string, size float64) int {
 	sneakerWithColor := getSeakerRelatedWithColor(sneakerId, sneakerColorId)
 	for _, sneakerType := range sneakerWithColor.Types {
 		for _, sneakerSize := range sneakerType.Sizes {
