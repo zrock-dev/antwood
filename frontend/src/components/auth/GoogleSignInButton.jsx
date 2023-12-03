@@ -40,8 +40,8 @@ export default function GoogleSignInButton({hasAccount}) {
                     onError={(err) => {
                         console.error('Failed to obtain the credential', err);
                     }}
-                />;
-            </GoogleOAuthProvider>;
+                />
+            </GoogleOAuthProvider>
 
         </div>
     );
