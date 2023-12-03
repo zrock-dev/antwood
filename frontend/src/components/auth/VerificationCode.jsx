@@ -2,7 +2,7 @@
 import styles from "@/styles/verificationcode.module.css";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
-import { isValidCode } from "@/requests/AuthRequest";
+import {requestEmailTokenValidation} from "@/requests/AuthRequest";
 import { toast } from "sonner";
 const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVerificationCode,
   sendVeficationCode }) => {
@@ -77,7 +77,7 @@ const VerificationCode = ({ onCloseToolTip, onVerified, verificationCode, setVer
       return
     }
 
-    const isValid = await isValidCode(code, verificationCode);
+    const isValid = await requestEmailTokenValidation(code, verificationCode);
     if (!isValid) {
       toast.error("Incorrect code");
       return

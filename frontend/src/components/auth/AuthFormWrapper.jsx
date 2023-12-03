@@ -7,7 +7,7 @@ import {
   validateSignupForm,
   validateSigninForm,
 } from "@/utils/AuthFormValidations";
-import { getCodeToVerifyAccount } from "@/requests/AuthRequest";
+import { requestEmailVerificationToken } from "@/requests/AuthRequest";
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
 import { toast } from "sonner";
@@ -75,7 +75,7 @@ function AuthFormWrapper({ isModalOpen }) {
 
 
   const sendCodeToVerifyAccount = async () => {
-    toast.promise(getCodeToVerifyAccount(form.email),
+    toast.promise(requestEmailVerificationToken(form.email),
       {
         loading: "Sending code",
         success: (data) => {

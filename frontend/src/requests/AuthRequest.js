@@ -35,13 +35,17 @@ export const getUserByEmail = (email) =>{
 export const logoutUser = () =>
   axios.get(`/auth/logout`, axiosConfig);
 
-export const getCodeToVerifyAccount = async (email) => {
-  const response = await axios.get(`/auth/verify-account/${email}`, axiosConfig)
-  return  response.data
+export const requestEmailVerificationToken = async (email) => {
+    console.log(`Request email verification token is: ${email}`)
+    const response = await axios.get(`/auth/verify-account/${email}`, axiosConfig)
+        .catch((err) => console.error(err))
+    return response.data
 }
 
 
-export const isValidCode = async (code, encryptedCode) =>{
-  const response = await axios.get(`/auth/verify-code?encryptedcode=${encryptedCode}&code=${code}`, axiosConfig);
-  return response.data && response.data.status
+export const requestEmailTokenValidation = async (code, encryptedCode) => {
+    console.log(`code: ${code} vs encrypted code: ${encryptedCode}`)
+    const response = await axios.get(`/auth/verify-code?encryptedcode=${encryptedCode}&code=${code}`, axiosConfig)
+        .catch((err) => console.error(err));
+    return response.data && response.data.status
 }
