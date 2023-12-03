@@ -10,7 +10,17 @@
 
 .main_btn {
   background-color: var(--secondary-color);
+  border: 3px solid var(--secondary-color);
   color: var(--primary-color);
+}
+
+.main_btn:hover{
+  background-color: var(--primary-color);
+  color: black;
+  border: 3px solid var(--secondary-color);
+  -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
 
 .second_btn {
@@ -23,4 +33,13 @@
 
   color: var(--secondary-color);
   border: 3px solid var(--secondary-color);
+}
+
+.third_btn:hover{
+  background-color: var(--secondary-color);
+  border: 3px solid var(--secondary-color);
+  color: var(--primary-color);
+  -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
 }
