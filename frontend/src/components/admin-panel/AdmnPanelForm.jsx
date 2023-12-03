@@ -25,7 +25,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
   const [reset, setReset] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const minorthan = "<"
+  const minorthanequal = "≤"
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -181,7 +181,7 @@ const AdminPanelForm = ({ form, setForm, resetForm, saveSneaker }) => {
             value={form.price}
             onChange={handleChange}
           />
-          <small>{minorthan}3000</small>
+          <small>{minorthanequal}3000</small>
           <span>{formError.price}</span>
           <i className="fa-solid fa-dollar-sign admin-panel-form-price-concurrency"></i>
         </div>
