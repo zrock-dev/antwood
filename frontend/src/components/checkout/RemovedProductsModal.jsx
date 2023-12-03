@@ -60,7 +60,9 @@ const RemovedProductsModal = () => {
                   return (
                     <div className="removed-product" key={product.sneakerId}>
                       <img src={product.image} alt="" />
-                      <span className="product-card-name-modal">{product.name}</span>
+                      <span className="product-card-name-modal">
+                        {product.name}
+                      </span>
                       <span>{product.size}</span>
                     </div>
                   );
@@ -71,10 +73,11 @@ const RemovedProductsModal = () => {
           {unavailableProducts && unavailableProducts.length > 0 && (
             <div>
               <div className="unavailable-products-header">
-                <h4>Unavailable Products</h4>
+                <h4>Update: Cart Items Adjusted</h4>
                 <p>
-                  This products are being removed from your cart because they
-                  are not available in the store
+                  We have removed some items from your cart because they are
+                  currently unavailable in our store. We want you to have the
+                  best shopping experience!
                 </p>
               </div>
               <div className="removed-products">

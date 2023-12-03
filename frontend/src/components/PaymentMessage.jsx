@@ -16,12 +16,12 @@ const PaymentMessage = ({promise}) => {
   useEffect(() => {
     let timer;
     if (isModalOpen) {
+       if (promise) {
+         promise();
+       }
       setModalOpen(true);
-      timer = setTimeout(() => {
+      timer = setTimeout(() => { 
         setModalOpen(false);
-        if (promise) {
-          promise();
-        }
       }, 4000);
     } else {
       setModalOpen(false);
