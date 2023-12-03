@@ -6,6 +6,7 @@ const TagSelector = ({ tags = [], addTags, removeTags, reset = false,  tagError 
   const [tag, setTag] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const suggestionsRef = useRef(null);
+  const smallerthan = "<"
 
   useEffect(() => {
     let handler = (e) => {
@@ -137,6 +138,7 @@ const handleOnKeyDown = (e) => {
           <i className="fa-solid fa-plus"></i>
         </Button>
       </div>
+      <small>{smallerthan}30</small>
       <div className="tags-ctn">
         {tags.map((tag) => (
           <div className="tag" key={tag}>
