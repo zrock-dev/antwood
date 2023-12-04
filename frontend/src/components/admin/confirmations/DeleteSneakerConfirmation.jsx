@@ -11,7 +11,9 @@ const DeleteSneakerConfirmation = ({ id, sneakerName, closeConfirmation }) => {
 			loading: 'Deleting sneaker...',
 			success: ()=>{
 				closeConfirmation();
+				if(window.location.pathname!=="/admin"){
 				router.replace("/admin");
+				}
 				router.refresh();
 				return 'Sneaker deleted successfully'
 			},
