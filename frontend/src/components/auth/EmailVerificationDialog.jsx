@@ -6,7 +6,7 @@ import {requestEmailTokenValidation, requestEmailVerificationToken} from "@/requ
 import {toast} from "sonner";
 
 const EMAIL_VERIFICATION_TIMEOUT = 45;
-const EmailVerificationDialog = ({startPoint, verificationSuccessHandler, email}) => {
+const EmailVerificationDialog = ({startPoint, verificationSuccessHandler, email, handleHide}) => {
     const tooltipRef = useRef();
     const [authToken, setAuthToken] = useState("");
     const [resendButtonVisibility, setResendButtonVisibility] = useState(false);
@@ -14,11 +14,10 @@ const EmailVerificationDialog = ({startPoint, verificationSuccessHandler, email}
     const [authCode, setAuthCode] = useState("")
     const [visibility, setVisibility] = useState(false)
 
-
     useEffect(() => {
         let onClickHandler = (e) => {
             if (tooltipRef.current && !tooltipRef.current.contains(e.target)) {
-                setVisibility(false)
+                hideDialogAction()
             }
         };
         document.addEventListener("mousedown", onClickHandler);
@@ -70,7 +69,7 @@ const EmailVerificationDialog = ({startPoint, verificationSuccessHandler, email}
             setRemainingTime(secondsUntilTimeout);
             secondsUntilTimeout -= 1;
             if (secondsUntilTimeout < 0) {
-                handleWaitTokenTimeout()
+                handleWaitTokenTimeout();
                 clearInterval(interval);
             }
         }, 1000);
@@ -113,6 +112,11 @@ const EmailVerificationDialog = ({startPoint, verificationSuccessHandler, email}
         if (event.key === "Enter") {
             verifyEmailToken().catch((err) => console.error(err))
         }
+    }
+
+    const hideDialogAction = () => {
+        setVisibility(false)
+        handleHide()
     }
 
     return (
