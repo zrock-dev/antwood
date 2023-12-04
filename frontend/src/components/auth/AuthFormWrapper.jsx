@@ -1,22 +1,26 @@
 "use client";
 import { useState } from "react";
 import authStyle from "@/styles/auth/auth.module.css";
+import VerificationCode from "./VerificationCode";
 import Button from "../Button";
 import {
   validateSignupForm,
   validateSigninForm,
 } from "@/utils/AuthFormValidations";
+import { requestEmailVerificationToken } from "@/requests/AuthRequest";
 import useAuthHandler from "@/hooks/AuthOperations";
 import { defaultFormError, defaultForm } from "@/utils/AuthFormValidations";
+import { toast } from "sonner";
 import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
-import EmailVerificationDialog from "@/components/auth/EmailVerificationDialog";
 
 function AuthFormWrapper({ isModalOpen }) {
   const [form, setForm] = useState(defaultForm);
   const [hasAccount, setHasAccount] = useState(false);
   const [error, setError] = useState(defaultFormError);
+  const [showVerificationCode, setShowVerificationCode] = useState(false);
   const { onSignin, onSignup, verifyUserExists } = useAuthHandler();
-  const [startVerification, setStartVerification] = useState(false)
+  const [verificationCode, setVerificationCode] = useState("");
+
 
   const handleAuth = () => {
     resetForm();
@@ -47,7 +51,8 @@ function AuthFormWrapper({ isModalOpen }) {
     } else if (validateSignupForm(form, setError)) {
       let exist = await verifyUserExists(form.email);
       if (!exist) {
-        setStartVerification(true)
+        await sendCodeToVerifyAccount();
+        setShowVerificationCode(true);
       }
     }
   };
@@ -69,8 +74,21 @@ function AuthFormWrapper({ isModalOpen }) {
   };
 
 
-  const handleSuccessEmailVerification = () => {
-    onSignup(form, "solestyle").catch((err) => {console.error(err)})
+  const sendCodeToVerifyAccount = async () => {
+    toast.promise(requestEmailVerificationToken(form.email),
+      {
+        loading: "Sending code",
+        success: (data) => {
+          if (!data.code) {
+            setShowVerificationCode(false);
+            throw new Error(data.message);
+          }
+          setVerificationCode(data.code)
+          toast.info("If not received, verify email or check spam.");
+          return "Code sent";
+        },
+        error: "Incorrect email"
+      })
   }
 
   return (
@@ -124,11 +142,15 @@ function AuthFormWrapper({ isModalOpen }) {
         {hasAccount ? "Already have an account?" : "Don't have an account?"}{" "}
         <span onClick={handleAuth}>{hasAccount ? "Sign In" : "Sign Up"}</span>
       </p>
-      <EmailVerificationDialog
-          startPoint={startVerification}
-          verificationSuccessHandler={handleSuccessEmailVerification}
-          email={form.email}
-      />
+      {showVerificationCode && (
+        <VerificationCode
+          onCloseToolTip={() => setShowVerificationCode(false)}
+          onVerified={() => onSignup(form, "solestyle")}
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          sendVeficationCode={sendCodeToVerifyAccount}
+        />
+      )}
     </div>
   );
 }
