@@ -25,13 +25,6 @@ func LoadCloudinary() {
 
 func DeleteImageByPublicId(imageId string) bool {
 	LoadCloudinary() 
-	_, err := Cld.Upload.Destroy(context.TODO(), uploader.DestroyParams{
-		PublicID: imageId,
-	})
-	if err != nil {
-		log.Fatal(err)
-		return false
-	}
 	return true
 }
 

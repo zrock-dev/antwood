@@ -82,6 +82,7 @@ const RemovedProductsModal = () => {
               </div>
               <div className="removed-products">
                 <div className="removed-product-header">
+                  <span className="product-header-image">Image</span>
                   <span className="product-card-name-modal">Product Name</span>
                   <span className="product-card-size">Size</span>
                 </div>
@@ -89,6 +90,7 @@ const RemovedProductsModal = () => {
                   return (
                     <>
                       <div className="removed-product" key={product.sneakerId}>
+                        <img src={product.image} alt="" />
                         <span className="product-card-name-modal">
                           {product.name}
                         </span>
